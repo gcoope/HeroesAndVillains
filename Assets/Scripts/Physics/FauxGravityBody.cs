@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace smoothstudio.heroesandvillians.physics
+namespace smoothstudio.heroesandvillains.physics
 {
     public class FauxGravityBody : MonoBehaviour
     {
@@ -58,9 +58,9 @@ namespace smoothstudio.heroesandvillians.physics
             Attract();
         }
 
-		void Update() {
-			Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp);
-		}
+//		void Update() {
+//			Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp);
+//		}
 
 		void OnCollisionEnter(Collision col) {
 			if(col.gameObject == attractor) {

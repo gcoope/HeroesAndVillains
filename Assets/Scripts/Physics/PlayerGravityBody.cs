@@ -1,11 +1,11 @@
-﻿using smoothstudio.heroesandvillians.player;
+﻿using smoothstudio.heroesandvillains.player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace smoothstudio.heroesandvillians.physics { 
+namespace smoothstudio.heroesandvillains.physics { 
     class PlayerGravityBody : FauxGravityBody {
 
 		public bool localPlayer = false;

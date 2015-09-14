@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace smoothstudio.heroesandvillians.physics
+namespace smoothstudio.heroesandvillains.physics
 {
     public class FauxGravityAttractor : MonoBehaviour
     {
