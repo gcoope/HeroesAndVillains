@@ -5,7 +5,7 @@ namespace smoothstudio.heroesandvillians.physics
 {
     public class FauxGravityBody : MonoBehaviour
     {
-        private float gravity = -15f;
+        private float gravity = Settings.Gravity;
 
         private GameObject attractor;
         private FauxGravityAttractor currentAttractor;
@@ -13,16 +13,16 @@ namespace smoothstudio.heroesandvillians.physics
 
         private Transform attractorTransform;
         private Transform bodyTransform;
-        private Rigidbody bodyRigidbody;
+        protected Rigidbody bodyRigidbody;
 
         
         private float distToGround;
-        private Vector3 gravityUp;
+        protected Vector3 gravityUp;
         private Vector3 bodyUp;
 
-        private bool bodyIsGrounded = false;
+        [SerializeField]protected bool bodyIsGrounded = false;
 
-        void Awake() {
+        public void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
         }
 
@@ -57,13 +57,7 @@ namespace smoothstudio.heroesandvillians.physics
         private void Attract() {
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;
             bodyUp = bodyTransform.up;
-            bodyIsGrounded = Physics.Raycast(transform.position, -gravityUp, 0.1f);
-
-            if (Input.GetKeyDown(KeyCode.Space) && bodyIsGrounded)
-            {
-                bodyRigidbody.AddForce(gravityUp * 10, ForceMode.Impulse);
-            }
-
+            bodyIsGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp, 1f);
             this.bodyRigidbody.AddForce(gravityUp * gravity);
 
             Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;

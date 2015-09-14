@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using smoothstudio.heroesandvillians.physics;
 
 namespace smoothstudio.heroesandvillians.player
 {
@@ -9,6 +10,7 @@ namespace smoothstudio.heroesandvillians.player
         public Camera playerCamera;
         private float moveSpeed = 15f;
         private float rotateSpeed = 20f;
+        private float jumpPower = 5f;
         private Vector3 moveDir;
         private Rigidbody playerRigidbody;
         //private Transform playerTransform;
@@ -27,6 +29,12 @@ namespace smoothstudio.heroesandvillians.player
             moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized;
             if (Input.GetAxisRaw("Horizontal") < 0) transform.Rotate(0, -5, 0 * Time.deltaTime * rotateSpeed); // L
             if (Input.GetAxisRaw("Horizontal") > 0) transform.Rotate(0, 5, 0 * Time.deltaTime * rotateSpeed); // R
+
+            if (Input.GetKeyDown(KeyCode.Space)) {
+                gameObject.DispatchGlobalEvent(PlayerMoveEvent.PlayerJump, new object[] { jumpPower });
+            }
+                //this.playerRigidbody.AddForce(Vector3.up * jumpPower, ForceMode.Impulse); // Jump
+            
         }
 
         void FixedUpdate() {
