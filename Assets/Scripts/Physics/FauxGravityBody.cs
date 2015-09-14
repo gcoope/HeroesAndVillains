@@ -44,6 +44,10 @@ namespace smoothstudio.heroesandvillians.physics
             bodyRigidbody = gameObject.GetComponent<Rigidbody>();
             bodyTransform = gameObject.GetComponent<Transform>();
 
+			if(bodyRigidbody == null) {
+				bodyRigidbody = gameObject.AddComponent<Rigidbody>();
+			}
+
             if (bodyRigidbody != null) {
                 bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 bodyRigidbody.useGravity = false;
@@ -53,6 +57,22 @@ namespace smoothstudio.heroesandvillians.physics
         void FixedUpdate() {
             Attract();
         }
+
+		void Update() {
+			Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp);
+		}
+
+		void OnCollisionEnter(Collision col) {
+			if(col.gameObject == attractor) {
+				bodyIsGrounded = true;
+			}
+		}
+
+		void OnCollisionExit(Collision col) {
+			if(col.gameObject == attractor) {
+				bodyIsGrounded = false;
+			}
+		}
 
         private void Attract() {
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;
