@@ -10,7 +10,7 @@ namespace smoothstudio.heroesandvillians.physics {
 
 		public bool localPlayer = false;
 
-        void Awake() {
+        public override void Awake() {
 			base.Awake();
             gameObject.AddGlobalEventListener(PlayerMoveEvent.PlayerJump, Jump);
         }

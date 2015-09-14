@@ -3,16 +3,17 @@ using System.Collections;
 
 public class Settings : MonoBehaviour {
 
-    private static float gravity = -15f;
+	// Player
+	public static float BaseHealth = 100f;
+	public static float BaseArmour = 0f;
+	public static float BaseDamage = 25f;
+	public static float BaseMoveSpeed = 10f;
+	public static float BaseJumpHeight = 10f;
 
-    public static float Gravity {
-        get {
-            return gravity;
-        }
+	// Physics
+    public static float Gravity = -15f;
 
-        private set {
-            //
-        }
-    }
+	// Networking
+	public static string HostIP = "localhost";
 
 }

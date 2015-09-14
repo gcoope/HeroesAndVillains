@@ -8,9 +8,9 @@ namespace smoothstudio.heroesandvillians.player
 	public class PlayerMove : NetworkBehaviour
     {
         [HideInInspector] public Camera playerCamera;
-        private float moveSpeed = 15f;
+        private float moveSpeed = Settings.BaseMoveSpeed;
         private float rotateSpeed = 20f;
-        private float jumpPower = 10f;
+        private float jumpPower = Settings.BaseJumpHeight;
         private Vector3 moveDir;
         private Rigidbody playerRigidbody;
 

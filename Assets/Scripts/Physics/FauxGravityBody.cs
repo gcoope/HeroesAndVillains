@@ -22,7 +22,7 @@ namespace smoothstudio.heroesandvillians.physics
 
         [SerializeField]protected bool bodyIsGrounded = false;
 
-        public void Awake() {
+        public virtual void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
         }
 
@@ -77,7 +77,6 @@ namespace smoothstudio.heroesandvillians.physics
         private void Attract() {
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;
             bodyUp = bodyTransform.up;
-            bodyIsGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp, 1f);
             this.bodyRigidbody.AddForce(gravityUp * gravity);
 
             Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
