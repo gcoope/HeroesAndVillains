@@ -24,7 +24,7 @@ public class StartMenuController : NetworkLobbyManager {
 	}
 
 	void Start() {
-		playerListItem = Resources.Load<GameObject>("Prefabs/Lobby/PlayerItem");
+		//playerListItem = Resources.Load<GameObject>("Prefabs/Lobby/PlayerItem");
 #if UNITY_EDITOR
 		//HostLan();
 #endif

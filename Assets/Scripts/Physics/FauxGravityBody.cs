@@ -20,8 +20,6 @@ namespace smoothstudio.heroesandvillains.physics
         protected Vector3 gravityUp;
         private Vector3 bodyUp;
 
-        [SerializeField]protected bool bodyIsGrounded = false;
-
         public virtual void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
         }
@@ -57,22 +55,6 @@ namespace smoothstudio.heroesandvillains.physics
         void FixedUpdate() {
             Attract();
         }
-
-//		void Update() {
-//			Debug.DrawRay(new Vector3(transform.position.x, transform.position.y - 0.25f, transform.position.z), -gravityUp);
-//		}
-
-		void OnCollisionEnter(Collision col) {
-			if(col.gameObject == attractor) {
-				bodyIsGrounded = true;
-			}
-		}
-
-		void OnCollisionExit(Collision col) {
-			if(col.gameObject == attractor) {
-				bodyIsGrounded = false;
-			}
-		}
 
         private void Attract() {
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;

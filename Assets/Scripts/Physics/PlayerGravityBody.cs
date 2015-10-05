@@ -1,4 +1,4 @@
-﻿using smoothstudio.heroesandvillains.player;
+﻿using smoothstudio.heroesandvillains.player.events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,16 +12,14 @@ namespace smoothstudio.heroesandvillains.physics {
 
         public override void Awake() {
 			base.Awake();
-            gameObject.AddGlobalEventListener(PlayerMoveEvent.PlayerJump, Jump);
+            gameObject.AddGlobalEventListener(PlayerEvent.PlayerJump, Jump);
         }
 
         private void Jump(EventObject evt) {
 			if(!localPlayer) return;
             if(evt.Params[0] != null) {
-                if (bodyIsGrounded) {
-                    bodyRigidbody.AddForce(gravityUp * (float)evt.Params[0], ForceMode.Impulse);
-                }
+            	bodyRigidbody.AddForce(gravityUp * (float)evt.Params[0], ForceMode.Impulse);
             }
-        }
+        }	
     }
 }
