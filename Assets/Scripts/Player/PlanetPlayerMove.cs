@@ -25,6 +25,7 @@ namespace smoothstudio.heroesandvillains.player
 		private float sendThreshold = 0.5f;
 
         void Awake() { 
+			Debug.Log("Player awake");
             playerRigidbody = GetComponent<Rigidbody>();
             if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
 			playerCamera = gameObject.GetComponentInChildren<Camera>();

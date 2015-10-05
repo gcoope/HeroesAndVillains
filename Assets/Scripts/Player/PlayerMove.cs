@@ -9,8 +9,8 @@ namespace smoothstudio.heroesandvillains.player
 	{
 		[HideInInspector] public Camera playerCamera;
 		private float moveSpeed = Settings.BaseMoveSpeed;
-		private float rotateSpeed = 20f;
 		private float jumpPower = Settings.BaseJumpHeight;
+		private float rotateSpeed = 25f;
 		private Vector3 moveDir;
 		private Rigidbody playerRigidbody;
 		private float gravity = Settings.Gravity;
@@ -48,15 +48,19 @@ namespace smoothstudio.heroesandvillains.player
 		
 		private void RecieveInput() {
 			moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized;
-			if (Input.GetAxisRaw("Horizontal") < 0) transform.Rotate(0, -5, 0 * Time.deltaTime * rotateSpeed); // L
-			if (Input.GetAxisRaw("Horizontal") > 0) transform.Rotate(0, 5, 0 * Time.deltaTime * rotateSpeed); // R
+			if (Input.GetAxisRaw("Horizontal") < 0) {
+//				transform.Rotate(0, -5 * Time.deltaTime * rotateSpeed, 0); // L
+				playerRigidbody.MoveRotation(transform.rotation * Quaternion.Euler(new Vector3(0, -5f * Time.deltaTime * rotateSpeed, 0)));
+			} 
+			if (Input.GetAxisRaw("Horizontal") > 0) {
+//				transform.Rotate(0, 5 * Time.deltaTime * rotateSpeed, 0); // R
+				playerRigidbody.MoveRotation(transform.rotation * Quaternion.Euler(new Vector3(0, 5f * Time.deltaTime * rotateSpeed, 0)));
+			}
 			
-			if (Input.GetKeyDown(KeyCode.Space)) {
-
+			if (Input.GetButtonDown("Jump")) {
 				if(Physics.Raycast(transform.position, -Vector3.up, distToGround + 0.1f)) {
 					playerRigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
 				}
-
 			}
 			
 		}
@@ -97,7 +101,7 @@ namespace smoothstudio.heroesandvillains.player
 					lastPosition = transform.position;
 				}
 
-				if(transform.rotation != lastPosition) {
+				if(transform.rotation != lastRotation) {
 					Cmd_PassRotation(transform.rotation);
 					lastRotation = transform.rotation;
 				}
