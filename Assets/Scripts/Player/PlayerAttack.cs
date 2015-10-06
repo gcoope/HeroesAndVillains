@@ -10,12 +10,12 @@ namespace smoothstudio.heroesandvillains.player
 	public class PlayerAttack : NetworkBehaviour
 	{	
 		private BasePlayerInfo playerInfo;
-		private float attackCooldown = 0.5f;
+//		private float attackCooldown = 0.5f;
 
 		// Projectile firing
 		private Transform projectileLauncher;
 		private GameObject fireballPrefab;
-		private List<GameObject> fireballPool; // #soon
+		private List<GameObject> fireballPool; // TODO <---
 
 		void Awake() {
 			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
