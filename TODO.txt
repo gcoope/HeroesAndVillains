@@ -1,0 +1,9 @@
+Multiplayer:
+
+- Projectiles from all players
+- Jumping smoothing
+- Lobby joining/setup
+- Melee attacks
+- Ranged attacks hitting - Raycast or collision?
+- Health (bars?) shown for every player
+- Dieing/fainting when no health 
