@@ -20,7 +20,11 @@ public class BasePlayerInfo : MonoBehaviour {
 	public bool cloaked; // Invisible / cloaked?
 	public float noiseLevel; // Amount of noise they're making - could affect stealth? (Note: this might be too much work)
 
-	void Start () {
-	
+	// Personal object pooler
+	public PersonalObjectPooler personalObjectPooler;
+
+	void Awake () {
+		personalObjectPooler = gameObject.GetComponent<PersonalObjectPooler>();
+		personalObjectPooler.Init();
 	}
 }

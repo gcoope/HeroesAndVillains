@@ -7,3 +7,4 @@ Multiplayer:
 - Ranged attacks hitting - Raycast or collision?
 - Health (bars?) shown for every player
 - Dieing/fainting when no health 
+- Object pool projectiles per player #
