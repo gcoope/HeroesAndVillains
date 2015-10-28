@@ -1,16 +1,19 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
+using smoothstudio.heroesandvillains.player.events;
 
 
 namespace smoothstudio.heroesandvillains.player.projectiles
 {
-	public class FireBallProjectile : MonoBehaviour, IProjectile	{
+	public class FireBallProjectile : NetworkBehaviour, IProjectile	{
 
-		public float lifeTime = 5f;
+		private float lifeTime = 5f;
+		private int damage = 10;
 
-		void Awake() {
-			StartCoroutine("SelfDestruct");
+		void OnEnable() {
+			StartCoroutine("SelfDestruct");			
 		}
 
 		IEnumerator SelfDestruct() {
@@ -19,7 +22,13 @@ namespace smoothstudio.heroesandvillains.player.projectiles
 		}
 
 		public void TidyUp() {
-			Destroy(gameObject); // TODO Pooling (please)
+			gameObject.DispatchGlobalEvent(ProjectileEvent.DestroyProjectile, new object[] { gameObject });
+		}
+
+		void OnCollisionEnter(Collision col) {
+			if(col.gameObject.CompareTag("Player")) {
+				gameObject.DispatchGlobalEvent(ProjectileEvent.ProjectileHitPlayer, new object[] {gameObject, damage});
+			}
 		}
 
 	}

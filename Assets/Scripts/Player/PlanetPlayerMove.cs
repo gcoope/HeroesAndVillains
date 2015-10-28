@@ -8,12 +8,14 @@ namespace smoothstudio.heroesandvillains.player
 {
 	public class PlanetPlayerMove : NetworkBehaviour
     {
-        [HideInInspector] public Camera playerCamera;
-        private float moveSpeed = Settings.BaseMoveSpeed;
+		private BasePlayerInfo playerInfo;
+    	private Rigidbody playerRigidbody;	
+		private Transform playerCameraTransform;
+
+        private float moveSpeed;
         private float rotateSpeed = 15f;
-        private float jumpPower = Settings.BaseJumpHeight;
+        private float jumpPower;
         private Vector3 moveDir;
-        private Rigidbody playerRigidbody;
 
 		private bool isGrounded = false;
 		private float rayLength = 2.5f;
@@ -28,17 +30,19 @@ namespace smoothstudio.heroesandvillains.player
 		private Vector3 lastPosition;
 		private float sendThreshold = 0.5f;
 
-        void Awake() { 
-            playerRigidbody = GetComponent<Rigidbody>();
-            if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
-			playerCamera = gameObject.GetComponentInChildren<Camera>();
-        }
+		void Awake() {
+			playerRigidbody = GetComponent<Rigidbody>();
+			if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
 
-		public override void OnStartLocalPlayer() {
-			playerCamera.enabled = true;
-			playerRigidbody.isKinematic = false;
-			gameObject.GetComponent<PlayerGravityBody>().localPlayer = true;
+			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
+			moveSpeed = playerInfo.speed;
+			jumpPower = playerInfo.jumpHeight;
 		}
+
+		void Start() {
+			playerCameraTransform = GetComponentInChildren<Camera>().transform;
+		}
+
 
         void Update() {
 			if(isLocalPlayer) {
@@ -64,6 +68,15 @@ namespace smoothstudio.heroesandvillains.player
             moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized;
             if (Input.GetAxisRaw("Horizontal") < 0) transform.Rotate(0, -5, 0 * Time.deltaTime * rotateSpeed); // L
             if (Input.GetAxisRaw("Horizontal") > 0) transform.Rotate(0, 5, 0 * Time.deltaTime * rotateSpeed); // R
+
+			/* 
+			// Mouse Test
+			if(Input.GetAxis("Mouse X") < 0) transform.Rotate(0, -5, 0 * Time.deltaTime * rotateSpeed); // L
+			if(Input.GetAxis("Mouse X") > 0) transform.Rotate(0, 5, 0 * Time.deltaTime * rotateSpeed); // R
+			if(Input.GetAxis("Mouse Y") < 0) transform.Rotate(-5, 0, 0 * Time.deltaTime * rotateSpeed); // D
+			if(Input.GetAxis("Mouse Y") > 0) transform.Rotate(5, 0, 0 * Time.deltaTime * rotateSpeed); // U
+			 */
+			
 			if (Input.GetButtonDown("Jump") && isGrounded) {
 				gameObject.DispatchGlobalEvent(PlayerEvent.PlayerJump, new object[] {jumpPower});
             }            

@@ -1,9 +1,11 @@
 Multiplayer:
 
-- Projectiles from all players
-- Jumping smoothing
+- Projectiles from all players #
+- Jump smoothing syncing
 - Lobby joining/setup
-- Melee attacks
-- Ranged attacks hitting - Raycast or collision?
+- Melee attacks #
+- Ranged attacks hitting - Raycast or collision? # have done collisions
 - Health (bars?) shown for every player
 - Dieing/fainting when no health 
+- Object pool projectiles per player #
+- Server side unique player ID manager

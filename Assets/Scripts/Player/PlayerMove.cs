@@ -47,13 +47,12 @@ namespace smoothstudio.heroesandvillains.player
 		}
 		
 		private void RecieveInput() {
-			moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized;
-			if (Input.GetAxisRaw("Horizontal") < 0) {
-//				transform.Rotate(0, -5 * Time.deltaTime * rotateSpeed, 0); // L
+			moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized; // F/B
+
+			if (Input.GetAxisRaw("Horizontal") < 0) { // L
 				playerRigidbody.MoveRotation(transform.rotation * Quaternion.Euler(new Vector3(0, -5f * Time.deltaTime * rotateSpeed, 0)));
 			} 
-			if (Input.GetAxisRaw("Horizontal") > 0) {
-//				transform.Rotate(0, 5 * Time.deltaTime * rotateSpeed, 0); // R
+			if (Input.GetAxisRaw("Horizontal") > 0) { // R
 				playerRigidbody.MoveRotation(transform.rotation * Quaternion.Euler(new Vector3(0, 5f * Time.deltaTime * rotateSpeed, 0)));
 			}
 			
