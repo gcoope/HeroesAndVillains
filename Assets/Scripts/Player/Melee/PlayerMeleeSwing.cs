@@ -25,7 +25,7 @@ public class PlayerMeleeSwing : NetworkBehaviour {
 
 	void Update () {
 		if (isLocalPlayer) {
-			if (Input.GetKeyDown (KeyCode.M)) {
+			if (Input.GetKeyDown (KeyCode.M) || Input.GetButtonDown("Fire2")) {
 				CmdSwing ();
 			}
 		}

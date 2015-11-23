@@ -7,7 +7,7 @@ using smoothstudio.heroesandvillains.player.events;
 
 namespace smoothstudio.heroesandvillains.player.projectiles
 {
-	public class FireBallProjectile : NetworkBehaviour, IProjectile	{
+	public class FireBallProjectile : NetworkBehaviour	{
 
 		private float lifeTime = 5f;
 		private int damage = 10;

@@ -10,21 +10,23 @@ public class PlayerHUD : MonoBehaviour {
 	public GameObject respawnText;
 
 	void Awake() {
-		gameObject.AddGlobalEventListener(PlayerEvent.PlayerFaint, PlayerFaint);
-		gameObject.AddGlobalEventListener(PlayerEvent.PlayerRespawn, PlayerRespawn);
+		gameObject.AddGlobalEventListener(PlayerEvent.PlayerFaint, PlayerHasFainted);
+		gameObject.AddGlobalEventListener(PlayerEvent.PlayerRespawn, PlayerHasRespawned);
 	}
 
 	void Start() {
 		respawnText.SetActive (false);
 	}
 
-	private void PlayerFaint(EventObject evt) {	
+	public void PlayerHasFainted() { PlayerHasFainted(null); }
+	private void PlayerHasFainted(EventObject evt) {	
 		healthText.enabled = false;
 		ammoText.enabled = false;
 		respawnText.SetActive(true);
 	}
 
-	private void PlayerRespawn(EventObject ev) {
+	public void PlayerHasRespawned() { PlayerHasRespawned(null); }
+	private void PlayerHasRespawned(EventObject ev) {
 		healthText.enabled = true;
 		ammoText.enabled = true;
 		respawnText.SetActive(false);

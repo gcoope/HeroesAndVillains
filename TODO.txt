@@ -9,3 +9,15 @@ Multiplayer:
 - Dieing/fainting when no health 
 - Object pool projectiles per player #
 - Server side unique player ID manager
+
+28/10/2015:
+- First person controller
+- Double jumping
+- Edge detect + anti-aliasing filters
+- Player raycast shooting
+- Raycast draw line + add explosion at end
+- Player dieing/respawning
+
+29/10/2015:
+- Xbox controls
+- Splash damage (currently overrides raycast though)

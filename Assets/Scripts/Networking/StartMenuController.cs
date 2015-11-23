@@ -2,69 +2,79 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using DG.Tweening;
+using smoothstudio.heroesandvillains.player.events;
+using System;
 
-public class StartMenuController : NetworkLobbyManager {
+public class StartMenuController : MonoBehaviour {
 
 
-	// UI
-	public GameObject startCanvas;
-	public GameObject lobbyCanvas;
-	private GameObject currentCanvas;
+	private NetworkManager manager; 
+	public InputField hostAddressText;
 
-	public InputField nameBox;
-	public Button readyUpButton;
-	public Button startGameButton; // Host only
-	public GameObject listHolder; // Holder of player list
-	public Text statusText;
-	private GameObject playerListItem; // prefab
+	void Awake() {	
+//		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, JoinAsClient);
+		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, HostLan);
+//		gameObject.AddGlobalEventListener(MenuEvent.HostServer, StartAsServer);
+		gameObject.AddGlobalEventListener(MenuEvent.CloseGame, CloseApp);
 
-	void Awake() {
-
-		currentCanvas = startCanvas;
+		if(hostAddressText == null) {
+			Debug.Log("manually searching for IP input");
+			hostAddressText = GameObject.Find("IP Input Field").GetComponent<InputField>();
+		}
 	}
 
 	void Start() {
-		//playerListItem = Resources.Load<GameObject>("Prefabs/Lobby/PlayerItem");
-#if UNITY_EDITOR
-		//HostLan();
-#endif
+		manager = GetComponent<NetworkManager>();
+		DOTween.Init(); // findme DOTween init
 	}
 
-	public void HostLan() {
-		base.StartHost();
-		//SwapCanvas();
+	public void JoinAsClient() { JoinAsClient(null); }
+	public void JoinAsClient(EventObject evt = null) {
+		CheckHostAddress ();
+		manager.StartClient();
 	}
 
-	public void JoinAsClient() {
-		base.StartClient();
-		SwapCanvas();
+	public void HostLan() { HostLan(null); }
+	public void HostLan(EventObject evt = null) {
+		CheckHostAddress();
+		manager.StartHost();
 	}
 
-	public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
-	{
-		Debug.Log("OnLobbyServerSceneLoadedForPlayer");
-		return true;
+	public void StartAsServer() { StartAsServer(null); }
+	public void StartAsServer(EventObject evt = null) {
+		CheckHostAddress ();
+		manager.StartServer();
 	}
 
-	public override void OnLobbyClientConnect (NetworkConnection conn)
-	{
-		Debug.Log("On client connect");
-		base.OnLobbyClientConnect (conn);
+	public void CloseApp() { CloseApp(null); }
+	public void CloseApp(EventObject evt = null) {
+		Debug.Log("Exiting Application");
+		Application.Quit();
 	}
 
-	public void SetPlayerReady() {
+	private void CheckHostAddress() {
+		if(hostAddressText == null) { // Manual search if reference lost - TODO Fix this system
+			hostAddressText = GameObject.Find("IP Input Field").GetComponent<InputField>();
+		}
 
+		manager.networkAddress = hostAddressText.text != "" ? hostAddressText.text : "localhost";
 	}
 
-	private void SwapCanvas() {
-		if(currentCanvas == startCanvas) {
-			currentCanvas = lobbyCanvas;
-			currentCanvas.SetActive(true);
-			startCanvas.SetActive(false);
-		} else {
-			currentCanvas = startCanvas;
-			currentCanvas.SetActive(true);
-			lobbyCanvas.SetActive(false);
+	void Update() {
+		if(Input.GetKeyDown(KeyCode.Escape)) {
+			if(manager.IsClientConnected()) {
+				Debug.Log("Stopping client");
+				manager.StopClient();
+				try {
+					Debug.Log("Stopping host");
+					manager.StopHost();
+				} catch (Exception e) {
+					Debug.Log(e.Message);
+				}
+			}
 		}
 	}
+
+
 }

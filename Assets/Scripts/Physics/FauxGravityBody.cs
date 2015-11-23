@@ -18,7 +18,7 @@ namespace smoothstudio.heroesandvillains.physics
         
         private float distToGround;
         protected Vector3 gravityUp;
-        private Vector3 bodyUp;
+        public Vector3 bodyUp;
 
         public virtual void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
@@ -57,12 +57,11 @@ namespace smoothstudio.heroesandvillains.physics
         }
 
         private void Attract() {
-            gravityUp = (bodyTransform.position - attractorTransform.position).normalized;
+            gravityUp = (bodyTransform.position - attractorTransform.position).normalized;		                                                
             bodyUp = bodyTransform.up;
+			Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
+			bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
             this.bodyRigidbody.AddForce(gravityUp * gravity);
-
-            Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
-            bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
         }
     }
 }

@@ -22,8 +22,10 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			playerHUD.SetActive(true);
 			playerCamera.enabled = true;
 			playerRigidbody.isKinematic = false;
-			gameObject.GetComponent<PlayerGravityBody>().localPlayer = true;
+			gameObject.GetComponent<PlayerGravityBody>().enabled = true;
 			gameObject.GetComponent<AudioListener>().enabled = true;
+			if(Camera.main != null) Camera.main.enabled = false;
 		}
 	}
 }
+
