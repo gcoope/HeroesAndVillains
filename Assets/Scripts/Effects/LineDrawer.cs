@@ -8,6 +8,7 @@ public class LineDrawer : NetworkBehaviour {
 	private LineRenderer line;
 	private float lineShowDuration = 0.3f;
 	private Color fadeCol;
+	private Color sideCol;
 
 	[SyncVar]
 	private Vector3 startPos;
@@ -23,9 +24,10 @@ public class LineDrawer : NetworkBehaviour {
 		StartCoroutine("DestroySelf"); // Was an issue with destroying after fade tween - it caused null reference for the gameObject..
 	}
 
-	public void Setup(Vector3 start, Vector3 end) {
+	public void Setup(Vector3 start, Vector3 end, Color sideCol) {
 		this.startPos = start;
 		this.endPos = end;
+		this.sideCol = sideCol;
 	}
 
 	public void LocalDrawLine(Vector3 start, Vector3 end) {
@@ -36,13 +38,13 @@ public class LineDrawer : NetworkBehaviour {
 	public void DrawLine() {
 		if(line == null) line = GetComponent<LineRenderer>();
 		line.enabled = true;
-		fadeCol = new Color(1,1,1,1);
+		fadeCol = new Color(sideCol.r, sideCol.g, sideCol.b,1);
 
 		line.SetColors(fadeCol, fadeCol);
 		line.SetPosition(0, startPos);
 		line.SetPosition(1, endPos);
 
-		DOTween.To(()=> fadeCol, x => fadeCol = x, new Color(1,1,1,0), lineShowDuration).OnUpdate(OnLineFadeUpdate);
+		DOTween.To(()=> fadeCol, x => fadeCol = x, new Color(sideCol.r, sideCol.g, sideCol.b,0), lineShowDuration).OnUpdate(OnLineFadeUpdate);
 	}
 
 	IEnumerator DestroySelf() {

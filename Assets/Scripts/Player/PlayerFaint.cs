@@ -7,7 +7,7 @@ using smoothstudio.heroesandvillains.physics;
 
 public class PlayerFaint : NetworkBehaviour {
 
-	private bool isHero;
+	[SyncVar] private bool isHero;
 
 	void Start() {
 		isHero = gameObject.GetComponent<BasePlayerInfo>().playerTeam == Settings.HeroTeam;

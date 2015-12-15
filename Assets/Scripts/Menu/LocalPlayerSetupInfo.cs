@@ -10,19 +10,54 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 	public Text nameInputText;
 	public Text selectedDropdownText;
 
-	public string LocalPlayerName;
-	public string LocalPlayerTeam;
+	private string _localPlayerName;
+	public string LocalPlayerName {
+		get {
+			return _localPlayerName;
+		}
+		set {
+			_localPlayerName = value;
+		}
+	}
+
+	private string _localPlayerTeam;
+	public string LocalPlayerTeam {
+		get {
+			return _localPlayerTeam;
+		}
+		set {
+			_localPlayerTeam = value;
+		}
+	}
+
+	void Awake() {
+		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, UpdateItems); 
+		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, UpdateItems); 
+	}
 
 	void Start () {
-		LocalPlayerName = "";
-		LocalPlayerTeam = Settings.HeroTeam; // default
+		_localPlayerName = "";
+		_localPlayerTeam = Settings.HeroTeam; // default
 	}
 
 	public void OnDropdownChange() {
-		LocalPlayerTeam = selectedDropdownText.text == "Heroes" ? Settings.HeroTeam : Settings.VillainTeam;
+		if(selectedDropdownText == null) {
+			selectedDropdownText = GameObject.Find("DropdownLabel").GetComponent<Text>();
+		}
+
+		_localPlayerTeam = selectedDropdownText.text == "Heroes" ? Settings.HeroTeam : Settings.VillainTeam;
 	}
 
 	public void UpdateNameInput() {
-		LocalPlayerName = nameInputText.text;
+		if(nameInputText == null) {
+			nameInputText = GameObject.Find("NameInputText").GetComponent<Text>();
+		}
+
+		_localPlayerName = nameInputText.text != "" ? nameInputText.text : NameGenerator.GetRandomName();
+	}
+
+	private void UpdateItems(EventObject evt) {
+		OnDropdownChange();
+		UpdateNameInput();
 	}
 }

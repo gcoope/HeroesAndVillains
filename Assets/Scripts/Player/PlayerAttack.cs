@@ -34,9 +34,11 @@ namespace smoothstudio.heroesandvillains.player
 
 		private bool controllerHasFired = false;
 
+		private Color fireLineColor;
+
 		void Awake() {
-			gameObject.AddGlobalEventListener(ProjectileEvent.DestroyProjectile, TidySpawnedItems);
-			gameObject.AddGlobalEventListener(ProjectileEvent.ProjectileHitPlayer, ProjectileHitSomePlayer);
+//			gameObject.AddGlobalEventListener(ProjectileEvent.DestroyProjectile, TidySpawnedItems);
+//			gameObject.AddGlobalEventListener(ProjectileEvent.ProjectileHitPlayer, ProjectileHitSomePlayer);
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
 		}
 
@@ -50,8 +52,10 @@ namespace smoothstudio.heroesandvillains.player
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
 
 			if(playerInfo.playerTeam == Settings.HeroTeam) {
+				fireLineColor = Color.cyan;
 				explosionParticlePrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Thunder/Lightning Spark");
 			} else if(playerInfo.playerTeam == Settings.VillainTeam) {
+				fireLineColor = Color.red;
 				explosionParticlePrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Fire/Explosion");				
 			}
 
@@ -119,7 +123,7 @@ namespace smoothstudio.heroesandvillains.player
 		[Command]
 		private void CmdSpawnLine(Vector3 start, Vector3 end)	{
 			GameObject line = Instantiate<GameObject>(lineDrawPrefab);
-			line.GetComponent<LineDrawer>().Setup(start, end);
+			line.GetComponent<LineDrawer>().Setup(start, end, fireLineColor);
 			NetworkServer.Spawn(line);		
 		}
 
@@ -139,12 +143,12 @@ namespace smoothstudio.heroesandvillains.player
 			
 		}
 
-		[Command]
-		private void CmdSpawn()	{
-			GameObject fireBall = playerInfo.personalObjectPooler.SpawnFromPool(fireballPrefab, null, projectileLauncher.position, projectileLauncher.eulerAngles);
-            fireBall.GetComponent<Rigidbody>().AddForce(projectileLauncher.forward * 30f, ForceMode.Impulse); // Seems wrong
-			NetworkServer.Spawn(fireBall);
-		}
+//		[Command]
+//		private void CmdSpawn()	{
+//			GameObject fireBall = playerInfo.personalObjectPooler.SpawnFromPool(fireballPrefab, null, projectileLauncher.position, projectileLauncher.eulerAngles);
+//            fireBall.GetComponent<Rigidbody>().AddForce(projectileLauncher.forward * 30f, ForceMode.Impulse); // Seems wrong
+//			NetworkServer.Spawn(fireBall);
+//		}
 
 		
 		// ----------------------
@@ -159,24 +163,24 @@ namespace smoothstudio.heroesandvillains.player
 		// Event handlers
 		// ----------------------
 
-		private void TidySpawnedItems(EventObject evt) {
-			if(playerInfo.personalObjectPooler != null && evt.Params != null) {
-				GameObject toPass = (GameObject)evt.Params[0];
-				if(playerInfo.personalObjectPooler.SpawnedItemsContains(toPass)) {
-					playerInfo.personalObjectPooler.RecycleToPool(toPass);
-				}
-			}
-		}
+//		private void TidySpawnedItems(EventObject evt) {
+//			if(playerInfo.personalObjectPooler != null && evt.Params != null) {
+//				GameObject toPass = (GameObject)evt.Params[0];
+//				if(playerInfo.personalObjectPooler.SpawnedItemsContains(toPass)) {
+//					playerInfo.personalObjectPooler.RecycleToPool(toPass);
+//				}
+//			}
+//		}
 
-		private void ProjectileHitSomePlayer(EventObject evt) {
-			if(evt.Params != null) {
-				GameObject toPass = (GameObject)evt.Params[0];
-				if(!playerInfo.personalObjectPooler.SpawnedItemsContains(toPass)) { // Was fired not from this player
-					gameObject.DispatchGlobalEvent(ProjectileEvent.DestroyProjectile, new object[] {toPass});
-					playerHealth.TakeDamage((int)evt.Params[1]);
-				}
-			}
-		}
+//		private void ProjectileHitSomePlayer(EventObject evt) {
+//			if(evt.Params != null) {
+//				GameObject toPass = (GameObject)evt.Params[0];
+//				if(!playerInfo.personalObjectPooler.SpawnedItemsContains(toPass)) { // Was fired not from this player
+//					gameObject.DispatchGlobalEvent(ProjectileEvent.DestroyProjectile, new object[] {toPass});
+//					playerHealth.TakeDamage((int)evt.Params[1]);
+//				}
+//			}
+//		}
 
 		private void MeleeHitSomePlayer(EventObject evt) {
 			if (evt.Params != null) {

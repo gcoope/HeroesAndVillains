@@ -12,7 +12,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 	private PlayerHealth playerHealth;
 
 	[Header("Player")]
-	[SyncVar] public string playerName = "Name";
+	[SyncVar(hook = "OnNameChange")] public string playerName = "Name";
 	[SyncVar(hook = "OnTeamChange")] public string playerTeam = Settings.HeroTeam;
 	private NetworkInstanceId playerNetID;
 
@@ -24,8 +24,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public float jumpHeight = Settings.BaseJumpHeight;
 	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
 
-	public PersonalObjectPooler personalObjectPooler; // Object pool specifically for this player
-
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
@@ -33,26 +31,39 @@ public class BasePlayerInfo : NetworkBehaviour {
 	}
 
 	public override void OnStartLocalPlayer() {
-		GetNetID();
-		SetClientID();
+//		GetNetID();
+//		SetClientID();
 
 		// Bit messy - needs a model
 		GameObject manager = GameObject.Find ("NetworkManager");
 		LocalPlayerSetupInfo localPlayerInfo = manager.GetComponent<LocalPlayerSetupInfo>();
 		this.playerName = localPlayerInfo.LocalPlayerName == "" ? NameGenerator.GetRandomName() : localPlayerInfo.LocalPlayerName;
 		this.playerTeam = localPlayerInfo.LocalPlayerTeam;
-
 		gameObject.name = playerName;
+
+		CmdTellServerName(playerName);
+		CmdTellServerTeam(playerTeam);
 
 		Debug.Log("Player: " + playerName + " is on team: " + playerTeam);
 
-		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	
+		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // So we can't click ourselves #hacky
 
+		// Positioning
+		Transform spawnPos = SpawnManager.instance.GetFreeSpawn(playerTeam == Settings.HeroTeam);
+		transform.position = spawnPos.position;
+		transform.rotation = spawnPos.rotation;
+		GetComponent<PlayerModelChanger>().SetModelColour(playerTeam);
+
+		GetComponent<PlayerName>().SetName(playerName);
 	}
 
 	public void OnTeamChange(string team) {
 		playerTeam = team;
 		GetComponent<PlayerModelChanger>().SetModelColour(playerTeam);
+	}
+
+	public void OnNameChange(string name) {
+		GetComponent<PlayerName>().SetName(name);
 	}
 
 	[Client]
@@ -78,11 +89,17 @@ public class BasePlayerInfo : NetworkBehaviour {
 	[Command]
 	private void CmdTellServerName(string name) {
 		gameObject.name = name;
+		playerName = name;
 	}
 
-	void FixedUpdate() {
-		if(gameObject.name == "" || gameObject.name == "PlanetPlayer(Clone"){
-			SetClientID();
-		}
+	[Command]
+	private void CmdTellServerTeam(string team) {
+		playerTeam = team;
 	}
+
+//	void FixedUpdate() {
+//		if(gameObject.name == "" || gameObject.name == "PlanetPlayer(Clone"){
+//			SetClientID();
+//		}
+//	}
 }

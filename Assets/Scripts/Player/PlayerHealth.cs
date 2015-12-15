@@ -43,7 +43,6 @@ public class PlayerHealth : NetworkBehaviour {
 		
 		if(fromPlayerTeam != "") {
 			if(fromPlayerTeam == playerInfo.playerTeam) {
-				Debug.Log("Hit a friendly");
 				return;
 			}
 		}
