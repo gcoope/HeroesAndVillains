@@ -23,6 +23,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public float speed = Settings.BaseMoveSpeed;
 	public float jumpHeight = Settings.BaseJumpHeight;
 	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
+	public float rocketJumpPower = Settings.RocketJumpPower;
 
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();

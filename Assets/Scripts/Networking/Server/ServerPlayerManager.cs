@@ -10,12 +10,14 @@ public class ServerPlayerManager : MonoBehaviour {
 	public static void RegisterPlayer(string netID, BasePlayerInfo player) {
 		playersDict.Add(netID, player);
 		player.transform.name = netID;
-		Debug.Log("Registered: "+ netID);
+//		ServerOnlyPlayerDisplay.instance.Log("Registered: " + netID);
 	}
 
 	public static void UnregisterPlayer(string playerID) {
 		playersDict.Remove(playerID);
-		Debug.Log("Unregistered: "+ playerID);
+//		if(ServerOnlyPlayerDisplay.instance != null) {
+//			ServerOnlyPlayerDisplay.instance.Log("Unregistered: "+ playerID);
+//		}
 	}
 
 	public BasePlayerInfo GetPlayerInfo(string netID) {

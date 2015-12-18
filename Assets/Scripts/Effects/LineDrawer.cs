@@ -8,12 +8,19 @@ public class LineDrawer : NetworkBehaviour {
 	private LineRenderer line;
 	private float lineShowDuration = 0.3f;
 	private Color fadeCol;
-	private Color sideCol;
+	private Color teamSpecificColour;
 
 	[SyncVar]
 	private Vector3 startPos;
 	[SyncVar]
 	private Vector3 endPos;
+
+	[SyncVar]
+	private float teamSpecificColourR;
+	[SyncVar]
+	private float teamSpecificColourG;
+	[SyncVar]
+	private float teamSpecificColourB;
 
 	void Awake() {
 		line = GetComponent<LineRenderer>();
@@ -27,24 +34,23 @@ public class LineDrawer : NetworkBehaviour {
 	public void Setup(Vector3 start, Vector3 end, Color sideCol) {
 		this.startPos = start;
 		this.endPos = end;
-		this.sideCol = sideCol;
+		this.teamSpecificColour = sideCol;
+		this.teamSpecificColourR = teamSpecificColour.r;
+		this.teamSpecificColourG = teamSpecificColour.g;
+		this.teamSpecificColourB = teamSpecificColour.b;
 	}
 
-	public void LocalDrawLine(Vector3 start, Vector3 end) {
-		this.startPos = start;
-		this.endPos = end;
-		DrawLine();
-	}
 	public void DrawLine() {
 		if(line == null) line = GetComponent<LineRenderer>();
 		line.enabled = true;
-		fadeCol = new Color(sideCol.r, sideCol.g, sideCol.b,1);
+		teamSpecificColour = new Color(teamSpecificColourR, teamSpecificColourG, teamSpecificColourB, 1);
+		fadeCol = new Color(teamSpecificColour.r, teamSpecificColour.g, teamSpecificColour.b,1);
 
 		line.SetColors(fadeCol, fadeCol);
 		line.SetPosition(0, startPos);
 		line.SetPosition(1, endPos);
 
-		DOTween.To(()=> fadeCol, x => fadeCol = x, new Color(sideCol.r, sideCol.g, sideCol.b,0), lineShowDuration).OnUpdate(OnLineFadeUpdate);
+		DOTween.To(()=> fadeCol, x => fadeCol = x, new Color(teamSpecificColour.r, teamSpecificColour.g, teamSpecificColour.b,0), lineShowDuration).OnUpdate(OnLineFadeUpdate);
 	}
 
 	IEnumerator DestroySelf() {

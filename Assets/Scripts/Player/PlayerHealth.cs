@@ -46,7 +46,8 @@ public class PlayerHealth : NetworkBehaviour {
 				return;
 			}
 		}
-		
+
+		CmdLogSomething(playerInfo.playerName + " took " + amount + " damage");
 		Health -= amount;
 		UpdateHealthText ();
 	}
@@ -85,5 +86,10 @@ public class PlayerHealth : NetworkBehaviour {
 		Health = Settings.BaseHealth;
 
 		Debug.Log(gameObject.name + " has respawned!");
+	}
+
+	[Command]
+	private void CmdLogSomething(string msg) {
+		ServerOnlyPlayerDisplay.instance.Log(msg);
 	}
 }

@@ -7,45 +7,33 @@ using smoothstudio.heroesandvillains.player;
 
 public class LocalPlayerSetupInfo : MonoBehaviour {
 
-	public Text nameInputText;
-	public Text selectedDropdownText;
+	private Text nameInputText;
 
-	private string _localPlayerName;
-	public string LocalPlayerName {
-		get {
-			return _localPlayerName;
-		}
-		set {
-			_localPlayerName = value;
-		}
-	}
-
-	private string _localPlayerTeam;
-	public string LocalPlayerTeam {
-		get {
-			return _localPlayerTeam;
-		}
-		set {
-			_localPlayerTeam = value;
-		}
-	}
+	public string LocalPlayerName;
+	public string LocalPlayerTeam;
 
 	void Awake() {
 		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, UpdateItems); 
 		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, UpdateItems); 
+		gameObject.AddGlobalEventListener(MenuEvent.InputFieldChange, HandleInputFieldChange);
 	}
 
 	void Start () {
-		_localPlayerName = "";
-		_localPlayerTeam = Settings.HeroTeam; // default
+		LocalPlayerName = "";
+		LocalPlayerTeam = Settings.HeroTeam; // default
 	}
 
-	public void OnDropdownChange() {
-		if(selectedDropdownText == null) {
-			selectedDropdownText = GameObject.Find("DropdownLabel").GetComponent<Text>();
-		}
+	private void HandleInputFieldChange(EventObject evt) {
+		if(evt.Params[0] != null) {
+			InputFieldVO data = (InputFieldVO)evt.Params[0];
 
-		_localPlayerTeam = selectedDropdownText.text == "Heroes" ? Settings.HeroTeam : Settings.VillainTeam;
+			if(data.inputKey == InputFieldKeys.MenuNameInput) {
+				LocalPlayerName = data.inputValue;
+			}
+			else if(data.inputKey == InputFieldKeys.MenuTeamSelectInput) {
+				LocalPlayerTeam = data.inputValue;
+			}
+		}
 	}
 
 	public void UpdateNameInput() {
@@ -53,11 +41,13 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 			nameInputText = GameObject.Find("NameInputText").GetComponent<Text>();
 		}
 
-		_localPlayerName = nameInputText.text != "" ? nameInputText.text : NameGenerator.GetRandomName();
+		if(LocalPlayerName == "") {
+			LocalPlayerName = NameGenerator.GetRandomName();
+		}
 	}
 
 	private void UpdateItems(EventObject evt) {
-		OnDropdownChange();
 		UpdateNameInput();
+		Debug.Log("Player name: " + LocalPlayerName + ", Player team: " + LocalPlayerTeam);
 	}
 }

@@ -97,7 +97,7 @@ namespace smoothstudio.heroesandvillains.player
 		
 		void FixedUpdate() {
 			if(isLocalPlayer) {
-				TransmitTransform(); // Kepp other clients updated
+				TransmitTransform(); // Keep other clients updated
 				playerRigidbody.MovePosition(playerRigidbody.position + transform.TransformDirection(moveDir) * moveSpeed * Time.deltaTime);
 			}
 		}
@@ -184,7 +184,7 @@ namespace smoothstudio.heroesandvillains.player
 
 		[ClientCallback]
 		private void TransmitTransform() {
-			if(isLocalPlayer) { // TODO Add limiters here if lag/bandwidth issue
+			if(isLocalPlayer && NetworkManager.singleton.IsClientConnected()) { // TODO Add limiters here if lag/bandwidth issue
 					Cmd_PassPosition(transform.position);
 //				if(transform.rotation != lastRotation) {
 					Cmd_PassRotation(transform.rotation);

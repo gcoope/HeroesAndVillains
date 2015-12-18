@@ -36,7 +36,7 @@ namespace smoothstudio.heroesandvillains.physics
                 }
             }
 
-            attractor = currentAttractor != null ? currentAttractor.gameObject : GameObject.Find("Planet");
+            attractor = currentAttractor != null ? currentAttractor.gameObject : GameObject.Find("Planet"); // just in case
 
             attractorTransform = attractor.GetComponent<Transform>();
             bodyRigidbody = gameObject.GetComponent<Rigidbody>();
@@ -61,7 +61,7 @@ namespace smoothstudio.heroesandvillains.physics
             bodyUp = bodyTransform.up;
 			Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
 			bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
-            this.bodyRigidbody.AddForce(gravityUp * gravity);
+			this.bodyRigidbody.AddForce(gravityUp * gravity, ForceMode.Force);
         }
     }
 }

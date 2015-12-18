@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using smoothstudio.heroesandvillains.physics;
+using smoothstudio.heroesandvillains.player.events;
 
 public class PlayerNetworkSetup : NetworkBehaviour {
 
@@ -30,23 +31,36 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	{		
 		base.OnStartClient ();
 
-//		GameObject manager = GameObject.Find ("NetworkManager");
-//		NetworkManager m = manager.GetComponent<NetworkManager>();
-//		LocalPlayerSetupInfo localPlayerInfo = manager.gameObject.GetComponent<LocalPlayerSetupInfo>();
+
 		string _netID = gameObject.GetComponent<NetworkIdentity>().netId.ToString();
-		BasePlayerInfo player = gameObject.GetComponent<BasePlayerInfo>();
-//		if(localPlayerInfo != null) {
-//			player.playerName = localPlayerInfo.LocalPlayerName;
-//			player.playerTeam = localPlayerInfo.LocalPlayerTeam;
-//		} else {
-//			Debug.Log("It's null");
-//		}
-		
-		ServerPlayerManager.RegisterPlayer(_netID, player);
+		BasePlayerInfo player = gameObject.GetComponent<BasePlayerInfo>();		
+//		ServerPlayerManager.RegisterPlayer(_netID, player);
+	}
+
+	void Start() {
+		LocalPlayerSetupInfo localPlayerInfo = NetworkManager.singleton.gameObject.GetComponent<LocalPlayerSetupInfo>();
+		if(localPlayerInfo != null) {
+			CmdLogSomething(localPlayerInfo.LocalPlayerName + " joined " + (localPlayerInfo.LocalPlayerTeam == Settings.HeroTeam ? "Heroes" : "Villains"));
+		} else {
+			Debug.Log("It's null");
+		}
 	}
 
 	void OnDisable() {
 		ServerPlayerManager.UnregisterPlayer(transform.name);
+	}
+
+	void Update() {
+		if(Input.GetKeyDown(KeyCode.Escape)) {
+			if(isLocalPlayer) {
+				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect);
+			}
+		}
+	}
+
+	[Command]
+	private void CmdLogSomething(string msg) {
+		ServerOnlyPlayerDisplay.instance.Log(msg);
 	}
 }
 

@@ -31,6 +31,7 @@ public class PlayerFaint : NetworkBehaviour {
 
 	[Command]
 	public void CmdFaint(NetworkInstanceId id) {
+		ServerOnlyPlayerDisplay.instance.Log(gameObject.GetComponent<BasePlayerInfo>().playerName + " fainted");
 		GameObject player = NetworkServer.FindLocalObject(id);
 		player.GetComponent<PlanetPlayerMove>().enabled = false;
 		player.GetComponent<PlayerAttack>().enabled = false;
@@ -66,6 +67,7 @@ public class PlayerFaint : NetworkBehaviour {
 
 	[Command]
 	public void CmdRespawn(NetworkInstanceId id) {
+		ServerOnlyPlayerDisplay.instance.Log(gameObject.GetComponent<BasePlayerInfo>().playerName + " respawned");
 		GameObject player = NetworkServer.FindLocalObject(id);
 		Transform spawnPos = SpawnManager.instance.GetFreeSpawn(isHero);// NetworkManager.singleton.GetStartPosition(); // TODO Team based spawn
 		player.transform.position = spawnPos.position;

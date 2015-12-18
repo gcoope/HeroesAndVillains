@@ -21,6 +21,7 @@ namespace smoothstudio.heroesandvillains.player
 		private PlayerInfoPacket playerPacket;
 
 		private Transform playerCameraTransform;
+		PlayerGravityBody playerGravityBody;
 
 		// Projectile firing
 		public Transform projectileLauncher;
@@ -45,7 +46,7 @@ namespace smoothstudio.heroesandvillains.player
 		void Start() {
 			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 			playerHealth = gameObject.GetComponent<PlayerHealth>();
-			fireballPrefab = Resources.Load<GameObject>("Prefabs/Player/Fireball");
+//			fireballPrefab = Resources.Load<GameObject>("Prefabs/Player/Fireball");
 //			playerInfo.personalObjectPooler.CreatePool(fireballPrefab, fireballPoolCount);
 
 			lineDrawPrefab = Resources.Load<GameObject>("Prefabs/Effects/LineDrawer");
@@ -60,7 +61,10 @@ namespace smoothstudio.heroesandvillains.player
 			}
 
 			playerCameraTransform = gameObject.GetComponentInChildren<Camera>().transform;
-			if(isLocalPlayer) playerPacket = new PlayerInfoPacket(playerInfo.playerName, playerInfo.playerTeam);
+			if(isLocalPlayer) {
+				playerPacket = new PlayerInfoPacket(playerInfo.playerName, playerInfo.playerTeam);
+				playerGravityBody = GetComponent<PlayerGravityBody>();
+			}
 		}
 
 
@@ -113,6 +117,14 @@ namespace smoothstudio.heroesandvillains.player
 				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f));
 				CmdSpawnExplosioncollider(projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerName, playerInfo.playerTeam);
 			}
+
+			// Rocket jumping for fun
+			float distanceToHit = Vector3.Distance(transform.position, hit.point);
+
+			if(distanceToHit < 3f) {
+				playerGravityBody.AddExplosionForce(hit.point, playerInfo.rocketJumpPower);
+			}
+
 		}
 
 		[Command]
