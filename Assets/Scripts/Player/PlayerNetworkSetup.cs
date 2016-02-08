@@ -40,12 +40,12 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	}
 
 	void Update() {
-		if(Input.GetKeyDown(KeyCode.Escape)) {
-			if(isLocalPlayer) {
-				Debug.Log("Trying to d/c");
-				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // Not working
-			}
-		}
+//		if(Input.GetKeyDown(KeyCode.Escape)) {
+//			if(isLocalPlayer) {
+//				Debug.Log("Trying to d/c");
+//				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // Not working
+//			}
+//		}
 	}
 
 	void OnDisable() {

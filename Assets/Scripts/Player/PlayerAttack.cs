@@ -38,6 +38,8 @@ namespace smoothstudio.heroesandvillains.player
 
 		private Color fireLineColor;
 
+		private bool allowAnyInput = true;
+
 		void Awake() {
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
 		}
@@ -67,9 +69,13 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		void Update() {
-			if(isLocalPlayer) {
+			if(isLocalPlayer && allowAnyInput) {
 				RecieveInput();
 			}
+		}
+
+		public void SetAllowAnyInput(bool allow) {
+			allowAnyInput = allow;
 		}
 
 		private void RecieveInput() {

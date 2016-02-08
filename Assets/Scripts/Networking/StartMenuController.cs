@@ -62,7 +62,6 @@ public class StartMenuController : MonoBehaviour {
 
 	public void CloseApp() { CloseApp(null); }
 	public void CloseApp(EventObject evt = null) {
-//		Debug.Log("Exiting Application");
 		Application.Quit();
 	}
 

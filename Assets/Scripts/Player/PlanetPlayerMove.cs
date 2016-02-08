@@ -43,11 +43,13 @@ namespace smoothstudio.heroesandvillains.player
 		private Vector2 _mouseAbsolute;
 		private Vector2 _smoothMouse;
 		private Vector2 clampInDegrees = new Vector2(360, 180);
-		private bool lockCursor = true;
 		private Vector2 sensitivity = new Vector2(0.75f, 0.75f);
 		private Vector2 smoothing = new Vector2(3, 3);
 		private Vector2 targetDirection;
 		private Vector2 targetCharacterDirection;
+
+		// Pause menu control
+		private bool allowAllControl = true;
 
 		void Awake() {
 			playerRigidbody = GetComponent<Rigidbody>();
@@ -59,11 +61,15 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		void OnDisable() {
-			Screen.lockCursor = lockCursor = false;
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			Screen.lockCursor = false;
 		}
 
 		void OnEnable() {
-			Screen.lockCursor = lockCursor = true;
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+			Screen.lockCursor = true;
 		}
 
 		void Start() {
@@ -83,6 +89,11 @@ namespace smoothstudio.heroesandvillains.player
 
         void Update() {
 			if(isLocalPlayer) {
+
+//				Cursor.lockState = !allowAllControl ? CursorLockMode.Locked : CursorLockMode.None; // findme Cursor control
+				Cursor.visible = !allowAllControl;
+				Screen.lockCursor = allowAllControl;
+
 				RecieveInputFirstPerson();
 				HandleJumping();
 
@@ -106,7 +117,16 @@ namespace smoothstudio.heroesandvillains.player
 			}
 		}
 
+		public void SetAllowControl(bool allow) {
+			allowAllControl = allow;
+		}
+
+		public void SetSensitivity(float sens) {
+			sensitivity = new Vector2(sens, sens);
+		}
+
 		private void HandleJumping() {
+			if(!allowAllControl) return;
 			if (Input.GetButtonDown("Jump")) {
 				if(isGrounded) {
 					hasDoubleJumped = false;
@@ -127,14 +147,16 @@ namespace smoothstudio.heroesandvillains.player
 //				sensitivity = new Vector2(0.75f, 0.75f);
 //			}
 
-			if(Input.GetKeyDown(KeyCode.L)) lockCursor = !lockCursor;
+
+			if(!allowAllControl) {
+				moveDir = Vector3.zero;
+				return;
+			}
 
 			moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized; // Forward/Back, strafe Left/Right
 
 			// [NOT MINE] Smooth mouse look - http://forum.unity3d.com/threads/a-free-simple-smooth-mouselook.73117/
 			// TODO Reference this
-
-			Screen.lockCursor = lockCursor;
 
 			// Allow the script to clamp based on a desired target value.
 			Quaternion targetOrientation = Quaternion.Euler(targetDirection);
