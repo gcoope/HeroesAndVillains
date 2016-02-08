@@ -52,11 +52,8 @@ public class PlayerHealth : NetworkBehaviour {
 			}
 		}
 
-		Debug.Log(fromPlayerTeam);
-
 		playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1);
 
-//		CmdLogSomething(playerInfo.playerName + " took " + amount + " damage from " + fromPlayerName);
 		Health -= amount;
 		UpdateHealthText ();
 		if(Health <= 0) {
@@ -76,7 +73,6 @@ public class PlayerHealth : NetworkBehaviour {
 	public void Faint(string fromPlayer = "") {
 		isFainted = true;
 
-//		playerFaint.LocalFaint();
 		if(isLocalPlayer) {
 			playerFaint.CmdFaint(gameObject);
 			playerHUD.PlayerHasFainted();
@@ -90,7 +86,6 @@ public class PlayerHealth : NetworkBehaviour {
 	private void PlayerRespawn() {
 		isFainted = false;
 
-//		playerFaint.LocalRespawn();
 		playerFaint.CmdRespawn(gameObject);
 		playerHUD.PlayerHasRespawned();
 		Health = Settings.BaseHealth;

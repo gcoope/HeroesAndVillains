@@ -6,9 +6,9 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public Material heroMat;
 	public Material villainMat;
-	public Transform rootModelObject;
-	public Material currentMaterial;
+	private Material currentMaterial;
 	[SyncVar(hook = "OnChangeTeam")] private string playerTeam;
+	[SerializeField] private ModelMaterialFader materialFader;
 
 	private void OnChangeTeam(string team) {
 		CmdTellOthersMaterial(team);
@@ -27,11 +27,7 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	private void UpdateMaterial(string team) {
 		currentMaterial = team == Settings.HeroTeam ? heroMat : villainMat;
-		foreach(Transform child in rootModelObject) {
-			if(child.GetComponent<Renderer>() != null) {
-				child.GetComponent<Renderer>().material = currentMaterial; 
-			}
-		}
+		materialFader.PassMaterial(currentMaterial);
 	}
 
 	[Command]
@@ -41,7 +37,8 @@ public class PlayerModelChanger : NetworkBehaviour {
 	}
 
 	public void EnableModel(bool enable) {
-		rootModelObject.gameObject.SetActive(enable);
+		if(enable) materialFader.ShowModel();
+		else materialFader.HideModel();
 	}
 }
 

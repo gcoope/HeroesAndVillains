@@ -10,7 +10,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
     private Rigidbody playerRigidbody;	
 	public GameObject playerHUD;
 	public GameObject playerNameText;
-	public GameObject modelObj;
+	public ModelMaterialFader modelMaterialManager;
 
 	void Awake() { 
 		playerRigidbody = GetComponent<Rigidbody>();
@@ -24,7 +24,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	public override void OnStartLocalPlayer() {
 		if(isLocalPlayer) {			
 			playerNameText.SetActive(false);
-			modelObj.SetActive(false);
+			modelMaterialManager.HideModel();
 			playerCamera.enabled = true;
 			playerRigidbody.isKinematic = false;
 			gameObject.GetComponent<PlayerGravityBody>().enabled = true;
