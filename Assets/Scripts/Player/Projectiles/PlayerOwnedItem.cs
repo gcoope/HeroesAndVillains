@@ -1,14 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using UnityEngine.Networking;
 
-public class PlayerOwnedItem : MonoBehaviour {
+public class PlayerOwnedItem : NetworkBehaviour {
 
-	public string playerName;
-	public string playerTeam;
+	[SyncVar] public string playerName;
+	[SyncVar] public string playerTeam;
 
 	public void SetOwner(string name, string team) {
-		this.playerName = name;
-		this.playerTeam = team;
+		playerName = name;
+		playerTeam = team;
 	}
 
 }

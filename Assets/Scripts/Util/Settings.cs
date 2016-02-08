@@ -11,7 +11,7 @@ public class Settings : MonoBehaviour {
 	public static float BaseMoveSpeed = 15f;
 	public static float BaseJumpHeight = 15f;
 	public static bool DoubleJumpEnabled = false;
-	public static float RocketJumpPower = 10f;
+	public static float RocketJumpPower = 30f;
 
 	// Game settings
 	public static bool FirstPersonMode = true;

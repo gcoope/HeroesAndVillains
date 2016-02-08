@@ -48,21 +48,21 @@ public class StartMenuController : MonoBehaviour {
 	public void HostLan(EventObject evt = null) {
 		NetworkManager.singleton.StopHost();
 		CheckHostAddress();
-		Debug.Log("Hosting local at: " + NetworkManager.singleton.networkAddress);
+//		Debug.Log("Hosting local at: " + NetworkManager.singleton.networkAddress);
 		NetworkManager.singleton.StartHost();
 	}
 
 	public void StartAsServer() { StartAsServer(null); }
 	public void StartAsServer(EventObject evt = null) {
 		NetworkManager.singleton.StopServer();
-		Debug.Log("Hosting server at: " + NetworkManager.singleton.networkAddress);
+//		Debug.Log("Hosting server at: " + NetworkManager.singleton.networkAddress);
 		NetworkManager.singleton.networkAddress = "localhost";
 		NetworkManager.singleton.StartServer();
 	}
 
 	public void CloseApp() { CloseApp(null); }
 	public void CloseApp(EventObject evt = null) {
-		Debug.Log("Exiting Application");
+//		Debug.Log("Exiting Application");
 		Application.Quit();
 	}
 
@@ -73,6 +73,6 @@ public class StartMenuController : MonoBehaviour {
 	}
 
 	private void CheckHostAddress() {
-		if(NetworkManager.singleton.networkAddress == "") NetworkManager.singleton.networkAddress = "localhost";
+		if(string.IsNullOrEmpty(NetworkManager.singleton.networkAddress)) NetworkManager.singleton.networkAddress = "localhost";
 	}
 }

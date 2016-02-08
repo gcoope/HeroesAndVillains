@@ -1,22 +1,23 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
-using smoothstudio.heroesandvillains.player;
-using System.Collections.Generic;
 
 public class SplashDamagerCollider : NetworkBehaviour {
 
-	[SyncVar] private string playerName;
-	[SyncVar] private string playerTeam;
+	[SyncVar] public string playerName;
+	[SyncVar] public string playerTeam;
 
-	void Start() {
-		playerName = GetComponent<PlayerOwnedItem>().playerName;
-		playerTeam = GetComponent<PlayerOwnedItem>().playerTeam;
+	public void SetOwner(string name, string team) {
+		playerName = name;
+		playerTeam = team;
 	}
 
 	void OnTriggerEnter(Collider col) {
-		if(col.CompareTag("Player")) {
-			col.gameObject.GetComponent<PlayerHealth>().TakeDamage(10, playerName, playerTeam);
+		if(col.CompareTag(ObjectTagKeys.Player)) {
+			col.gameObject.GetComponent<PlayerHealth>().TakeDamage(20, playerName, playerTeam);
+		}
+
+		if(col.CompareTag(ObjectTagKeys.DestructableObject)) {
+			col.gameObject.GetComponent<DestructableModel>().Hit();
 		}
 	}
 }

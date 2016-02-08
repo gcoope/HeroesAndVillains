@@ -5,14 +5,16 @@ namespace smoothstudio.heroesandvillains.physics
 {
     public class FauxGravityBody : MonoBehaviour
     {
+		public bool applyUprightRotation = true;
+
         private float gravity = Settings.Gravity;
 
         private GameObject attractor;
         private FauxGravityAttractor currentAttractor;
         private FauxGravityAttractor[] gravityAttractors;
 
-        private Transform attractorTransform;
-        private Transform bodyTransform;
+		protected Transform attractorTransform;
+		protected Transform bodyTransform;
         protected Rigidbody bodyRigidbody;
 
         
@@ -47,7 +49,7 @@ namespace smoothstudio.heroesandvillains.physics
 			}
 
             if (bodyRigidbody != null) {
-                bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+				if(applyUprightRotation) bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
                 bodyRigidbody.useGravity = false;
             }
         }
@@ -59,8 +61,10 @@ namespace smoothstudio.heroesandvillains.physics
         private void Attract() {
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;		                                                
             bodyUp = bodyTransform.up;
-			Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
-			bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
+			if(applyUprightRotation) {
+				Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
+				bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
+			}
 			this.bodyRigidbody.AddForce(gravityUp * gravity, ForceMode.Force);
         }
     }

@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class ParticleTidyUp : MonoBehaviour {
+public class ParticleTidyUp : NetworkBehaviour {
 
-	public float stayDuration = 5f;
+	public float stayDuration = 0.25f;
 
 	void Start () {
 		StartCoroutine("TidyUp");

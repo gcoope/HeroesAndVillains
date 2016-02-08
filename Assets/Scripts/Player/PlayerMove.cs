@@ -43,11 +43,11 @@ namespace smoothstudio.heroesandvillains.player
 		
 		void Update() {
 			if(isLocalPlayer) RecieveInput();
-			UpdateTransform();
+			if(!isLocalPlayer) UpdateTransform();
 		}
 		
 		private void RecieveInput() {
-			moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized; // F/B
+			moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized; // F/B
 
 			if (Input.GetAxisRaw("Horizontal") < 0) { // L
 				playerRigidbody.MoveRotation(transform.rotation * Quaternion.Euler(new Vector3(0, -5f * Time.deltaTime * rotateSpeed, 0)));
@@ -68,18 +68,24 @@ namespace smoothstudio.heroesandvillains.player
 			TransmitTransform();
 
 			// Artificial gravity
-			playerRigidbody.AddForce(transform.up * gravity);
+//			playerRigidbody.AddForce(transform.up * gravity);
 
 			if(isLocalPlayer) {
-				this.playerRigidbody.MovePosition(playerRigidbody.position + transform.TransformDirection(moveDir) * moveSpeed * Time.deltaTime);
+//				this.playerRigidbody.MovePosition(playerRigidbody.position + transform.TransformDirection(moveDir)	 * moveSpeed * Time.deltaTime);
+//				this.playerRigidbody.AddForce(transform.TransformDirection(moveDir) * moveSpeed * Time.deltaTime);
+//				this.playerRigidbody.velocity += (transform.TransformDirection(moveDir) * moveSpeed);
+
+				if(playerRigidbody.velocity.magnitude > 2f) {
+					playerRigidbody.velocity = playerRigidbody.velocity.normalized * 2f;
+				} else {
+					playerRigidbody.velocity = moveDir;
+				}
 			}
 		}
 		
 		void UpdateTransform() {
-			if(!isLocalPlayer) {
-				transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 15f);
-				transform.rotation = Quaternion.Slerp(transform.rotation, syncRot, Time.deltaTime * 15f);
-			}
+			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 15f);
+			transform.rotation = Quaternion.Slerp(transform.rotation, syncRot, Time.deltaTime * 15f);
 		}
 
 		[Command]

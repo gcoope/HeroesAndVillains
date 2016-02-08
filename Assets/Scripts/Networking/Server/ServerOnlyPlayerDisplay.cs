@@ -26,6 +26,7 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 		base.OnStartServer ();
 		isVisible = true;
 		transform.GetChild(0).gameObject.SetActive(true);
+		Log("Press F4 to toggle console");
 		Log("Server started...");
 		string localIp = "";
 		foreach(IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList) {
@@ -33,8 +34,7 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 				localIp = ip.ToString();
 			}
 		}
-		Log("IP: " + localIp);
-
+		Log("Host IP: " + localIp);
 		Log("Registering server callbacks");
 		//NetworkServer.RegisterHandler(MsgType.Connect, ClientConnected);
 //		NetworkServer.RegisterHandler(MsgType.Command, CommandSent);

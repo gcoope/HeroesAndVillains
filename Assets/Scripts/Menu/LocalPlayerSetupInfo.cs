@@ -9,8 +9,8 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 
 	private Text nameInputText;
 
-	public string LocalPlayerName;
-	public string LocalPlayerTeam;
+	private string localPlayerName;
+	private string localPlayerTeam;
 
 	void Awake() {
 		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, UpdateItems); 
@@ -19,8 +19,8 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 	}
 
 	void Start () {
-		LocalPlayerName = "";
-		LocalPlayerTeam = Settings.HeroTeam; // default
+		localPlayerName = "";
+		localPlayerTeam = Settings.HeroTeam;
 	}
 
 	private void HandleInputFieldChange(EventObject evt) {
@@ -28,26 +28,28 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 			InputFieldVO data = (InputFieldVO)evt.Params[0];
 
 			if(data.inputKey == InputFieldKeys.MenuNameInput) {
-				LocalPlayerName = data.inputValue;
+				localPlayerName = data.inputValue;
 			}
 			else if(data.inputKey == InputFieldKeys.MenuTeamSelectInput) {
-				LocalPlayerTeam = data.inputValue;
+				if(data.inputValue == "Heroes") {
+					localPlayerTeam = Settings.HeroTeam;
+				} else {
+					localPlayerTeam = Settings.VillainTeam;
+				}
 			}
 		}
 	}
 
 	public void UpdateNameInput() {
-		if(nameInputText == null) {
-			nameInputText = GameObject.Find("NameInputText").GetComponent<Text>();
+		if(string.IsNullOrEmpty(localPlayerName)) {
+			localPlayerName = NameGenerator.GetRandomName();
 		}
 
-		if(LocalPlayerName == "") {
-			LocalPlayerName = NameGenerator.GetRandomName();
-		}
+		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerName, localPlayerName);
 	}
 
 	private void UpdateItems(EventObject evt) {
 		UpdateNameInput();
-		Debug.Log("Player name: " + LocalPlayerName + ", Player team: " + LocalPlayerTeam);
+		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerTeam, localPlayerTeam);
 	}
 }

@@ -15,7 +15,10 @@ namespace smoothstudio.heroesandvillains.physics {
 //			bodyRigidbody.AddForceAtPosition((transform.position - fromPosition).normalized * 20f, fromPosition, ForceMode.Impulse);
 //			bodyRigidbody.AddForce(gravityUp * power, ForceMode.Impulse);
 			bodyRigidbody.AddForce((transform.position - fromPosition).normalized * power, ForceMode.Impulse);
+//			bodyRigidbody.AddForce(gravityUp * power, ForceMode.Impulse);
+
 //			bodyRigidbody.AddForce((transform.position - fromPosition).normalized * power, ForceMode.Impulse);
 		}
+
     }
 }

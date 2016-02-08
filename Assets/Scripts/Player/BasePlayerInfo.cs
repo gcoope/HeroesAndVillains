@@ -10,11 +10,16 @@ public class BasePlayerInfo : NetworkBehaviour {
 	private PlayerHUD playerHUD;
 	private PlayerFaint playerFaint;
 	private PlayerHealth playerHealth;
+	private PlayerName nameText;
+	private PlayerModelChanger modelChanger;
 
 	[Header("Player")]
-	[SyncVar(hook = "OnNameChange")] public string playerName = "Name";
-	[SyncVar(hook = "OnTeamChange")] public string playerTeam = Settings.HeroTeam;
-	private NetworkInstanceId playerNetID;
+
+	[SyncVar(hook = "OnNameChange")] 
+	public string playerName = "Player Name";
+
+	[SyncVar(hook = "OnTeamChange")] 
+	public string playerTeam = Settings.HeroTeam;
 
 	[Header("Stats")]
 	public int armor = Settings.BaseArmour;  // as above
@@ -29,78 +34,87 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		playerHealth = gameObject.GetComponent<PlayerHealth>();
+		nameText = gameObject.GetComponent<PlayerName>();
+		modelChanger = gameObject.GetComponent<PlayerModelChanger>();
+//		gameObject.AddGlobalEventListener(NetworkEvent.GotPlayerInfo, GotPlayerInfo);
 	}
 
 	public override void OnStartLocalPlayer() {
-//		GetNetID();
-//		SetClientID();
+		playerName = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerName);
+		if(string.IsNullOrEmpty(playerName)) playerName = NameGenerator.GetRandomName();
+		playerTeam = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerTeam);
+		CmdTellServerPlayerInfo(playerName, playerTeam);
 
-		// Bit messy - needs a model
-		GameObject manager = GameObject.Find ("NetworkManager");
-		LocalPlayerSetupInfo localPlayerInfo = manager.GetComponent<LocalPlayerSetupInfo>();
-		this.playerName = localPlayerInfo.LocalPlayerName == "" ? NameGenerator.GetRandomName() : localPlayerInfo.LocalPlayerName;
-		this.playerTeam = localPlayerInfo.LocalPlayerTeam;
-		gameObject.name = playerName;
-
-		CmdTellServerName(playerName);
-		CmdTellServerTeam(playerTeam);
-
-		Debug.Log("Player: " + playerName + " is on team: " + playerTeam);
-
-		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // So we can't click ourselves #hacky
+		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // Only on local client - So we can't click ourselves, bit hacky...
 
 		// Positioning
 		Transform spawnPos = SpawnManager.instance.GetFreeSpawn(playerTeam == Settings.HeroTeam);
 		transform.position = spawnPos.position;
 		transform.rotation = spawnPos.rotation;
-		GetComponent<PlayerModelChanger>().SetModelColour(playerTeam);
-
-		GetComponent<PlayerName>().SetName(playerName);
 	}
 
-	public void OnTeamChange(string team) {
-		playerTeam = team;
-		GetComponent<PlayerModelChanger>().SetModelColour(playerTeam);
+	public override void OnStartClient () {		
+		base.OnStartClient ();
+		nameText = gameObject.GetComponent<PlayerName>();
+		OnNameChange(playerName);
+		OnTeamChange(playerTeam);
 	}
-
-	public void OnNameChange(string name) {
-		GetComponent<PlayerName>().SetName(name);
-	}
-
-	[Client]
-	private void GetNetID() {
-		playerNetID = GetComponent<NetworkIdentity>().netId;
-		CmdTellServerName(MakeUniqueName());
-	}
-
-	private void SetClientID() {
-		if(isLocalPlayer) {
+		
+	private void RequestInfo(string id) {
+		PlayerInfoPacket info = ServerPlayerManager.instance.GetPlayerInfo(id);
+		if(!string.IsNullOrEmpty(info.playerName)) {
+			playerName = info.playerName;
+			playerTeam = info.playerTeam;
 			gameObject.name = playerName;
+
+			OnNameChange(playerName);
+			OnTeamChange(playerTeam);
 		} else {
-			gameObject.name = MakeUniqueName();
+			Debug.Log("Info came back null - not updating player");
 		}
 	}
 
-	private string MakeUniqueName() {
-		GameObject manager = GameObject.Find ("NetworkManager");
-		LocalPlayerSetupInfo localPlayerInfo = manager.GetComponent<LocalPlayerSetupInfo>();
-		return this.playerName = localPlayerInfo.LocalPlayerName == "" ? NameGenerator.GetRandomName() : localPlayerInfo.LocalPlayerName;
+	private void GotPlayerInfo(EventObject evt) {
+		PlayerInfoPacket info = (PlayerInfoPacket)evt.Params[0];
+		playerName = info.playerName;
+		playerTeam = info.playerTeam;
+		gameObject.name = playerName;
+
+		OnNameChange(playerName);
+		OnTeamChange(playerTeam);
 	}
 
-	[Command]
-	private void CmdTellServerName(string name) {
+	public void OnTeamChange(string team) {
+		if(isLocalPlayer) return;
+		modelChanger.SetModelColour(playerTeam);
+	}
+
+	public void OnNameChange(string name) {
+		if(isLocalPlayer) return;
+		nameText.SetName(name);
 		gameObject.name = name;
-		playerName = name;
 	}
 
 	[Command]
-	private void CmdTellServerTeam(string team) {
+	private void CmdTellServerPlayerInfo(string name, string team) {
+		playerName = name;
 		playerTeam = team;
+		gameObject.name = playerName;
+		modelChanger.SetModelColour(playerTeam);
+		nameText.SetName(playerName);
+		RpcSetClientPlayerInfo(playerName, playerTeam);
+
+		string _netID = gameObject.GetComponent<NetworkIdentity>().netId.ToString();
+		PlayerInfoPacket packet = new PlayerInfoPacket(playerName, playerTeam, _netID);
+		ServerPlayerManager.instance.RegisterPlayer(_netID, packet);
 	}
 
-//	void FixedUpdate() {
-//		if(gameObject.name == "" || gameObject.name == "PlanetPlayer(Clone"){
-//			SetClientID();
-//		}
-//	}
+	[ClientRpc]
+	private void RpcSetClientPlayerInfo(string name, string team) {
+		playerName = name;
+		playerTeam = team;
+		gameObject.name = playerName;
+		modelChanger.SetModelColour(playerTeam);
+		nameText.SetName(playerName);
+	}
 }

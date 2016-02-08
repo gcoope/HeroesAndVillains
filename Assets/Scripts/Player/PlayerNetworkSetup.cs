@@ -9,52 +9,50 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	public Camera playerCamera;
     private Rigidbody playerRigidbody;	
 	public GameObject playerHUD;
+	public GameObject playerNameText;
+	public GameObject modelObj;
 
 	void Awake() { 
 		playerRigidbody = GetComponent<Rigidbody>();
 		if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
 		playerCamera = gameObject.GetComponentInChildren<Camera>();
+		gameObject.AddGlobalEventListener(UIEVent.RequestLocalCamera, (EventObject evt)=>{
+			if(isLocalPlayer) gameObject.DispatchGlobalEvent(UIEVent.GotLocalCamera, new object[]{transform});
+		});
 	}	
 
 	public override void OnStartLocalPlayer() {
-		if(isLocalPlayer) {
-			playerHUD.SetActive(true);
+		if(isLocalPlayer) {			
+			playerNameText.SetActive(false);
+			modelObj.SetActive(false);
 			playerCamera.enabled = true;
 			playerRigidbody.isKinematic = false;
 			gameObject.GetComponent<PlayerGravityBody>().enabled = true;
-			gameObject.GetComponent<AudioListener>().enabled = true;
+			gameObject.GetComponent<AudioListener>().enabled = true;		
 			if(Camera.main != null) Camera.main.enabled = false;
 		}
 	}
 
-	public override void OnStartClient ()
-	{		
-		base.OnStartClient ();
-
-
-		string _netID = gameObject.GetComponent<NetworkIdentity>().netId.ToString();
-		BasePlayerInfo player = gameObject.GetComponent<BasePlayerInfo>();		
-//		ServerPlayerManager.RegisterPlayer(_netID, player);
-	}
-
 	void Start() {
-		LocalPlayerSetupInfo localPlayerInfo = NetworkManager.singleton.gameObject.GetComponent<LocalPlayerSetupInfo>();
-		if(localPlayerInfo != null) {
-			CmdLogSomething(localPlayerInfo.LocalPlayerName + " joined " + (localPlayerInfo.LocalPlayerTeam == Settings.HeroTeam ? "Heroes" : "Villains"));
-		} else {
-			Debug.Log("It's null");
+		if(!isLocalPlayer && !isServer) {
+			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
 		}
-	}
-
-	void OnDisable() {
-		ServerPlayerManager.UnregisterPlayer(transform.name);
 	}
 
 	void Update() {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			if(isLocalPlayer) {
-				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect);
+				Debug.Log("Trying to d/c");
+				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // Not working
 			}
+		}
+	}
+
+	void OnDisable() {
+		if(ServerPlayerManager.instance != null) ServerPlayerManager.instance.UnregisterPlayer(gameObject.GetComponent<NetworkIdentity>().netId.ToString());
+
+		if(!isLocalPlayer && !isServer) {
+			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
 		}
 	}
 

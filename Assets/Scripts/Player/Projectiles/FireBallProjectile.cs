@@ -26,7 +26,7 @@ namespace smoothstudio.heroesandvillains.player.projectiles
 		}
 
 		void OnCollisionEnter(Collision col) {
-			if(col.gameObject.CompareTag("Player")) {
+			if(col.gameObject.CompareTag(ObjectTagKeys.Player)) {
 				gameObject.DispatchGlobalEvent(ProjectileEvent.ProjectileHitPlayer, new object[] {gameObject, damage});
 			}
 		}

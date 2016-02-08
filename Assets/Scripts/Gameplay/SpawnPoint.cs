@@ -15,6 +15,7 @@ public class SpawnPoint : MonoBehaviour {
 
 	public void SpawnedOn() {
 		_isFree = false;
+		StartCoroutine("WaitASec");
 	}
 
 	IEnumerator WaitASec() {

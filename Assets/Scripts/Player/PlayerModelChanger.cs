@@ -10,17 +10,23 @@ public class PlayerModelChanger : NetworkBehaviour {
 	public Material currentMaterial;
 	[SyncVar(hook = "OnChangeTeam")] private string playerTeam;
 
+	private void OnChangeTeam(string team) {
+		CmdTellOthersMaterial(team);
+	}
+
 	public void SetModelColour(string team) {
 		playerTeam = team;
-		UpdateMaterial();
+		UpdateMaterial(playerTeam);
 	}
 
-	private void OnChangeTeam(string team) {
-		SetModelColour(team);
+	[ClientRpc]
+	public void RpcSetModelColour(string team) {
+		playerTeam = team;
+		UpdateMaterial(playerTeam);
 	}
 
-	private void UpdateMaterial() {
-		currentMaterial = playerTeam == Settings.HeroTeam ? heroMat : villainMat;
+	private void UpdateMaterial(string team) {
+		currentMaterial = team == Settings.HeroTeam ? heroMat : villainMat;
 		foreach(Transform child in rootModelObject) {
 			if(child.GetComponent<Renderer>() != null) {
 				child.GetComponent<Renderer>().material = currentMaterial; 
@@ -29,9 +35,13 @@ public class PlayerModelChanger : NetworkBehaviour {
 	}
 
 	[Command]
-	private void CmdTellOthersMaterial(string playerTeam) {
-		playerTeam = playerTeam;
+	public void CmdTellOthersMaterial(string playerTeam) {
+		RpcSetModelColour(playerTeam);
+		gameObject.GetComponent<PlayerModelChanger>().UpdateMaterial(playerTeam);
 	}
 
+	public void EnableModel(bool enable) {
+		rootModelObject.gameObject.SetActive(enable);
+	}
 }
 

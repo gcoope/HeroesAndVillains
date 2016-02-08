@@ -9,5 +9,6 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public static string PlayerDamaged = "PlayerEvent.PlayerDamaged";
 		public static string PlayerFaint = "PlayerEvent.PlayerFaint";
 		public static string PlayerRespawn = "PlayerEvent.PlayerRespawn";
+		public static string UpdateScoreboard = "PlayerEvent.UpdateScoreboard";
     }
 }

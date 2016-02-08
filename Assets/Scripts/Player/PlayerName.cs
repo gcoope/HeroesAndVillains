@@ -1,11 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class PlayerName : MonoBehaviour	{
+public class PlayerName : NetworkBehaviour	{
 
-	public TextMesh textMesh;
+	public Text textObj;
 		
 	public void SetName(string name) {
-		textMesh.text = name;
+		textObj.text = name;
 	}
+
+	public void EnableText() { 
+		if(!isLocalPlayer) textObj.gameObject.SetActive(true);
+		else DisableText();
+	}
+	public void DisableText() { textObj.gameObject.SetActive(false); }
 }

@@ -4,6 +4,7 @@ using smoothstudio.heroesandvillains.player.events;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using smoothstudio.heroesandvillains.player;
+using DG.Tweening;
 
 public class PlayerHealth : NetworkBehaviour {
 	
@@ -12,8 +13,10 @@ public class PlayerHealth : NetworkBehaviour {
 	private BasePlayerInfo playerInfo;
 	private PlayerHUD playerHUD;
 	private PlayerFaint playerFaint;
+	[SerializeField] private Transform playerCameraTransform;
 
-	[SyncVar(hook = "OnHealthChange")] public int Health = Settings.BaseHealth; // Variable per class? Maybe have a stat setup at the start	
+	[SyncVar(hook = "OnHealthChange")] 
+	public int Health = Settings.BaseHealth; // Variable per class? Maybe have a stat setup at the start	
 
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
@@ -25,11 +28,13 @@ public class PlayerHealth : NetworkBehaviour {
 	
 	void Update() {
 
-		if(!isFainted) CheckFainted();
+		if(Health <= 0) {
+			Faint();
+		}
 
 		if(!isLocalPlayer) return;
 		if(Input.GetKeyDown(KeyCode.F9)) {
-			TakeDamage(10);
+			TakeDamage(25, playerInfo.playerName, playerInfo.playerTeam, true);
 		}	
 		if(isFainted) {
 			if(Input.GetKeyDown(KeyCode.R)) {
@@ -38,18 +43,25 @@ public class PlayerHealth : NetworkBehaviour {
 		}
 	}
 
-	public void TakeDamage(int amount, string fromPlayerName = "", string fromPlayerTeam = "") {
+	public void TakeDamage(int amount, string fromPlayerName = "", string fromPlayerTeam = "", bool forceDmg = false) {
 		if (isFainted) return;
-		
-		if(fromPlayerTeam != "") {
+
+		if(!forceDmg && !string.IsNullOrEmpty(fromPlayerTeam)) {
 			if(fromPlayerTeam == playerInfo.playerTeam) {
 				return;
 			}
 		}
 
-		CmdLogSomething(playerInfo.playerName + " took " + amount + " damage");
+		Debug.Log(fromPlayerTeam);
+
+		playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1);
+
+//		CmdLogSomething(playerInfo.playerName + " took " + amount + " damage from " + fromPlayerName);
 		Health -= amount;
 		UpdateHealthText ();
+		if(Health <= 0) {
+			Faint(fromPlayerName);
+		}
 	}
 	
 	private void UpdateHealthText() {
@@ -58,33 +70,31 @@ public class PlayerHealth : NetworkBehaviour {
 	
 	private void OnHealthChange(int hp) {
 		Health = hp;
-		UpdateHealthText();
+		if(isLocalPlayer) UpdateHealthText();
 	}
 	
-	private void CheckFainted() {
-		if(Health <= 0) {
-			Faint();
-		}
-	}
-	
-	public void Faint(BasePlayerInfo fromPlayer = null) {
+	public void Faint(string fromPlayer = "") {
 		isFainted = true;
 
-		playerFaint.LocalFaint();
-		playerHUD.PlayerHasFainted();
+//		playerFaint.LocalFaint();
+		if(isLocalPlayer) {
+			playerFaint.CmdFaint(gameObject);
+			playerHUD.PlayerHasFainted();
+		}
 
-		if(fromPlayer != null) {
-			Debug.Log(playerInfo.playerName + " killed by " + fromPlayer.playerName);
+		if(!string.IsNullOrEmpty(fromPlayer) && isLocalPlayer) {
+			Debug.Log(playerInfo.playerName + " killed by " + fromPlayer);
 		}
 	}
 	
 	private void PlayerRespawn() {
 		isFainted = false;
 
-		playerFaint.LocalRespawn();
+//		playerFaint.LocalRespawn();
+		playerFaint.CmdRespawn(gameObject);
 		playerHUD.PlayerHasRespawned();
 		Health = Settings.BaseHealth;
-
+		UpdateHealthText();
 		Debug.Log(gameObject.name + " has respawned!");
 	}
 

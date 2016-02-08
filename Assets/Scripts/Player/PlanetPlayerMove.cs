@@ -8,7 +8,6 @@ namespace smoothstudio.heroesandvillains.player
 {
 	public class PlanetPlayerMove : NetworkBehaviour
     {
-		private bool FPSMode;
 		private bool cameraIsFPS;
 
 		private BasePlayerInfo playerInfo;
@@ -29,6 +28,8 @@ namespace smoothstudio.heroesandvillains.player
 		private bool doubleJumpEnabled;
 		private float rayLength = 1.8f;
 
+		private PlayerModelChanger playerModel; // So we can turn it on in 3rd person
+
 		// Sent over network
 		[SyncVar]
 		private Vector3 syncPos;
@@ -37,14 +38,13 @@ namespace smoothstudio.heroesandvillains.player
 
 		private Quaternion lastRotation;
 		private Vector3 lastPosition;
-		private float sendThreshold = 0.5f;
 
 		// FPS
 		private Vector2 _mouseAbsolute;
 		private Vector2 _smoothMouse;
 		private Vector2 clampInDegrees = new Vector2(360, 180);
 		private bool lockCursor = true;
-		private Vector2 sensitivity = new Vector2(2, 2);
+		private Vector2 sensitivity = new Vector2(0.75f, 0.75f);
 		private Vector2 smoothing = new Vector2(3, 3);
 		private Vector2 targetDirection;
 		private Vector2 targetCharacterDirection;
@@ -55,35 +55,35 @@ namespace smoothstudio.heroesandvillains.player
 			playerGravityBody = GetComponent<PlayerGravityBody>();
 			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 			playerCameraTransform = GetComponentInChildren<Camera>().transform;
+			playerModel = GetComponent<PlayerModelChanger>();
 		}
 
 		void OnDisable() {
 			Screen.lockCursor = lockCursor = false;
 		}
 
+		void OnEnable() {
+			Screen.lockCursor = lockCursor = true;
+		}
+
 		void Start() {
-			FPSMode = Settings.FirstPersonMode;
-			cameraIsFPS = FPSMode;
 			moveSpeed = playerInfo.speed;
 			jumpPower = playerInfo.jumpHeight;
 
 			doubleJumpEnabled = playerInfo.doubleJumpEnabled;
 
-			cameraFpsPosition = new Vector3(0, 0.3f, 0.85f);
+			cameraFpsPosition = new Vector3(0, 0.2f, 0f);
 			cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
 
-			// FPS setup
-			if(FPSMode) {
-				targetDirection = playerCameraTransform.localRotation.eulerAngles;	
-				targetCharacterDirection = transform.localRotation.eulerAngles;
-			}
+
+			targetDirection = playerCameraTransform.localRotation.eulerAngles;	
+			targetCharacterDirection = transform.localRotation.eulerAngles;
+
 		}
 
         void Update() {
 			if(isLocalPlayer) {
-				if(FPSMode)	RecieveInputFirstPerson();
-				else RecieveInputThirdPerson();
-
+				RecieveInputFirstPerson();
 				HandleJumping();
 
 				if(Physics.Raycast(transform.position, -transform.up, rayLength)) isGrounded = true; // Grounding check
@@ -91,14 +91,18 @@ namespace smoothstudio.heroesandvillains.player
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 			} else {
-				UpdateOfflineTransform();
+				UpdateOfflineTransform(); // For non-player-player movement
 			}
         }
 		
 		void FixedUpdate() {
 			if(isLocalPlayer) {
 				TransmitTransform(); // Keep other clients updated
-				playerRigidbody.MovePosition(playerRigidbody.position + transform.TransformDirection(moveDir) * moveSpeed * Time.deltaTime);
+				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
+				float zSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).z);
+				if(xSpeed < moveSpeed && zSpeed < moveSpeed) {
+					playerRigidbody.velocity += transform.TransformDirection(moveDir);
+				}
 			}
 		}
 
@@ -114,14 +118,14 @@ namespace smoothstudio.heroesandvillains.player
 			}      
 		}
 
-        private void RecieveInputThirdPerson() {
-			moveDir = new Vector3(0, 0, Input.GetAxisRaw("Vertical")).normalized; // Forward/Back
-
-            if (Input.GetAxisRaw("Horizontal") < 0) transform.Rotate(0, -5, 0 * Time.deltaTime * rotateSpeed); // Left
-            if (Input.GetAxisRaw("Horizontal") > 0) transform.Rotate(0, 5, 0 * Time.deltaTime * rotateSpeed); // Right
-        }
-
 		private void RecieveInputFirstPerson() {
+
+			// TODO Choose between controller/keyboard+mouse
+//			if(isControlerInput()) {
+//				sensitivity = new Vector2(2, 2);
+//			} else {
+//				sensitivity = new Vector2(0.75f, 0.75f);
+//			}
 
 			if(Input.GetKeyDown(KeyCode.L)) lockCursor = !lockCursor;
 
@@ -168,8 +172,8 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void UpdateOfflineTransform() {
-			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 15f);
-			transform.rotation = Quaternion.Slerp(transform.rotation, syncRot, Time.deltaTime * 15f);
+			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 20f);
+			transform.rotation = Quaternion.Slerp(transform.rotation, syncRot, Time.deltaTime * 20f);
 		}
 
 		[Command]
@@ -200,6 +204,35 @@ namespace smoothstudio.heroesandvillains.player
 			} else {
 				playerCameraTransform.localPosition = cameraThirdPersonPosition;
 			}
+
+			playerModel.EnableModel(!cameraIsFPS);
+		}
+
+		// Controller check
+		private bool isControlerInput() {
+			if(Input.GetKey(KeyCode.Joystick1Button0)  ||
+				Input.GetKey(KeyCode.Joystick1Button1)  ||
+				Input.GetKey(KeyCode.Joystick1Button2)  ||
+				Input.GetKey(KeyCode.Joystick1Button3)  ||
+				Input.GetKey(KeyCode.Joystick1Button4)  ||
+				Input.GetKey(KeyCode.Joystick1Button5)  ||
+				Input.GetKey(KeyCode.Joystick1Button6)  ||
+				Input.GetKey(KeyCode.Joystick1Button7)  ||
+				Input.GetKey(KeyCode.Joystick1Button8)  ||
+				Input.GetKey(KeyCode.Joystick1Button9)  ||
+				Input.GetKey(KeyCode.Joystick1Button10) ||
+				Input.GetKey(KeyCode.Joystick1Button11) ||
+				Input.GetKey(KeyCode.Joystick1Button12) ||
+				Input.GetKey(KeyCode.Joystick1Button13) ||
+				Input.GetKey(KeyCode.Joystick1Button14) ||
+				Input.GetKey(KeyCode.Joystick1Button15) ||
+				Input.GetKey(KeyCode.Joystick1Button16) ||
+				Input.GetKey(KeyCode.Joystick1Button17) ||
+				Input.GetKey(KeyCode.Joystick1Button18) ||
+				Input.GetKey(KeyCode.Joystick1Button19) ) {
+				return true;
+			}
+			return false;
 		}
     }
 }

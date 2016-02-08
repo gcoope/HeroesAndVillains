@@ -42,7 +42,7 @@ public class PlayerMeleeSwing : NetworkBehaviour {
 	}
 
 	public void MeleeSwingHit(Collider col) {
-		if (col.CompareTag ("Player")) {
+		if (col.CompareTag (ObjectTagKeys.Player)) {
 			BasePlayerInfo hitPlayerInfo = col.gameObject.GetComponent<BasePlayerInfo>();
 			if(hitPlayerInfo.playerName != playerInfo.playerName) {
 				gameObject.DispatchGlobalEvent(ProjectileEvent.MeleeHitPlayer, new object[] {hitPlayerInfo, playerInfo.meleeDamage});
