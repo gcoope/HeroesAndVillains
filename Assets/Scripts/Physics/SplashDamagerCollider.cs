@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
+[NetworkSettings(channel=3)]
 public class SplashDamagerCollider : NetworkBehaviour {
 
 	[SyncVar] public string playerName;

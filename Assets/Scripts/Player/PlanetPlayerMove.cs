@@ -6,10 +6,10 @@ using smoothstudio.heroesandvillains.player.events;
 
 namespace smoothstudio.heroesandvillains.player
 {
+	[NetworkSettings(channel=2, sendInterval=0)]
 	public class PlanetPlayerMove : NetworkBehaviour
     {
 		private bool cameraIsFPS;
-
 		private BasePlayerInfo playerInfo;
 		private PlayerGravityBody playerGravityBody;
     	private Rigidbody playerRigidbody;	
@@ -19,14 +19,14 @@ namespace smoothstudio.heroesandvillains.player
 		private Vector3 cameraThirdPersonPosition;
 
         private float moveSpeed;
-        private float rotateSpeed = 25f;
+        private const float rotateSpeed = 25f;
         private float jumpPower;
         private Vector3 moveDir;
 
 		private bool isGrounded;
 		private bool hasDoubleJumped;
 		private bool doubleJumpEnabled;
-		private float rayLength = 1.8f;
+		private const float rayLength = 1.8f;
 
 		private PlayerModelChanger playerModel; // So we can turn it on in 3rd person
 
@@ -52,12 +52,13 @@ namespace smoothstudio.heroesandvillains.player
 		private bool allowAllControl = true;
 
 		void Awake() {
-			playerRigidbody = GetComponent<Rigidbody>();
-			if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
-			playerGravityBody = GetComponent<PlayerGravityBody>();
-			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
-			playerCameraTransform = GetComponentInChildren<Camera>().transform;
-			playerModel = GetComponent<PlayerModelChanger>();
+			if(isLocalPlayer) {
+//				playerRigidbody = GetComponent<Rigidbody>();
+//				playerGravityBody = GetComponent<PlayerGravityBody>();			
+//				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
+//				playerCameraTransform = GetComponentInChildren<Camera>().transform;
+//				playerModel = GetComponent<PlayerModelChanger>();
+			}
 		}
 
 		void OnDisable() {
@@ -73,18 +74,25 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		void Start() {
-			moveSpeed = playerInfo.speed;
-			jumpPower = playerInfo.jumpHeight;
+			if(isLocalPlayer) {
+				playerRigidbody = GetComponent<Rigidbody>();
+				playerGravityBody = GetComponent<PlayerGravityBody>();			
+				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
+				playerCameraTransform = GetComponentInChildren<Camera>().transform;
+				playerModel = GetComponent<PlayerModelChanger>();
 
-			doubleJumpEnabled = playerInfo.doubleJumpEnabled;
+				moveSpeed = playerInfo.speed;
+				jumpPower = playerInfo.jumpHeight;
 
-			cameraFpsPosition = new Vector3(0, 0.2f, 0f);
-			cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
+				doubleJumpEnabled = playerInfo.doubleJumpEnabled;
+
+				cameraFpsPosition = new Vector3(0, 0.2f, 0f);
+				cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
 
 
-			targetDirection = playerCameraTransform.localRotation.eulerAngles;	
-			targetCharacterDirection = transform.localRotation.eulerAngles;
-
+				targetDirection = playerCameraTransform.localRotation.eulerAngles;	
+				targetCharacterDirection = transform.localRotation.eulerAngles;
+			}
 		}
 
         void Update() {
@@ -101,13 +109,15 @@ namespace smoothstudio.heroesandvillains.player
 				else isGrounded = false;
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
-			} else {
+			} 
+			else {
 				UpdateOfflineTransform(); // For non-player-player movement
 			}
         }
 		
 		void FixedUpdate() {
 			if(isLocalPlayer) {
+				if(playerRigidbody == null) playerRigidbody = GetComponent<Rigidbody>();
 				TransmitTransform(); // Keep other clients updated
 				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
 				float zSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).z);
@@ -148,7 +158,7 @@ namespace smoothstudio.heroesandvillains.player
 //			}
 
 
-			if(!allowAllControl) {
+			if(!allowAllControl) { // When game paused
 				moveDir = Vector3.zero;
 				return;
 			}
@@ -194,8 +204,8 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void UpdateOfflineTransform() {
-			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 20f);
-			transform.rotation = Quaternion.Slerp(transform.rotation, syncRot, Time.deltaTime * 20f);
+			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 15f);
+			transform.rotation = Quaternion.Lerp(transform.rotation, syncRot, Time.deltaTime * 15f);
 		}
 
 		[Command]
@@ -211,11 +221,11 @@ namespace smoothstudio.heroesandvillains.player
 		[ClientCallback]
 		private void TransmitTransform() {
 			if(isLocalPlayer && NetworkManager.singleton.IsClientConnected()) { // TODO Add limiters here if lag/bandwidth issue
-					Cmd_PassPosition(transform.position);
-//				if(transform.rotation != lastRotation) {
+				Cmd_PassPosition(transform.position);
+				if(transform.rotation != lastRotation) {
 					Cmd_PassRotation(transform.rotation);
-//					lastRotation = transform.rotation;
-//				}
+					lastRotation = transform.rotation;
+				}
 			}
 		}
 

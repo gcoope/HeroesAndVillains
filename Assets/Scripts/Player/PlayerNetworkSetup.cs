@@ -3,19 +3,23 @@ using System.Collections;
 using UnityEngine.Networking;
 using smoothstudio.heroesandvillains.physics;
 using smoothstudio.heroesandvillains.player.events;
+using smoothstudio.heroesandvillains.player;
 
 public class PlayerNetworkSetup : NetworkBehaviour {
 
-	public Camera playerCamera;
-    private Rigidbody playerRigidbody;	
-	public GameObject playerHUD;
-	public GameObject playerNameText;
-	public ModelMaterialFader modelMaterialManager;
+	AudioListener audioListener;
+	[SerializeField] PlayerGravityBody gravityBody;
+//	[SerializeField] PlayerAttack playerAttack;
+//	[SerializeField] PlayerMeleeSwing playerMelee;
+	[SerializeField] PlayerHUD playerHUD;
+	[SerializeField] ScoreUIController scoreUIController;
+	[SerializeField] GameObject playerNameText;
+	[SerializeField] ModelMaterialFader modelMaterialManager;
+	[SerializeField] Camera playerCamera;
 
 	void Awake() { 
-		playerRigidbody = GetComponent<Rigidbody>();
-		if (playerRigidbody == null) playerRigidbody = gameObject.AddComponent<Rigidbody>();
-		playerCamera = gameObject.GetComponentInChildren<Camera>();
+		audioListener = GetComponent<AudioListener>();
+		if(playerCamera == null) playerCamera = gameObject.GetComponentInChildren<Camera>();
 		gameObject.AddGlobalEventListener(UIEVent.RequestLocalCamera, (EventObject evt)=>{
 			if(isLocalPlayer) gameObject.DispatchGlobalEvent(UIEVent.GotLocalCamera, new object[]{transform});
 		});
@@ -23,13 +27,17 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
 	public override void OnStartLocalPlayer() {
 		if(isLocalPlayer) {			
+			if(Camera.main != null) Camera.main.enabled = false;
+			playerCamera.enabled = true;
+			audioListener.enabled = true;
+			gravityBody.enabled = true;
+//			playerAttack.enabled = true;
+//			playerMelee.enabled = true;
+			playerHUD.enabled = true;
+			scoreUIController.enabled = true;
 			playerNameText.SetActive(false);
 			modelMaterialManager.HideModel();
-			playerCamera.enabled = true;
-			playerRigidbody.isKinematic = false;
-			gameObject.GetComponent<PlayerGravityBody>().enabled = true;
-			gameObject.GetComponent<AudioListener>().enabled = true;		
-			if(Camera.main != null) Camera.main.enabled = false;
+
 		}
 	}
 
@@ -37,15 +45,6 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 		if(!isLocalPlayer && !isServer) {
 			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
 		}
-	}
-
-	void Update() {
-//		if(Input.GetKeyDown(KeyCode.Escape)) {
-//			if(isLocalPlayer) {
-//				Debug.Log("Trying to d/c");
-//				gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // Not working
-//			}
-//		}
 	}
 
 	void OnDisable() {

@@ -52,7 +52,7 @@ namespace smoothstudio.heroesandvillains.player
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
 
 			lightningSparkPrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Thunder/Lightning Spark");
-			 fireExplosionPrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Fire/Explosion");
+			fireExplosionPrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Fire/Explosion");
 
 			if(playerInfo.playerTeam == Settings.HeroTeam) {
 				fireLineColor = Color.cyan;
@@ -112,9 +112,8 @@ namespace smoothstudio.heroesandvillains.player
 
 		private void RaycastFire() { // New main shooting function
 			RaycastHit hit;
-			Vector3 fwd = projectileLauncher.TransformDirection(projectileLauncher.forward);
+//			Vector3 fwd = projectileLauncher.TransformDirection(projectileLauncher.forward);
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
-
 				CmdSpawnLine(transform.position, hit.point, fireLineColor);
 				CmdSpawnExplosion(hit.point, isHero);
 				CmdSpawnExplosioncollider(hit.point, playerInfo.playerName, playerInfo.playerTeam);
@@ -129,11 +128,6 @@ namespace smoothstudio.heroesandvillains.player
 			if(distanceToHit < 3f) {
 				playerGravityBody.AddExplosionForce(hit.point, playerInfo.rocketJumpPower);
 			}
-		}
-
-		[Command]
-		private void CmdApplyDamage(GameObject obj, int damage) {
-			obj.GetComponent<PlayerAttack>().RaycastShotHitPlayer(damage);
 		}
 
 		[Command]

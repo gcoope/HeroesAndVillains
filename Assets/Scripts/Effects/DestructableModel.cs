@@ -13,7 +13,6 @@ public class DestructableModel : MonoBehaviour {
 
 	private int currentHits = 0;
 	private bool hasChanged = false;
-//	[SyncVar(hook="CheckChange")] private bool hasChanged = false;
 
 	void Start () {
 		collider = gameObject.GetComponent<Collider>();
@@ -39,9 +38,5 @@ public class DestructableModel : MonoBehaviour {
 		currentModelRoot.SetActive(false);
 		destroyedModel.SetActive(true);
 		//TODO trigger any script on newly shown destroyed model
-	}
-
-	private void CheckChange(bool trigger) {
-		if(trigger) Change();
 	}
 }
