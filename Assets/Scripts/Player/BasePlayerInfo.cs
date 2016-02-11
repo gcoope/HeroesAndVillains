@@ -12,6 +12,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 	private PlayerHealth playerHealth;
 	private PlayerName nameText;
 	private PlayerModelChanger modelChanger;
+	private ScoreUIController scoreUIController;
 
 	[Header("Player")]
 
@@ -36,7 +37,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerHealth = gameObject.GetComponent<PlayerHealth>();
 		nameText = gameObject.GetComponent<PlayerName>();
 		modelChanger = gameObject.GetComponent<PlayerModelChanger>();
-//		gameObject.AddGlobalEventListener(NetworkEvent.GotPlayerInfo, GotPlayerInfo);
 	}
 
 	public override void OnStartLocalPlayer() {
@@ -58,20 +58,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 		nameText = gameObject.GetComponent<PlayerName>();
 		OnNameChange(playerName);
 		OnTeamChange(playerTeam);
-	}
-		
-	private void RequestInfo(string id) {
-		PlayerInfoPacket info = ServerPlayerManager.instance.GetPlayerInfo(id);
-		if(!string.IsNullOrEmpty(info.playerName)) {
-			playerName = info.playerName;
-			playerTeam = info.playerTeam;
-			gameObject.name = playerName;
-
-			OnNameChange(playerName);
-			OnTeamChange(playerTeam);
-		} else {
-			Debug.Log("Info came back null - not updating player");
-		}
 	}
 
 	private void GotPlayerInfo(EventObject evt) {
@@ -104,9 +90,9 @@ public class BasePlayerInfo : NetworkBehaviour {
 		nameText.SetName(playerName);
 		RpcSetClientPlayerInfo(playerName, playerTeam);
 
-		string _netID = gameObject.GetComponent<NetworkIdentity>().netId.ToString();
+		NetworkInstanceId _netID = gameObject.GetComponent<NetworkIdentity>().netId;
 		PlayerInfoPacket packet = new PlayerInfoPacket(playerName, playerTeam, _netID);
-		ServerPlayerManager.instance.RegisterPlayer(_netID, packet);
+		ServerPlayerManager.instance.RegisterPlayer(packet);
 	}
 
 	[ClientRpc]

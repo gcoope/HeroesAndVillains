@@ -9,8 +9,6 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
 	AudioListener audioListener;
 	[SerializeField] PlayerGravityBody gravityBody;
-//	[SerializeField] PlayerAttack playerAttack;
-//	[SerializeField] PlayerMeleeSwing playerMelee;
 	[SerializeField] PlayerHUD playerHUD;
 	[SerializeField] ScoreUIController scoreUIController;
 	[SerializeField] GameObject playerNameText;
@@ -31,28 +29,29 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			playerCamera.enabled = true;
 			audioListener.enabled = true;
 			gravityBody.enabled = true;
-//			playerAttack.enabled = true;
-//			playerMelee.enabled = true;
 			playerHUD.enabled = true;
 			scoreUIController.enabled = true;
 			playerNameText.SetActive(false);
 			modelMaterialManager.HideModel();
-
 		}
 	}
 
 	void Start() {
 		if(!isLocalPlayer && !isServer) {
 			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
+			modelMaterialManager.SetModelShowing(true);
+			modelMaterialManager.ShowModel();
 		}
 	}
 
+	[Server]
 	void OnDisable() {
-		if(ServerPlayerManager.instance != null) ServerPlayerManager.instance.UnregisterPlayer(gameObject.GetComponent<NetworkIdentity>().netId.ToString());
+		if(ServerPlayerManager.instance != null && netId != null) ServerPlayerManager.instance.UnregisterPlayer(netId);
+	}
 
-		if(!isLocalPlayer && !isServer) {
-			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
-		}
+	[Command]
+	void CmdOnDisable(NetworkInstanceId id) {
+		ServerPlayerManager.instance.UnregisterPlayer(id);
 	}
 
 	[Command]

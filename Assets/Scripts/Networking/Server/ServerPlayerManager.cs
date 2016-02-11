@@ -8,36 +8,67 @@ public class ServerPlayerManager : NetworkBehaviour {
 
 	public static ServerPlayerManager instance {
 		get {
-			if(_instance == null) {
-				_instance = GameObject.FindObjectOfType<ServerPlayerManager>();
-			}
+			if(_instance == null) {_instance = GameObject.FindObjectOfType<ServerPlayerManager>();}
 			return _instance;
 		}
 	}
 	private static ServerPlayerManager _instance;
 
-	private Dictionary<string, PlayerInfoPacket> playersDict = new Dictionary<string, PlayerInfoPacket>();
+	private Dictionary<NetworkInstanceId, PlayerInfoPacket> playerDetails = new Dictionary<NetworkInstanceId, PlayerInfoPacket>();
 
-	public void RegisterPlayer(string netID, PlayerInfoPacket player) {
-		playersDict.Add(netID, player);
-		ServerOnlyPlayerDisplay.instance.Log(player.playerName + " connected");
-	}
+	[Server]
+	public void RegisterPlayer(PlayerInfoPacket playerInfo) {
+		if(!playerDetails.ContainsKey(playerInfo.networkID)) {
+			ServerOnlyPlayerDisplay.instance.Log(playerInfo.playerName + " connected");
+			playerDetails.Add(playerInfo.networkID, playerInfo);
 
-	public void UnregisterPlayer(string playerID) {
-		if(ServerOnlyPlayerDisplay.instance != null) ServerOnlyPlayerDisplay.instance.Log(playersDict[playerID].playerName + " disconected");
-		playersDict.Remove(playerID);
-	}
-		
-	public PlayerInfoPacket GetPlayerInfo(string netID) {
-		if(playersDict.ContainsKey(netID)) {
-			return playersDict[netID];
-		} else {
-			Debug.Log(netId + " is not present in playersDict");
-			return new PlayerInfoPacket();
+			PlayerInfoPacket[] packets = new PlayerInfoPacket[playerDetails.Count];
+			playerDetails.Values.CopyTo(packets, 0);
+			RpcUpdatePlayers(packets);
 		}
 	}
 
-	public Dictionary<string, PlayerInfoPacket> GetAllConntectedPlayersInfo() {
-		return playersDict;
+	[ClientRpc]
+	private void RpcUpdatePlayers(PlayerInfoPacket[] playerInfoArray) {
+		gameObject.DispatchGlobalEvent(NetworkEvent.NewPlayerConnected, new object[]{playerInfoArray});
 	}
+
+	[Server]
+	public void UnregisterPlayer(NetworkInstanceId playerID) {
+		if(playerDetails.ContainsKey(playerID)) {
+			RpcRemovePlayer(playerDetails[playerID]);
+			ServerOnlyPlayerDisplay.instance.Log(playerDetails[playerID].playerName + " disconnected");
+			playerDetails.Remove(playerID);
+		}
+	}
+
+	[ClientRpc]
+	private void RpcRemovePlayer(PlayerInfoPacket playerToRemove) {
+		gameObject.DispatchGlobalEvent(NetworkEvent.PlayerDisconnected, new object[]{playerToRemove});
+	}
+
+	public Dictionary<NetworkInstanceId, PlayerInfoPacket> GetAllConntectedPlayersInfo() {
+		return playerDetails;
+	}
+
+
+	[Server]
+	public void AddScore(NetworkInstanceId id, int newScore) {
+		if(playerDetails.ContainsKey(id)) {
+			playerDetails[id] = new PlayerInfoPacket( // This doesn't feel right..
+				playerDetails[id].playerName,
+				playerDetails[id].playerTeam,
+				playerDetails[id].networkID,
+				playerDetails[id].score + newScore
+
+			);
+			RpcUdateScore(playerDetails[id]);
+		}
+	}
+
+	[ClientRpc]
+	private void RpcUdateScore(PlayerInfoPacket updatedPlayerDetails) {
+		gameObject.DispatchGlobalEvent(NetworkEvent.UpdatePlayerInfo, new object[]{updatedPlayerDetails});
+	}
+
 }

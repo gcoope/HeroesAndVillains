@@ -1,20 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-[NetworkSettings(channel=3)]
+[NetworkSettings(channel=1)]
 public class SplashDamagerCollider : NetworkBehaviour {
 
-	[SyncVar] public string playerName;
-	[SyncVar] public string playerTeam;
+	[SyncVar]
+	public PlayerInfoPacket playerPacket;
 
-	public void SetOwner(string name, string team) {
-		playerName = name;
-		playerTeam = team;
+	public void SetOwner(PlayerInfoPacket infoPacket) {
+		playerPacket = infoPacket;
 	}
 
 	void OnTriggerEnter(Collider col) {
 		if(col.CompareTag(ObjectTagKeys.Player)) {
-			col.gameObject.GetComponent<PlayerHealth>().TakeDamage(20, playerName, playerTeam);
+			col.gameObject.GetComponent<PlayerHealth>().TakeDamage(20, playerPacket);
 		}
 
 		if(col.CompareTag(ObjectTagKeys.DestructableObject)) {

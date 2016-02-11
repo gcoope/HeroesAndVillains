@@ -4,8 +4,14 @@ using UnityEngine.UI;
 using smoothstudio.heroesandvillains.player.events;
 using DG.Tweening;
 using smoothstudio.heroesandvillains.player;
+using UnityStandardAssets.ImageEffects;
 
 public class PlayerHUD : MonoBehaviour {
+
+//	[SerializeField] private Antialiasing antiAliasEffect;
+	[SerializeField] private FXAA antiAliasEffect;
+	[SerializeField] private ColorCorrectionCurves colorCorrectionEffect;
+	[SerializeField] private Camera playerCamera;
 
 	public Text healthText;
 	public Image healthAmountBar;
@@ -22,6 +28,8 @@ public class PlayerHUD : MonoBehaviour {
 	private PlanetPlayerMove planetPlayerMove;
 	private PlayerAttack playerAttack;
 	[SerializeField] private Slider mouseSensSlider;
+
+	private float targetFOV = 80;
 
 	void Awake() {
 		gameObject.AddGlobalEventListener(PlayerEvent.PlayerFaint, PlayerHasFainted);
@@ -46,6 +54,20 @@ public class PlayerHUD : MonoBehaviour {
 		if(Input.GetKeyDown(KeyCode.Escape)) {
 			TogglePauseMenu();
 		}
+
+		// TODO Move this to own video settings class
+		if(Input.GetKeyDown(KeyCode.F5)) {
+			if(antiAliasEffect != null) {
+				antiAliasEffect.enabled = !antiAliasEffect.enabled;
+			}
+		}
+		if(Input.GetKeyDown(KeyCode.F6)) {
+			if(colorCorrectionEffect != null) {
+				colorCorrectionEffect.enabled = !colorCorrectionEffect.enabled;
+			}
+		}
+
+		HandleZooming();
 	}
 
 	public void PlayerHasFainted(EventObject evt = null) {
@@ -125,6 +147,22 @@ public class PlayerHUD : MonoBehaviour {
 	private void HideScreen(CanvasGroup screen) {
 		screen.alpha = 0;
 		screen.interactable = false;
+	}
+
+	// Camera zoom
+	private void HandleZooming() {
+		if(playerCamera != null) {
+			// TODO Console controller zooming
+			if(Input.GetMouseButton(1)) {
+				targetFOV = 35;
+			} else {
+				targetFOV = 80;
+			}
+
+			if(playerCamera.fieldOfView != targetFOV) {
+				playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * 10f);
+			}
+		}
 	}
 
 }

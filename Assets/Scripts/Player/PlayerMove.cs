@@ -75,9 +75,9 @@ namespace smoothstudio.heroesandvillains.player
 //				this.playerRigidbody.AddForce(transform.TransformDirection(moveDir) * moveSpeed * Time.deltaTime);
 //				this.playerRigidbody.velocity += (transform.TransformDirection(moveDir) * moveSpeed);
 
-				if(playerRigidbody.velocity.magnitude > 2f) {
-					playerRigidbody.velocity = playerRigidbody.velocity.normalized * 2f;
-				} else {
+				if(playerRigidbody.velocity.magnitude < 0.5f) {
+//					playerRigidbody.velocity = playerRigidbody.velocity.normalized;// * 2f;
+//				} else {
 					playerRigidbody.velocity = moveDir;
 				}
 			}

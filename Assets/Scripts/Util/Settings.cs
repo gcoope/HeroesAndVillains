@@ -4,26 +4,27 @@ using System.Collections;
 public class Settings : MonoBehaviour {
 
 	// Player
-	public static int BaseHealth = 100;
-	public static int BaseArmour = 0;
-	public static int BaseDamage = 10;
-	public static int BaseMeleeDamage = 15;
-	public static float BaseMoveSpeed = 15f;
-	public static float BaseJumpHeight = 15f;
-	public static bool DoubleJumpEnabled = false;
-	public static float RocketJumpPower = 30f;
+	public const int BaseHealth = 100;
+	public const int BaseArmour = 0;
+	public const int BaseDamage = 10;
+	public const int BaseMeleeDamage = 15;
+	public const float BaseMoveSpeed = 15f;
+	public const float BaseJumpHeight = 15f;
+	public const bool DoubleJumpEnabled = false;
+	public const float RocketJumpPower = 15f;
 
 	// Game settings
-	public static bool FirstPersonMode = true;
+	public const bool FirstPersonMode = true;
+	public const int ScorePerKill = 10;
 
 	// Physics
-    public static float Gravity = -15f;
+    public const float Gravity = -16f;
 
 	// Networking
-	public static string HostIP = "localhost";
+	public const string HostIP = "localhost";
 
 	// Teams
-	public static string HeroTeam = "Settings.HeroTeam";
-	public static string VillainTeam = "Settings.VillainTeam";
+	public const string HeroTeam = "Settings.HeroTeam";
+	public const string VillainTeam = "Settings.VillainTeam";
 
 }

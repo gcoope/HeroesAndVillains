@@ -9,7 +9,7 @@ namespace smoothstudio.heroesandvillains.player
 	[NetworkSettings(channel=2, sendInterval=0)]
 	public class PlanetPlayerMove : NetworkBehaviour
     {
-		private bool cameraIsFPS;
+		private bool cameraIsFPS = true;
 		private BasePlayerInfo playerInfo;
 		private PlayerGravityBody playerGravityBody;
     	private Rigidbody playerRigidbody;	
@@ -51,15 +51,7 @@ namespace smoothstudio.heroesandvillains.player
 		// Pause menu control
 		private bool allowAllControl = true;
 
-		void Awake() {
-			if(isLocalPlayer) {
-//				playerRigidbody = GetComponent<Rigidbody>();
-//				playerGravityBody = GetComponent<PlayerGravityBody>();			
-//				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
-//				playerCameraTransform = GetComponentInChildren<Camera>().transform;
-//				playerModel = GetComponent<PlayerModelChanger>();
-			}
-		}
+//		void Awake() {}
 
 		void OnDisable() {
 			Cursor.lockState = CursorLockMode.None;
@@ -74,24 +66,28 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		void Start() {
+			playerModel = GetComponent<PlayerModelChanger>();
 			if(isLocalPlayer) {
 				playerRigidbody = GetComponent<Rigidbody>();
 				playerGravityBody = GetComponent<PlayerGravityBody>();			
 				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 				playerCameraTransform = GetComponentInChildren<Camera>().transform;
-				playerModel = GetComponent<PlayerModelChanger>();
 
 				moveSpeed = playerInfo.speed;
 				jumpPower = playerInfo.jumpHeight;
 
 				doubleJumpEnabled = playerInfo.doubleJumpEnabled;
 
-				cameraFpsPosition = new Vector3(0, 0.2f, 0f);
+				cameraFpsPosition = new Vector3(0, 0.5f, 0f);
 				cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
 
 
 				targetDirection = playerCameraTransform.localRotation.eulerAngles;	
 				targetCharacterDirection = transform.localRotation.eulerAngles;
+
+				if(playerRigidbody != null) playerRigidbody.drag = 0.5f;
+			} else {
+				playerModel.EnableModel(true);
 			}
 		}
 
@@ -109,6 +105,8 @@ namespace smoothstudio.heroesandvillains.player
 				else isGrounded = false;
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
+
+				TransmitTransform(); // Keep other clients updated // Was in FixedUpdate?
 			} 
 			else {
 				UpdateOfflineTransform(); // For non-player-player movement
@@ -118,7 +116,7 @@ namespace smoothstudio.heroesandvillains.player
 		void FixedUpdate() {
 			if(isLocalPlayer) {
 				if(playerRigidbody == null) playerRigidbody = GetComponent<Rigidbody>();
-				TransmitTransform(); // Keep other clients updated
+
 				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
 				float zSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).z);
 				if(xSpeed < moveSpeed && zSpeed < moveSpeed) {
@@ -149,14 +147,6 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void RecieveInputFirstPerson() {
-
-			// TODO Choose between controller/keyboard+mouse
-//			if(isControlerInput()) {
-//				sensitivity = new Vector2(2, 2);
-//			} else {
-//				sensitivity = new Vector2(0.75f, 0.75f);
-//			}
-
 
 			if(!allowAllControl) { // When game paused
 				moveDir = Vector3.zero;
@@ -204,6 +194,7 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void UpdateOfflineTransform() {
+			if(syncRot == null || syncPos == null) return;
 			transform.position = Vector3.Lerp(transform.position, syncPos, Time.deltaTime * 15f);
 			transform.rotation = Quaternion.Lerp(transform.rotation, syncRot, Time.deltaTime * 15f);
 		}
@@ -238,6 +229,10 @@ namespace smoothstudio.heroesandvillains.player
 			}
 
 			playerModel.EnableModel(!cameraIsFPS);
+		}
+
+		public bool isCameraFPS() {
+			return cameraIsFPS;
 		}
 
 		// Controller check

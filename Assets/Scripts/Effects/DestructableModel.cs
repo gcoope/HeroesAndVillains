@@ -9,31 +9,17 @@ public class DestructableModel : MonoBehaviour {
 	[SerializeField] private GameObject destroyedModel;
 	[SerializeField] private int shotsToDestroy = 3;
 
-	private Collider collider;
-
 	private int currentHits = 0;
-	private bool hasChanged = false;
+	protected bool hasChanged = false;
 
-	void Start () {
-		collider = gameObject.GetComponent<Collider>();
-	}
-
-	void OnCollisionEnter(Collision col) {
-		if(hasChanged) {
-			if(col.gameObject.CompareTag(ObjectTagKeys.Player)) {
-				col.gameObject.GetComponent<PlayerGravityBody>().Jump(35f);
-			}
-		}
-	}
-
-	public void Hit() {
+	public virtual void Hit() {
 		currentHits++;
 		if(currentHits == shotsToDestroy) {
 			Change();
 		}
 	}
 
-	private void Change() {
+	public virtual void Change() {
 		hasChanged = true;
 		currentModelRoot.SetActive(false);
 		destroyedModel.SetActive(true);

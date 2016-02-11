@@ -40,6 +40,8 @@ namespace smoothstudio.heroesandvillains.player
 
 		private bool allowAnyInput = true;
 
+		private PlayerInfoPacket localPlayerInfoPacket;
+
 		void Awake() {
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
 		}
@@ -66,6 +68,8 @@ namespace smoothstudio.heroesandvillains.player
 			if(isLocalPlayer) {
 				playerGravityBody = GetComponent<PlayerGravityBody>();
 			}
+
+			localPlayerInfoPacket = new PlayerInfoPacket(playerInfo.playerName, playerInfo.playerTeam, netId);
 		}
 
 		void Update() {
@@ -87,13 +91,13 @@ namespace smoothstudio.heroesandvillains.player
 			}       
 
 			// Controller needs a bit more help
-			if(Input.GetAxis("ControllerFire") > 0 && !controllerHasFired && controllerCanFire) {
+			if(Input.GetAxis("ControllerFire") < 0 && !controllerHasFired && controllerCanFire) {
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
 				RaycastFire();
 				playerCameraTransform.DOShakePosition(0.2f, 0.2f, 1);	
 			}
-			if(Input.GetAxis("ControllerFire") <= 0 && controllerHasFired) {
+			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
 			}
 		}
@@ -116,7 +120,7 @@ namespace smoothstudio.heroesandvillains.player
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, fireLineColor);
 				CmdSpawnExplosion(hit.point, isHero);
-				CmdSpawnExplosioncollider(hit.point, playerInfo.playerName, playerInfo.playerTeam);
+				CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
 
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
 				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), fireLineColor);
@@ -145,26 +149,18 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		[Command]
-		private void CmdSpawnExplosioncollider(Vector3 pos, string playerName, string playerTeam) {
+		private void CmdSpawnExplosioncollider(Vector3 pos, PlayerInfoPacket playerInfoPacket) {
 			GameObject col = Instantiate(splashCollider);
 			col.transform.position = pos;
-			col.GetComponent<SplashDamagerCollider>().SetOwner(playerName, playerTeam);
-			NetworkServer.Spawn(col);
-			
+			col.GetComponent<SplashDamagerCollider>().SetOwner(playerInfoPacket);
+			NetworkServer.Spawn(col); // TODO We might be able to do all collisions on the server someday..		
 		}
 
-		// ----------------------
-		// Public callable from raycast hit
-		// ----------------------
-
-		public void RaycastShotHitPlayer(int damage) {
-			playerHealth.TakeDamage(damage);
-		}
-
+		// TODO Falcon kick
 		private void MeleeHitSomePlayer(EventObject evt) {
 			if (evt.Params != null) {
 				if((BasePlayerInfo)evt.Params[0] == playerInfo) { // If the person hit was us
-					playerHealth.TakeDamage((int)evt.Params[1]);
+					playerHealth.TakeDamage((int)evt.Params[1], localPlayerInfoPacket);
 				}
 			}
 		}

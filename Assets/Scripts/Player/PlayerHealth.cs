@@ -10,17 +10,18 @@ public class PlayerHealth : NetworkBehaviour {
 	
 	[SyncVar] public bool isFainted = false;
 
-	private BasePlayerInfo playerInfo;
+	private BasePlayerInfo thisPlayerInfo;
 	private PlayerHUD playerHUD;
 	private PlayerFaint playerFaint;
 	[SerializeField] private Transform playerCameraTransform;
+	private PlayerInfoPacket lastPlayerToDamage;
 
 	[SyncVar(hook = "OnHealthChange")] 
 	public int Health = Settings.BaseHealth; // Variable per class? Maybe have a stat setup at the start	
 
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
-		playerInfo = gameObject.GetComponent<BasePlayerInfo>();
+		thisPlayerInfo = gameObject.GetComponent<BasePlayerInfo>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		UpdateHealthText ();
 	}
@@ -29,38 +30,49 @@ public class PlayerHealth : NetworkBehaviour {
 	void Update() {
 
 		if(Health <= 0) {
-			Faint();
+			if(!isFainted) Faint();
 		}
 
 		if(!isLocalPlayer) return;
 		if(Input.GetKeyDown(KeyCode.F9)) {
-			TakeDamage(25, playerInfo.playerName, playerInfo.playerTeam, true);
+			TakeDamage(25, new PlayerInfoPacket(thisPlayerInfo.playerName, thisPlayerInfo.playerTeam, netId), true);
 		}	
 		if(isFainted) {
 			if(Input.GetKeyDown(KeyCode.R)) {
 				PlayerRespawn();
 			}
 		}
+
+		#if UNITY_EDITOR
+		if(Input.GetKeyDown(KeyCode.Alpha5)) {
+			CmdAddScore(netId, 10); // findme Adding 10 points for kill
+		}
+		#endif
 	}
 
-	public void TakeDamage(int amount, string fromPlayerName = "", string fromPlayerTeam = "", bool forceDmg = false) {
+	public void TakeDamage(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDmg = false) {
 		if (isFainted) return;
 
-		if(!forceDmg && !string.IsNullOrEmpty(fromPlayerTeam)) {
-			if(fromPlayerTeam == playerInfo.playerTeam) {
+		lastPlayerToDamage = fromPlayerInfo;
+
+		if(!forceDmg && !string.IsNullOrEmpty(fromPlayerInfo.playerTeam)) { // No friendly damage
+			if(fromPlayerInfo.playerTeam.Equals(thisPlayerInfo.playerTeam)) {
 				return;
 			}
 		}
 
-		playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1);
-
 		Health -= amount;
 		UpdateHealthText ();
 		if(Health <= 0) {
-			Faint(fromPlayerName);
+			Faint();
 		}
 	}
-	
+
+	[Command]
+	private void CmdAddScore(NetworkInstanceId id, int amount) {
+		ServerPlayerManager.instance.AddScore(id, amount);
+	}
+
 	private void UpdateHealthText() {
 		playerHUD.UpdateHealthText(Health);
 	}
@@ -69,8 +81,9 @@ public class PlayerHealth : NetworkBehaviour {
 		Health = hp;
 		if(isLocalPlayer) UpdateHealthText();
 	}
-	
-	public void Faint(string fromPlayer = "") {
+
+	[Client]
+	public void Faint() {
 		isFainted = true;
 
 		if(isLocalPlayer) {
@@ -78,14 +91,28 @@ public class PlayerHealth : NetworkBehaviour {
 			playerHUD.PlayerHasFainted();
 		}
 
-		if(!string.IsNullOrEmpty(fromPlayer) && isLocalPlayer) {
-			Debug.Log(playerInfo.playerName + " killed by " + fromPlayer);
+		if(isLocalPlayer) {
+			if(lastPlayerToDamage.playerName == thisPlayerInfo.playerName) {
+				if(thisPlayerInfo.playerTeam == Settings.HeroTeam) {
+					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed themselves!");
+				} else {
+					CmdLogSomething("<color=red>" + lastPlayerToDamage.playerName + "</color> destroyed themselves!");
+				}
+			} else { // Wasn't suicide
+				if(thisPlayerInfo.playerTeam == Settings.HeroTeam) {
+					CmdLogSomething("<color=red>" + lastPlayerToDamage.playerName + "</color> destroyed <color=cyan>" +  thisPlayerInfo.playerName + "</color>");
+				} else {
+					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  thisPlayerInfo.playerName + "</color>");
+				}
+
+				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill); // findme Points added here
+			}
 		}
+
 	}
 	
 	private void PlayerRespawn() {
 		isFainted = false;
-
 		playerFaint.CmdRespawn(gameObject);
 		playerHUD.PlayerHasRespawned();
 		Health = Settings.BaseHealth;

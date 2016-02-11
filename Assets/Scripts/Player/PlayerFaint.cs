@@ -16,8 +16,6 @@ public class PlayerFaint : NetworkBehaviour {
 
 	[Command]
 	public void CmdFaint(GameObject player) {
-//	public void CmdFaint(NetworkInstanceId playerID) {
-//		ClientScene.FindLocalObject(playerID).GetComponent<PlayerFaint>().RpcLocalFaint();
 		player.GetComponent<PlayerFaint>().RpcLocalFaint();
 	}
 
@@ -27,18 +25,18 @@ public class PlayerFaint : NetworkBehaviour {
 		GetComponent<PlanetPlayerMove>().enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
 		GetComponent<PlayerMeleeSwing>().enabled = false;
-		GetComponent<PlayerGravityBody>().enabled = false;
 		GetComponent<Collider>().enabled = false;
-		GetComponent<Rigidbody>().velocity = Vector3.zero;
 		materialFader.FadeOut();
-//		Renderer[] playerRenderers = GetComponentsInChildren<Renderer>();
-//		for(int i = 0; i < playerRenderers.Length; i++) {
-//			playerRenderers[i].enabled = false;
-//		}	
-		
-		// TODO Killcam kind of thing?
+		if(isLocalPlayer) {
+			GetComponent<PlayerGravityBody>().enabled = false;
+			if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().velocity = Vector3.zero;
+		}
 	}
 
+	[Command]
+	public void CmdRespawn(GameObject player) {
+		player.GetComponent<PlayerFaint>().RpcLocalRespawn();
+	}
 
 	[ClientRpc]
 	public void RpcLocalRespawn() {
@@ -47,50 +45,19 @@ public class PlayerFaint : NetworkBehaviour {
 		transform.rotation = spawnPos.rotation;
 
 		GetComponent<Collider>().enabled = true;
-		GetComponent<Rigidbody>().velocity = Vector3.zero;
 		GetComponent<PlanetPlayerMove>().enabled = true;
-		GetComponent<PlayerGravityBody>().enabled = true;
 		GetComponent<PlayerAttack>().enabled = true;
 		GetComponent<PlayerMeleeSwing>().enabled = true;
-		materialFader.FadeIn();
-
-		StartCoroutine("WaitToVisuallyActivate");
-
-//		GetComponent<PlayerName>().EnableText();
-//		GetComponent<PlanetPlayerMove>().enabled = true;
-//		GetComponent<PlayerAttack>().enabled = true;
-//		GetComponent<PlayerMeleeSwing>().enabled = true;
-//		GetComponent<PlayerGravityBody>().enabled = true;
-//		GetComponent<Collider>().enabled = true;
-//		GetComponent<Rigidbody>().velocity = Vector3.zero;
-//		Renderer[] playerRenderers = GetComponentsInChildren<Renderer>();
-//		for(int i = 0; i < playerRenderers.Length; i++) {
-//			playerRenderers[i].enabled = true;
-//		}
-	}	 
-
-	IEnumerator WaitToVisuallyActivate() {
-		yield return new WaitForSeconds(0.5f);
 		GetComponent<PlayerName>().EnableText();
-//		Renderer[] playerRenderers = GetComponentsInChildren<Renderer>();
-//		for(int i = 0; i < playerRenderers.Length; i++) {
-//			playerRenderers[i].enabled = true;
-//		}
-	}
 
-	[Command]
-	public void CmdRespawn(GameObject player) {
-		player.GetComponent<PlayerFaint>().RpcLocalRespawn();
-	}
+		if(isLocalPlayer) {
+			GetComponent<PlayerGravityBody>().enabled = true;
+			if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().velocity = Vector3.zero;
+		}
 
-	// Unused
-	[Command]
-	public void CmdRespawnPlayer() {
-		Transform spawnPos = SpawnManager.instance.GetFreeSpawn(isHero);// TODO More advanced spawns to avoid spawn camp?
-		GameObject newPlayer = Instantiate<GameObject>(NetworkManager.singleton.playerPrefab);
-		newPlayer.transform.position = spawnPos.position;
-		newPlayer.transform.rotation = spawnPos.rotation;
-		NetworkServer.Destroy(this.gameObject);
-		NetworkServer.ReplacePlayerForConnection(this.connectionToClient, newPlayer, this.playerControllerId);
-	}
+		materialFader.FadeIn(true);
+	}	
+
+
+
 }

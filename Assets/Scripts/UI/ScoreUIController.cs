@@ -9,17 +9,14 @@ public class ScoreUIController : NetworkBehaviour {
 	[SerializeField] ScoreboardItem[] heroPlayers;
 	[SerializeField] ScoreboardItem[] villainPlayers;
 
+	private Dictionary<NetworkInstanceId, PlayerInfoPacket> localPlayerDetails;
+
 	void Awake() {
 		ClearBoard();
-
-		gameObject.AddGlobalEventListener(PlayerEvent.UpdateScoreboard, (EventObject evt)=>{
-			if(!isServer) CmdUpdateScoreBoard();
-		});
-	}
-
-	IEnumerator Start() {
-		yield return new WaitForSeconds(0.5f);
-		if(!isServer && isLocalPlayer) CmdUpdateScoreBoard();
+		localPlayerDetails = new Dictionary<NetworkInstanceId, PlayerInfoPacket>();
+		gameObject.AddGlobalEventListener(NetworkEvent.NewPlayerConnected, AddNewPlayer);
+		gameObject.AddGlobalEventListener(NetworkEvent.PlayerDisconnected, RemovePlayer);
+		gameObject.AddGlobalEventListener(NetworkEvent.UpdatePlayerInfo, UpdatePlayerDetails);
 	}
 
 
@@ -32,44 +29,51 @@ public class ScoreUIController : NetworkBehaviour {
 		}
 	}
 
-	[Command]
-	public void CmdUpdateScoreBoard() {
-		ClearBoard();
-
-		List<PlayerInfoPacket> playersInfo = new List<PlayerInfoPacket>();
-
-		Dictionary<string, PlayerInfoPacket> playersDict = ServerPlayerManager.instance.GetAllConntectedPlayersInfo();
-		foreach(KeyValuePair<string, PlayerInfoPacket> entry in playersDict) {
-			AddElement(entry.Value);
-			playersInfo.Add(entry.Value);
-		}
-
-		RpcUpdateScoreboard(playersInfo.ToArray());
-	}
-
-	[ClientRpc]
-	private void RpcUpdateScoreboard(PlayerInfoPacket[] playersDict) {
-		ClearBoard();
-		foreach(PlayerInfoPacket entry in playersDict) {
-			AddElement(entry);
-		}
-	}
-
-	private void AddElement(PlayerInfoPacket infoPacket) {
-		if(infoPacket.playerTeam == Settings.HeroTeam) {
-			foreach(ScoreboardItem item in heroPlayers) {
-				if(item.isEmpty) {
-					item.Populate(infoPacket.playerName, "0");
-					break;
-				}
-			}
-		} else if(infoPacket.playerTeam == Settings.VillainTeam) {
-			foreach(ScoreboardItem item in villainPlayers) {
-				if(item.isEmpty) {
-					item.Populate(infoPacket.playerName, "0");
-					break;
-				}
+	private void AddNewPlayer(EventObject evt) {
+		PlayerInfoPacket[] playerInfoArray = (PlayerInfoPacket[])evt.Params[0];
+		for(int i = 0; i < playerInfoArray.Length; i++) {
+			if(!localPlayerDetails.ContainsKey(playerInfoArray[i].networkID)) {
+				localPlayerDetails.Add(playerInfoArray[i].networkID, playerInfoArray[i]);
 			}
 		}
+		PopulateScoreboard();
+	}
+
+	private void RemovePlayer(EventObject evt) {
+		PlayerInfoPacket playerToRemove = (PlayerInfoPacket)evt.Params[0];
+		if(localPlayerDetails.ContainsKey(playerToRemove.networkID)) {
+			localPlayerDetails.Remove(playerToRemove.networkID);
+		}
+		PopulateScoreboard();
+	}
+
+	private void UpdatePlayerDetails(EventObject evt) {
+		PlayerInfoPacket playerToUpdate = (PlayerInfoPacket)evt.Params[0];
+		localPlayerDetails[playerToUpdate.networkID] = playerToUpdate;
+		PopulateScoreboard();
+	}
+
+	private void PopulateScoreboard() {
+		ClearBoard();
+		foreach(NetworkInstanceId playerID in localPlayerDetails.Keys) {
+
+			if(localPlayerDetails[playerID].playerTeam == Settings.HeroTeam) {				
+				for(int i = 0; i < heroPlayers.Length; i++) {
+					if(heroPlayers[i].isEmpty) {
+						heroPlayers[i].Populate(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score.ToString());
+						break;
+					}
+				}
+
+			} else if(localPlayerDetails[playerID].playerTeam == Settings.VillainTeam) {
+				for(int i = 0; i < villainPlayers.Length; i++) {
+					if(villainPlayers[i].isEmpty) {
+						villainPlayers[i].Populate(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score.ToString());
+						break;
+					}
+				}
+			}
+		}
+
 	}
 }

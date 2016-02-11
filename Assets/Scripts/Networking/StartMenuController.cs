@@ -8,10 +8,12 @@ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using UnityEngine.SceneManagement;
 
 public class StartMenuController : MonoBehaviour {
 
 	private string ipAddress = "localhost";
+	private bool isHost = false;
 
 	void Awake() {	
 		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, JoinAsClient);
@@ -39,14 +41,14 @@ public class StartMenuController : MonoBehaviour {
 
 	public void JoinAsClient() { JoinAsClient(null); }
 	public void JoinAsClient(EventObject evt = null) {
-		Debug.Log("Attempting to join: " + NetworkManager.singleton.networkAddress);
+//		Debug.Log("Attempting to join: " + NetworkManager.singleton.networkAddress);
 		CheckHostAddress ();
 		NetworkManager.singleton.StartClient();
 	}
 
 	public void HostLan() { HostLan(null); }
 	public void HostLan(EventObject evt = null) {
-		NetworkManager.singleton.StopHost();
+		isHost = true;
 		CheckHostAddress();
 //		Debug.Log("Hosting local at: " + NetworkManager.singleton.networkAddress);
 		NetworkManager.singleton.StartHost();
@@ -54,8 +56,8 @@ public class StartMenuController : MonoBehaviour {
 
 	public void StartAsServer() { StartAsServer(null); }
 	public void StartAsServer(EventObject evt = null) {
-		NetworkManager.singleton.StopServer();
 //		Debug.Log("Hosting server at: " + NetworkManager.singleton.networkAddress);
+		NetworkManager.singleton.StopServer();
 		NetworkManager.singleton.networkAddress = "localhost";
 		NetworkManager.singleton.StartServer();
 	}
@@ -66,8 +68,14 @@ public class StartMenuController : MonoBehaviour {
 	}
 
 	public void Disconnect(EventObject evt) {
-		if(NetworkManager.singleton.IsClientConnected()) {
-			NetworkManager.singleton.client.Disconnect();
+		if(isHost) {
+			NetworkManager.singleton.StopHost();
+			isHost = false;
+		} else {
+			if(NetworkManager.singleton.IsClientConnected()) {
+				NetworkManager.singleton.client.Disconnect();
+				SceneManager.LoadScene(0);
+			}
 		}
 	}
 
