@@ -84,8 +84,6 @@ namespace smoothstudio.heroesandvillains.player
 
 				targetDirection = playerCameraTransform.localRotation.eulerAngles;	
 				targetCharacterDirection = transform.localRotation.eulerAngles;
-
-				if(playerRigidbody != null) playerRigidbody.drag = 0.5f;
 			} else {
 				playerModel.EnableModel(true);
 			}
@@ -106,7 +104,6 @@ namespace smoothstudio.heroesandvillains.player
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 
-				TransmitTransform(); // Keep other clients updated // Was in FixedUpdate?
 			} 
 			else {
 				UpdateOfflineTransform(); // For non-player-player movement
@@ -122,6 +119,8 @@ namespace smoothstudio.heroesandvillains.player
 				if(xSpeed < moveSpeed && zSpeed < moveSpeed) {
 					playerRigidbody.velocity += transform.TransformDirection(moveDir);
 				}
+
+				TransmitTransform(); // Keep other clients updated
 			}
 		}
 

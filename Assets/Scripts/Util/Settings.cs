@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Settings : MonoBehaviour {
 
 	// Player
 	public const int BaseHealth = 100;
-	public const int BaseArmour = 0;
+	public const int OverShield = 0;
 	public const int BaseDamage = 10;
 	public const int BaseMeleeDamage = 15;
 	public const float BaseMoveSpeed = 15f;

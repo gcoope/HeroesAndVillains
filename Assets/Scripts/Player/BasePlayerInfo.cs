@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using smoothstudio.heroesandvillains.player.events;
-using UnityEngine.UI;
 using UnityEngine.Networking;
-using smoothstudio.heroesandvillains.player;
 
 public class BasePlayerInfo : NetworkBehaviour {
 
@@ -12,7 +8,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 	private PlayerHealth playerHealth;
 	private PlayerName nameText;
 	private PlayerModelChanger modelChanger;
-	private ScoreUIController scoreUIController;
 
 	[Header("Player")]
 
@@ -23,13 +18,13 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public string playerTeam = Settings.HeroTeam;
 
 	[Header("Stats")]
-	public int armor = Settings.BaseArmour;  // as above
+	public int overShield = Settings.OverShield;  // as above
 	public int damage = Settings.BaseDamage;
 	public int meleeDamage = Settings.BaseMeleeDamage;
 	public float speed = Settings.BaseMoveSpeed;
 	public float jumpHeight = Settings.BaseJumpHeight;
-	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
 	public float rocketJumpPower = Settings.RocketJumpPower;
+	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
 
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
@@ -56,16 +51,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public override void OnStartClient () {		
 		base.OnStartClient ();
 		nameText = gameObject.GetComponent<PlayerName>();
-		OnNameChange(playerName);
-		OnTeamChange(playerTeam);
-	}
-
-	private void GotPlayerInfo(EventObject evt) {
-		PlayerInfoPacket info = (PlayerInfoPacket)evt.Params[0];
-		playerName = info.playerName;
-		playerTeam = info.playerTeam;
-		gameObject.name = playerName;
-
 		OnNameChange(playerName);
 		OnTeamChange(playerTeam);
 	}

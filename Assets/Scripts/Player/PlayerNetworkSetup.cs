@@ -29,6 +29,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			playerCamera.enabled = true;
 			audioListener.enabled = true;
 			gravityBody.enabled = true;
+			gravityBody.Setup(gameObject.AddComponent<Rigidbody>());
 			playerHUD.enabled = true;
 			scoreUIController.enabled = true;
 			playerNameText.SetActive(false);

@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 
-public class ParticleTidyUp : MonoBehaviour {
+public class ColliderTidyUp : MonoBehaviour {
 
 	public float stayDuration = 0.25f;
 
@@ -12,6 +12,6 @@ public class ParticleTidyUp : MonoBehaviour {
 
 	IEnumerator TidyUp() {
 		yield return new WaitForSeconds(stayDuration);
-		ObjectPooler.instance.RecycleToPool(gameObject);
+		Destroy(gameObject);
 	}
 }

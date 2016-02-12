@@ -8,8 +8,7 @@ using UnityStandardAssets.ImageEffects;
 
 public class PlayerHUD : MonoBehaviour {
 
-//	[SerializeField] private Antialiasing antiAliasEffect;
-	[SerializeField] private FXAA antiAliasEffect;
+	[SerializeField] private Antialiasing antiAliasEffect;
 	[SerializeField] private ColorCorrectionCurves colorCorrectionEffect;
 	[SerializeField] private Camera playerCamera;
 

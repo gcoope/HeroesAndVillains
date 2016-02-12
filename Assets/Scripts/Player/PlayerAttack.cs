@@ -13,25 +13,16 @@ namespace smoothstudio.heroesandvillains.player
 	{	
 		private BasePlayerInfo playerInfo;
 		private PlayerHealth playerHealth;
-		private float attackCooldown = 0.5f;
-		private bool canNormalFire = true;
+		private const float attackCooldown = 0.4f;
 		private bool useFireCooldown = true;
+		private bool canNormalFire = true;
 
 		private Transform playerCameraTransform;
 		PlayerGravityBody playerGravityBody;
 
 		// Projectile firing
 		public Transform projectileLauncher;
-		private GameObject fireballPrefab;
-		private int fireballPoolCount = 100;
-		private List<GameObject> fireballPool;
-
-		private GameObject lineDrawPrefab;
 		private GameObject splashCollider;
-
-		GameObject lightningSparkPrefab;
-		GameObject fireExplosionPrefab;
-		bool isHero;
 
 		private bool controllerHasFired = false;
 		private bool controllerCanFire = true;
@@ -50,19 +41,7 @@ namespace smoothstudio.heroesandvillains.player
 			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 			playerHealth = gameObject.GetComponent<PlayerHealth>();
 
-			lineDrawPrefab = Resources.Load<GameObject>("Prefabs/Effects/LineDrawer");
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
-
-			lightningSparkPrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Thunder/Lightning Spark");
-			fireExplosionPrefab = Resources.Load<GameObject>("Prefabs/Effects/Elementals/Fire/Explosion");
-
-			if(playerInfo.playerTeam == Settings.HeroTeam) {
-				fireLineColor = Color.cyan;
-			} else {
-				fireLineColor = Color.red;			
-			}
-
-			isHero = playerInfo.playerTeam == Settings.HeroTeam;
 
 			playerCameraTransform = gameObject.GetComponentInChildren<Camera>().transform;
 			if(isLocalPlayer) {
@@ -87,7 +66,7 @@ namespace smoothstudio.heroesandvillains.player
 				if(!canNormalFire && useFireCooldown) return;
 				StartCoroutine("NormalFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1);
+				playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1); // TODO rethink camera shake implementation, cause bugs
 			}       
 
 			// Controller needs a bit more help
@@ -107,24 +86,21 @@ namespace smoothstudio.heroesandvillains.player
 			yield return new WaitForSeconds(attackCooldown);
 			canNormalFire = true;
 		}
-
-		IEnumerator ControllerFireCooldown() { // Adds cooldown so you can't spam fire
+		IEnumerator ControllerFireCooldown() { // Adds cooldown for controller attacks so you can't spam fire
 			controllerCanFire = false;
 			yield return new WaitForSeconds(attackCooldown);
 			controllerCanFire = true;
 		}
 
-		private void RaycastFire() { // New main shooting function
+		private void RaycastFire() { // Primary attack (for now)
 			RaycastHit hit;
-//			Vector3 fwd = projectileLauncher.TransformDirection(projectileLauncher.forward);
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
-				CmdSpawnLine(transform.position, hit.point, fireLineColor);
-				CmdSpawnExplosion(hit.point, isHero);
+				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
+				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
 				CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
-
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
-				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), fireLineColor);
-				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f), isHero);
+				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
+				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
 			}
 
 			// Rocket jumping 
@@ -135,17 +111,13 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		[Command]
-		private void CmdSpawnLine(Vector3 start, Vector3 end, Color col)	{
-			GameObject line = Instantiate<GameObject>(lineDrawPrefab);
-			line.GetComponent<LineDrawer>().Setup(start, end, col);
-			NetworkServer.Spawn(line);		
+		private void CmdSpawnLine(Vector3 start, Vector3 end, string team)	{
+			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 		}
 
 		[Command]
-		private void CmdSpawnExplosion(Vector3 pos, bool isHero)	{
-			GameObject explosion = Instantiate(isHero ? lightningSparkPrefab : fireExplosionPrefab);	
-			explosion.transform.position = pos;
-			NetworkServer.Spawn(explosion);
+		private void CmdSpawnExplosion(Vector3 pos, string team)	{
+			LocalPrefabSpawner.instance.ServerSpawnExplosion(pos, team);
 		}
 
 		[Command]

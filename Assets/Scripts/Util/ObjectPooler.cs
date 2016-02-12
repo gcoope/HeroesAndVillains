@@ -115,7 +115,6 @@ public class ObjectPooler : MonoBehaviour {
 			obj.transform.parent = instance.gameObject.transform;
 			obj.transform.position = Vector3.zero;
 			obj.SetActive(false);
-			NetworkServer.UnSpawn(obj); // neccesary I think
 		} else { // Force destroy - not preffered but will work the same
 			Debug.LogWarning("Force destroying: " + obj + ", it wasn't found in spawnedItems");
 			//Object.Destroy(obj);

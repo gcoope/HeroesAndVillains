@@ -24,10 +24,6 @@ namespace smoothstudio.heroesandvillains.physics
 
         public virtual void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
-
-			if(bodyRigidbody == null) {
-				bodyRigidbody = gameObject.AddComponent<Rigidbody>();
-			}
         }
 
         void Start() {
@@ -45,9 +41,11 @@ namespace smoothstudio.heroesandvillains.physics
             attractor = currentAttractor != null ? currentAttractor.gameObject : GameObject.Find("Planet"); // just in case
 
             attractorTransform = attractor.GetComponent<Transform>();
-            bodyRigidbody = gameObject.GetComponent<Rigidbody>();
-            bodyTransform = gameObject.GetComponent<Transform>();
 
+			if(bodyRigidbody == null) {
+				bodyRigidbody = gameObject.AddComponent<Rigidbody>();
+			}
+            bodyTransform = gameObject.GetComponent<Transform>();
 
             if (bodyRigidbody != null) {
 				if(applyUprightRotation) bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -60,6 +58,7 @@ namespace smoothstudio.heroesandvillains.physics
         }
 
         private void Attract() {
+			if(bodyRigidbody == null) return;
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;		                                                
             bodyUp = bodyTransform.up;
 			if(applyUprightRotation) {

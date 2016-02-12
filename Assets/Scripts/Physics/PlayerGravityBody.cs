@@ -7,6 +7,14 @@ using UnityEngine;
 
 namespace smoothstudio.heroesandvillains.physics { 
     class PlayerGravityBody : FauxGravityBody {
+
+		public void Setup(Rigidbody rBody) {
+			bodyRigidbody = rBody;
+			if(applyUprightRotation) bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+			bodyRigidbody.useGravity = false;
+			bodyRigidbody.drag = 0.5f;
+		}
+
         public void Jump(float jumpPower) {
 			if(bodyRigidbody != null) bodyRigidbody.AddForce(gravityUp * jumpPower, ForceMode.Impulse);
         }	
