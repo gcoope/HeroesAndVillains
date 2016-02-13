@@ -97,7 +97,11 @@ namespace smoothstudio.heroesandvillains.player
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
 				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
-				CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
+				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
+					CmdRaycastHit(hit.collider.gameObject);
+				} else {
+					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
+				}
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
 				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
 				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
@@ -112,6 +116,7 @@ namespace smoothstudio.heroesandvillains.player
 
 		[Command]
 		private void CmdSpawnLine(Vector3 start, Vector3 end, string team)	{
+//			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 		}
 
@@ -126,6 +131,11 @@ namespace smoothstudio.heroesandvillains.player
 			col.transform.position = pos;
 			col.GetComponent<SplashDamagerCollider>().SetOwner(playerInfoPacket);
 			NetworkServer.Spawn(col); // TODO We might be able to do all collisions on the server someday..		
+		}
+
+		[Command]
+		private void CmdRaycastHit(GameObject player) {
+			player.GetComponent<PlayerHealth>().ServerTakeDamage(20, localPlayerInfoPacket);
 		}
 
 		// TODO Falcon kick

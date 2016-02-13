@@ -15,6 +15,7 @@ public class PlayerHUD : MonoBehaviour {
 	public Text healthText;
 	public Image healthAmountBar;
 	public Text sensitivityValueLabel;
+	public Text respawnText;
 
 	public CanvasGroup ingameScreen;
 	public CanvasGroup pauseScreen;
@@ -24,6 +25,7 @@ public class PlayerHUD : MonoBehaviour {
 	private bool showingScoreboard = false;
 	private bool showingPauseMenu = false;
 
+	private BasePlayerInfo playerInfo;
 	private PlanetPlayerMove planetPlayerMove;
 	private PlayerAttack playerAttack;
 	[SerializeField] private Slider mouseSensSlider;
@@ -31,10 +33,10 @@ public class PlayerHUD : MonoBehaviour {
 	private float targetFOV = 80;
 
 	void Awake() {
-		gameObject.AddGlobalEventListener(PlayerEvent.PlayerFaint, PlayerHasFainted);
 		gameObject.AddGlobalEventListener(PlayerEvent.PlayerRespawn, PlayerHasRespawned);
 		planetPlayerMove = gameObject.GetComponent<PlanetPlayerMove>();
 		playerAttack = gameObject.GetComponent<PlayerAttack>();
+		playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 		mouseSensSlider.onValueChanged.AddListener(OnSliderChange);
 	}
 
@@ -69,9 +71,24 @@ public class PlayerHUD : MonoBehaviour {
 		HandleZooming();
 	}
 
-	public void PlayerHasFainted(EventObject evt = null) {
-		HideScreen(ingameScreen);
-		ShowScreen(respawnScreen);
+	public void PlayerHasFainted(PlayerInfoPacket lastPlayerTohurt) {
+
+		string newRespawnText = "";
+
+		// Set respawn text
+		if(lastPlayerTohurt.playerName == playerInfo.playerName) {
+			if(playerInfo.playerTeam == Settings.HeroTeam)	newRespawnText = "<color=cyan>You</color> destroyed yourself!";
+			else newRespawnText = "<color=red>You</color> destroyed yourself!";
+		} else { // Wasn't self-kill
+			if(playerInfo.playerTeam == Settings.HeroTeam) newRespawnText = "<color=red>" + lastPlayerTohurt.playerName + "</color> destroyed <color=cyan>you!</color>";
+			else newRespawnText = "<color=cyan>" + lastPlayerTohurt.playerName + "</color> destroyed <color=red>you!</color>";
+		}
+
+		newRespawnText += "\nPress R to respawn";
+		respawnText.text = newRespawnText;
+
+		FadeOutScreen(ingameScreen);
+		FadeInScreen(respawnScreen);
 	}
 
 	public void PlayerHasRespawned(EventObject evt = null) {
@@ -146,6 +163,16 @@ public class PlayerHUD : MonoBehaviour {
 	private void HideScreen(CanvasGroup screen) {
 		screen.alpha = 0;
 		screen.interactable = false;
+	}
+
+	private void FadeInScreen(CanvasGroup screen) {
+		screen.alpha = 0;
+		screen.DOFade(1, 0.5f);
+	}
+
+	private void FadeOutScreen(CanvasGroup screen) {
+		screen.alpha = 1;
+		screen.DOFade(0, 0.5f);
 	}
 
 	// Camera zoom

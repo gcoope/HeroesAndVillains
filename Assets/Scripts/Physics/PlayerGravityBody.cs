@@ -13,6 +13,8 @@ namespace smoothstudio.heroesandvillains.physics {
 			if(applyUprightRotation) bodyRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 			bodyRigidbody.useGravity = false;
 			bodyRigidbody.drag = 0.5f;
+			bodyRigidbody.interpolation = RigidbodyInterpolation.Extrapolate;
+			bodyRigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 		}
 
         public void Jump(float jumpPower) {

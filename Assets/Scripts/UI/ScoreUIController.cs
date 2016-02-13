@@ -3,13 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using smoothstudio.heroesandvillains.player.events;
 using UnityEngine.Networking;
+using System.Linq;
+using UnityEngine.UI;
 
 public class ScoreUIController : NetworkBehaviour {
 
-	[SerializeField] ScoreboardItem[] heroPlayers;
-	[SerializeField] ScoreboardItem[] villainPlayers;
+	[SerializeField] ScoreboardItem[] heroPlayersItems;
+	[SerializeField] ScoreboardItem[] villainPlayersItems;
 
 	private Dictionary<NetworkInstanceId, PlayerInfoPacket> localPlayerDetails;
+
+	[SerializeField] private Text heroTeamScoreText;
+	[SerializeField] private Text villainTeamScoreText;
+	private int heroTeamTotalScore = 0;
+	private int villainTeamTotalScore = 0;
 
 	void Awake() {
 		ClearBoard();
@@ -21,11 +28,11 @@ public class ScoreUIController : NetworkBehaviour {
 
 
 	private void ClearBoard() {
-		for(int i = 0; i < heroPlayers.Length; i++) {
-			heroPlayers[i].Empty();
+		for(int i = 0; i < heroPlayersItems.Length; i++) {
+			heroPlayersItems[i].Empty();
 		}
-		for(int i = 0; i < villainPlayers.Length; i++) {
-			villainPlayers[i].Empty();
+		for(int i = 0; i < villainPlayersItems.Length; i++) {
+			villainPlayersItems[i].Empty();
 		}
 	}
 
@@ -50,30 +57,53 @@ public class ScoreUIController : NetworkBehaviour {
 	private void UpdatePlayerDetails(EventObject evt) {
 		PlayerInfoPacket playerToUpdate = (PlayerInfoPacket)evt.Params[0];
 		localPlayerDetails[playerToUpdate.networkID] = playerToUpdate;
+
 		PopulateScoreboard();
 	}
 
 	private void PopulateScoreboard() {
 		ClearBoard();
+
+		List<ScoreboardPacket> heroScorePackets = new List<ScoreboardPacket>(5);
+		List<ScoreboardPacket> villainScorePackets = new List<ScoreboardPacket>(5);
+
+		heroTeamTotalScore = 0;
+		villainTeamTotalScore = 0;
+
 		foreach(NetworkInstanceId playerID in localPlayerDetails.Keys) {
-
-			if(localPlayerDetails[playerID].playerTeam == Settings.HeroTeam) {				
-				for(int i = 0; i < heroPlayers.Length; i++) {
-					if(heroPlayers[i].isEmpty) {
-						heroPlayers[i].Populate(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score.ToString());
-						break;
-					}
-				}
-
-			} else if(localPlayerDetails[playerID].playerTeam == Settings.VillainTeam) {
-				for(int i = 0; i < villainPlayers.Length; i++) {
-					if(villainPlayers[i].isEmpty) {
-						villainPlayers[i].Populate(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score.ToString());
-						break;
-					}
-				}
+			if(localPlayerDetails[playerID].playerTeam.Equals(Settings.HeroTeam)) {	
+				heroScorePackets.Add(new ScoreboardPacket(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score));
+				heroTeamTotalScore += localPlayerDetails[playerID].score;
+			} else if(localPlayerDetails[playerID].playerTeam.Equals(Settings.VillainTeam)) {
+				villainScorePackets.Add(new ScoreboardPacket(localPlayerDetails[playerID].playerName, localPlayerDetails[playerID].score));
+				villainTeamTotalScore += localPlayerDetails[playerID].score;
 			}
 		}
 
+		heroTeamScoreText.text = heroTeamTotalScore.ToString();
+		villainTeamScoreText.text = villainTeamTotalScore.ToString();
+
+		heroScorePackets = heroScorePackets.OrderByDescending(o=>o.score).ToList();
+		for(int i = 0; i < heroScorePackets.Count; i++) {
+			if(heroPlayersItems[i].isEmpty) {
+				heroPlayersItems[i].Populate(heroScorePackets[i].name, heroScorePackets[i].score);
+			}
+		}
+
+		villainScorePackets = villainScorePackets.OrderByDescending(o=>o.score).ToList();
+		for(int i = 0; i < villainScorePackets.Count; i++) {
+			if(villainPlayersItems[i].isEmpty) {
+				villainPlayersItems[i].Populate(villainScorePackets[i].name, villainScorePackets[i].score);
+			}
+		}
+	}
+}
+
+public class ScoreboardPacket {
+	public string name;
+	public int score;
+	public ScoreboardPacket(string name, int score) {
+		this.name = name;
+		this.score = score;
 	}
 }

@@ -114,6 +114,10 @@ namespace smoothstudio.heroesandvillains.player
 			if(isLocalPlayer) {
 				if(playerRigidbody == null) playerRigidbody = GetComponent<Rigidbody>();
 
+				if(moveDir == Vector3.zero && isGrounded) {
+					playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
+				}
+
 				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
 				float zSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).z);
 				if(xSpeed < moveSpeed && zSpeed < moveSpeed) {

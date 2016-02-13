@@ -45,7 +45,7 @@ public class PlayerHealth : NetworkBehaviour {
 
 		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Alpha5)) {
-			CmdAddScore(netId, 10); // findme Adding 10 points for kill
+			CmdAddScore(netId, Settings.ScorePerKill); // findme Points added here
 		}
 		#endif
 	}
@@ -68,27 +68,53 @@ public class PlayerHealth : NetworkBehaviour {
 		}
 	}
 
+	[Server]
+	public void ServerTakeDamage(int amount, PlayerInfoPacket fromPlayerInfo) {
+		lastPlayerToDamage = fromPlayerInfo;
+		if(!string.IsNullOrEmpty(fromPlayerInfo.playerTeam)) { // No friendly damage
+			if(fromPlayerInfo.playerTeam.Equals(thisPlayerInfo.playerTeam)) {
+				return;
+			}
+		}
+		Health -= amount;
+		RpcTakeDamage(fromPlayerInfo);
+	}
+
+	[ClientRpc]
+	private void RpcTakeDamage(PlayerInfoPacket fromPlayerInfo) {
+		lastPlayerToDamage = fromPlayerInfo;
+		UpdateHealthText ();
+		if(Health <= 0) {
+			Faint();
+		}
+	}
+
 	[Command]
 	private void CmdAddScore(NetworkInstanceId id, int amount) {
 		ServerPlayerManager.instance.AddScore(id, amount);
+	}
+
+	private void OnHealthChange(int hp) {
+		Health = hp;
+		if(isLocalPlayer) { 
+			UpdateHealthText();
+			if(Health <= 0) {
+				Faint();
+			}
+		}
 	}
 
 	private void UpdateHealthText() {
 		playerHUD.UpdateHealthText(Health);
 	}
 	
-	private void OnHealthChange(int hp) {
-		Health = hp;
-		if(isLocalPlayer) UpdateHealthText();
-	}
-
 	[Client]
 	public void Faint() {
 		isFainted = true;
 
 		if(isLocalPlayer) {
 			playerFaint.CmdFaint(gameObject);
-			playerHUD.PlayerHasFainted();
+			playerHUD.PlayerHasFainted(lastPlayerToDamage);
 		}
 
 		if(isLocalPlayer) {
@@ -104,7 +130,6 @@ public class PlayerHealth : NetworkBehaviour {
 				} else {
 					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  thisPlayerInfo.playerName + "</color>");
 				}
-
 				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill); // findme Points added here
 			}
 		}

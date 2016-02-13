@@ -7,11 +7,12 @@ public class PlayerModelChanger : NetworkBehaviour {
 	public Material heroMat;
 	public Material villainMat;
 	private Material currentMaterial;
-	[SyncVar(hook = "OnChangeTeam")] private string playerTeam;
+	[SyncVar(hook = "OnChangeTeam")]
+	private string playerTeam;
 	[SerializeField] private ModelMaterialFader materialFader;
 
 	private void OnChangeTeam(string team) {
-		CmdTellOthersMaterial(team);
+		if(team != playerTeam) CmdTellOthersMaterial(team);
 	}
 
 	public void SetModelColour(string team) {
