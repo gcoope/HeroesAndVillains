@@ -108,15 +108,13 @@ namespace smoothstudio.heroesandvillains.player
 			}
 
 			// Rocket jumping 
-			float distanceToHit = Vector3.Distance(transform.position, hit.point);
-			if(distanceToHit < 3f) {
+			if(Vector3.Distance(transform.position, hit.point) < 3f) {
 				playerGravityBody.AddExplosionForce(hit.point, playerInfo.rocketJumpPower);
 			}
 		}
 
 		[Command]
 		private void CmdSpawnLine(Vector3 start, Vector3 end, string team)	{
-//			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 		}
 
@@ -125,7 +123,7 @@ namespace smoothstudio.heroesandvillains.player
 			LocalPrefabSpawner.instance.ServerSpawnExplosion(pos, team);
 		}
 
-		[Command]
+		[Command] // TODO Make this server only?
 		private void CmdSpawnExplosioncollider(Vector3 pos, PlayerInfoPacket playerInfoPacket) {
 			GameObject col = Instantiate(splashCollider);
 			col.transform.position = pos;
