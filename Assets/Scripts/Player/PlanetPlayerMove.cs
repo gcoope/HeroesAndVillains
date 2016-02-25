@@ -51,7 +51,8 @@ namespace smoothstudio.heroesandvillains.player
 		// Pause menu control
 		private bool allowAllControl = true;
 
-//		void Awake() {}
+		// Sticking to building fix
+		private PhysicMaterial colliderMaterial;
 
 		void OnDisable() {
 			Cursor.lockState = CursorLockMode.None;
@@ -68,6 +69,7 @@ namespace smoothstudio.heroesandvillains.player
 		void Start() {
 			playerModel = GetComponent<PlayerModelChanger>();
 			if(isLocalPlayer) {
+				colliderMaterial = GetComponent<Collider>().material;
 				playerRigidbody = GetComponent<Rigidbody>();
 				playerGravityBody = GetComponent<PlayerGravityBody>();			
 				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
@@ -104,6 +106,15 @@ namespace smoothstudio.heroesandvillains.player
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 
+
+//				 Sticking fix
+				if (isGrounded) {
+					colliderMaterial.dynamicFriction = 1;
+					colliderMaterial.staticFriction = 1;
+				} else {
+					colliderMaterial.dynamicFriction = 0.2f;
+					colliderMaterial.staticFriction = 0.2f;
+				}
 			} 
 			else {
 				UpdateOfflineTransform(); // For non-player-player movement
@@ -115,7 +126,7 @@ namespace smoothstudio.heroesandvillains.player
 				if(playerRigidbody == null) playerRigidbody = GetComponent<Rigidbody>();
 
 				if(moveDir == Vector3.zero && isGrounded) {
-					playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
+				//	playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
 				}
 
 				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
@@ -126,6 +137,8 @@ namespace smoothstudio.heroesandvillains.player
 
 				TransmitTransform(); // Keep other clients updated
 			}
+
+			
 		}
 
 		public void SetAllowControl(bool allow) {

@@ -9,7 +9,7 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public static string HostServer = "MenuEvent.HostServer";
 		public static string CloseGame = "MenuEvent.CloseGame";
 		public static string ClientDisconnect = "MenuEvent.ClientDisconnect";
-
 		public static string InputFieldChange = "MenuEvent.InputFieldChange";
+		public const string ToggleVisibleCanvas = "MenuEvent.ToggleVisibleCanvas";
 	}
 }

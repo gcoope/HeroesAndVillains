@@ -70,6 +70,7 @@ namespace smoothstudio.heroesandvillains.player
 			}       
 
 			// Controller needs a bit more help
+			/* TODO Fix this input tags on reimport
 			if(Input.GetAxis("ControllerFire") < 0 && !controllerHasFired && controllerCanFire) {
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
@@ -79,6 +80,7 @@ namespace smoothstudio.heroesandvillains.player
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
 			}
+			*/
 		}
 
 		IEnumerator NormalFireCooldown() { // Adds cooldown so you can't spam fire
