@@ -54,6 +54,9 @@ namespace smoothstudio.heroesandvillains.player
 		// Sticking to building fix
 		private PhysicMaterial colliderMaterial;
 
+		// Game flow
+		private bool isGameOver = false;
+
 		void OnDisable() {
 			Cursor.lockState = CursorLockMode.None;
 			Cursor.visible = true;
@@ -64,6 +67,10 @@ namespace smoothstudio.heroesandvillains.player
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 			Screen.lockCursor = true;
+		}
+
+		void Awake() {
+			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
 		}
 
 		void Start() {
@@ -92,7 +99,7 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
         void Update() {
-			if(isLocalPlayer) {
+			if(isLocalPlayer && !isGameOver) {
 
 //				Cursor.lockState = !allowAllControl ? CursorLockMode.Locked : CursorLockMode.None; // findme Cursor control
 				Cursor.visible = !allowAllControl;
@@ -101,11 +108,19 @@ namespace smoothstudio.heroesandvillains.player
 				RecieveInputFirstPerson();
 				HandleJumping();
 
-				if(Physics.Raycast(transform.position, -transform.up, rayLength)) isGrounded = true; // Grounding check
+				RaycastHit sphereHit;
+//				if(Physics.Raycast(transform.position, -transform.up, rayLength)) isGrounded = true; // Grounding check
+				if(Physics.SphereCast(transform.position, 0.4f, -transform.up, out sphereHit, rayLength)) isGrounded = true;
 				else isGrounded = false;
 
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 
+				// Move to top of world for testing
+				if(Input.GetKeyDown(KeyCode.F5)) {
+					Transform topPos = SpawnManager.instance.GetFreeSpawn(true);
+					transform.position = topPos.position;
+					transform.rotation = topPos.rotation;
+				}
 
 //				 Sticking fix
 				if (isGrounded) {
@@ -136,9 +151,18 @@ namespace smoothstudio.heroesandvillains.player
 				}
 
 				TransmitTransform(); // Keep other clients updated
-			}
+			}			
+		}
 
-			
+		private void HandleGameOverEvent(EventObject evt) {
+			RpcSetGameOver(true);
+		}
+
+		[ClientRpc]
+		private void RpcSetGameOver(bool gameOver) {
+			moveDir = new Vector3(0,0,0);
+			playerRigidbody.velocity = new Vector3(0,0,0);
+			isGameOver = gameOver;
 		}
 
 		public void SetAllowControl(bool allow) {

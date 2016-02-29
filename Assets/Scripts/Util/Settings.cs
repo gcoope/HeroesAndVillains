@@ -15,6 +15,7 @@ public class Settings : MonoBehaviour {
 	// Game settings
 	public const bool FirstPersonMode = true;
 	public const int ScorePerKill = 10;
+	public const int TDMWinScore = 50;
 
 	// Physics
     public const float Gravity = -16f;

@@ -5,8 +5,9 @@ using smoothstudio.heroesandvillains.player.events;
 using DG.Tweening;
 using smoothstudio.heroesandvillains.player;
 using UnityStandardAssets.ImageEffects;
+using UnityEngine.Networking;
 
-public class PlayerHUD : MonoBehaviour {
+public class PlayerHUD : NetworkBehaviour {
 
 	[SerializeField] private Antialiasing antiAliasEffect;
 	[SerializeField] private ColorCorrectionCurves colorCorrectionEffect;
@@ -31,6 +32,7 @@ public class PlayerHUD : MonoBehaviour {
 	[SerializeField] private Slider mouseSensSlider;
 
 	private float targetFOV = 80;
+	private bool isGameOver = false;
 
 	void Awake() {
 		gameObject.AddGlobalEventListener(PlayerEvent.PlayerRespawn, PlayerHasRespawned);
@@ -38,6 +40,8 @@ public class PlayerHUD : MonoBehaviour {
 		playerAttack = gameObject.GetComponent<PlayerAttack>();
 		playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 		mouseSensSlider.onValueChanged.AddListener(OnSliderChange);
+
+		gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameoverEvent);
 	}
 
 	void Start() {
@@ -48,14 +52,6 @@ public class PlayerHUD : MonoBehaviour {
 	}
 
 	void Update() {
-		if(Input.GetKeyDown(KeyCode.Tab)) {
-			if(!showingPauseMenu) ToggleScoreboard();
-		}
-
-		if(Input.GetKeyDown(KeyCode.Escape)) {
-			TogglePauseMenu();
-		}
-
 		// TODO Move this to own video settings class
 		if(Input.GetKeyDown(KeyCode.F5)) {
 			if(antiAliasEffect != null) {
@@ -67,10 +63,48 @@ public class PlayerHUD : MonoBehaviour {
 				colorCorrectionEffect.enabled = !colorCorrectionEffect.enabled;
 			}
 		}
+		
+		if(isGameOver) return;
+		if(Input.GetKeyDown(KeyCode.Tab)) {
+			if(!showingPauseMenu) ToggleScoreboard();
+		}
+
+		if(Input.GetKeyDown(KeyCode.Escape)) {
+			TogglePauseMenu();
+		}
 
 		HandleZooming();
 	}
 
+	// Gameover handling
+	private void HandleGameoverEvent(EventObject evt) {
+		bool isHero = (bool)evt.Params[0];
+		RpcShowGameOver(isHero);
+	}
+
+	[ClientRpc]
+	private void RpcShowGameOver(bool isHero) {
+		isGameOver = true;
+
+		string gameOverText = "GAME OVER\n";
+		if(isHero) {
+			gameOverText += "<color=cyan>Heroes win!</color>";
+		} else {
+			gameOverText += "<color=red>Villains win!</color>";
+		}
+		respawnText.text = gameOverText;
+		FadeOutScreen(ingameScreen);
+		FadeInScreen(respawnScreen);
+		StartCoroutine("WaitTheShowScores");
+	}
+
+	private IEnumerator WaitTheShowScores() {
+		yield return new WaitForSeconds(3.5f);
+		showingScoreboard = false;
+		ToggleScoreboard();
+	}
+
+	// Faint handling
 	public void PlayerHasFainted(PlayerInfoPacket lastPlayerTohurt) {
 
 		string newRespawnText = "";

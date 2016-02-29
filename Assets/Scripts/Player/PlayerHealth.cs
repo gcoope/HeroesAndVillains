@@ -29,11 +29,13 @@ public class PlayerHealth : NetworkBehaviour {
 	
 	void Update() {
 
+
+		if(!isLocalPlayer) return;
+
 		if(Health <= 0) {
 			if(!isFainted) Faint();
 		}
 
-		if(!isLocalPlayer) return;
 		if(Input.GetKeyDown(KeyCode.F9)) {
 			TakeDamage(25, new PlayerInfoPacket(thisPlayerInfo.playerName, thisPlayerInfo.playerTeam, netId), true);
 		}	
@@ -43,11 +45,9 @@ public class PlayerHealth : NetworkBehaviour {
 			}
 		}
 
-		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Alpha5)) {
-			CmdAddScore(netId, Settings.ScorePerKill); // findme Points added here
+			CmdAddScore(netId, Settings.ScorePerKill, thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
 		}
-		#endif
 	}
 
 	public void TakeDamage(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDmg = false) {
@@ -84,21 +84,22 @@ public class PlayerHealth : NetworkBehaviour {
 	private void RpcTakeDamage(PlayerInfoPacket fromPlayerInfo) {
 		lastPlayerToDamage = fromPlayerInfo;
 		UpdateHealthText ();
-		if(Health <= 0) {
+		if(Health <= 0 && !isFainted) {
 			Faint();
 		}
 	}
 
 	[Command]
-	private void CmdAddScore(NetworkInstanceId id, int amount) {
+	private void CmdAddScore(NetworkInstanceId id, int amount, bool isHeroTeam) {
 		ServerPlayerManager.instance.AddScore(id, amount);
+		ServerScoreManager.instance.AddScore(isHeroTeam, amount);
 	}
 
 	private void OnHealthChange(int hp) {
 		Health = hp;
 		if(isLocalPlayer) { 
 			UpdateHealthText();
-			if(Health <= 0) {
+			if(Health <= 0 && !isFainted) {
 				Faint();
 			}
 		}
@@ -130,7 +131,7 @@ public class PlayerHealth : NetworkBehaviour {
 				} else {
 					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  thisPlayerInfo.playerName + "</color>");
 				}
-				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill); // findme Points added here
+				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill, thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
 			}
 		}
 

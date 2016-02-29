@@ -3,7 +3,6 @@ using UnityEngine.Networking;
 
 public class BasePlayerInfo : NetworkBehaviour {
 
-	private PlayerHUD playerHUD;
 	private PlayerFaint playerFaint;
 	private PlayerHealth playerHealth;
 	private PlayerName nameText;
@@ -27,7 +26,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
 
 	void Awake () {
-		playerHUD = gameObject.GetComponent<PlayerHUD>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		playerHealth = gameObject.GetComponent<PlayerHealth>();
 		nameText = gameObject.GetComponent<PlayerName>();

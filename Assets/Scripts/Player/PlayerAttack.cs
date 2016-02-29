@@ -30,11 +30,13 @@ namespace smoothstudio.heroesandvillains.player
 		private Color fireLineColor;
 
 		private bool allowAnyInput = true;
+		private bool isGameOver = false;
 
 		private PlayerInfoPacket localPlayerInfoPacket;
 
 		void Awake() {
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
+			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
 		}
 
 		void Start() {
@@ -52,9 +54,18 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		void Update() {
-			if(isLocalPlayer && allowAnyInput) {
+			if(isLocalPlayer && allowAnyInput && !isGameOver) {
 				RecieveInput();
 			}
+		}
+
+		private void HandleGameOverEvent(EventObject evt) {
+			RpcSetGameOver(true);
+		}
+
+		[ClientRpc]
+		private void RpcSetGameOver(bool gameOver) {
+			isGameOver = gameOver;
 		}
 
 		public void SetAllowAnyInput(bool allow) {
@@ -70,7 +81,6 @@ namespace smoothstudio.heroesandvillains.player
 			}       
 
 			// Controller needs a bit more help
-			/* TODO Fix this input tags on reimport
 			if(Input.GetAxis("ControllerFire") < 0 && !controllerHasFired && controllerCanFire) {
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
@@ -80,7 +90,6 @@ namespace smoothstudio.heroesandvillains.player
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
 			}
-			*/
 		}
 
 		IEnumerator NormalFireCooldown() { // Adds cooldown so you can't spam fire
@@ -99,11 +108,11 @@ namespace smoothstudio.heroesandvillains.player
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
 				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
-				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
-					CmdRaycastHit(hit.collider.gameObject);
-				} else {
+//				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
+//					CmdRaycastHit(hit.collider.gameObject);
+//				} else {
 					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
-				}
+//				}
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
 				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
 				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
