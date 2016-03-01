@@ -51,7 +51,6 @@ public class ServerPlayerManager : NetworkBehaviour {
 		return playerDetails;
 	}
 
-
 	[Server]
 	public void AddScore(NetworkInstanceId id, int newScore) {
 		if(playerDetails.ContainsKey(id)) {
@@ -60,9 +59,22 @@ public class ServerPlayerManager : NetworkBehaviour {
 				playerDetails[id].playerTeam,
 				playerDetails[id].networkID,
 				playerDetails[id].score + newScore
-
 			);
 			RpcUdateScore(playerDetails[id]);
+		}
+	}
+
+	[Server]
+	public void ResetAllScores() {
+		List<NetworkInstanceId> keyList = new List<NetworkInstanceId> (playerDetails.Keys);
+		foreach (NetworkInstanceId key in keyList) {
+			playerDetails[key] = new PlayerInfoPacket( // This doesn't feel right either..
+				playerDetails[key].playerName,
+				playerDetails[key].playerTeam,
+				playerDetails[key].networkID,
+				0
+			);
+			RpcUdateScore(playerDetails[key]);
 		}
 	}
 

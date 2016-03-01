@@ -23,6 +23,10 @@ public class PlayerHUD : NetworkBehaviour {
 	public CanvasGroup respawnScreen;
 	public CanvasGroup scoreboardScreen;
 
+	public Text countdownText;
+	public CanvasGroup countdownScreen;
+	private int currentCountdownNumber = 20;
+
 	private bool showingScoreboard = false;
 	private bool showingPauseMenu = false;
 
@@ -42,13 +46,19 @@ public class PlayerHUD : NetworkBehaviour {
 		mouseSensSlider.onValueChanged.AddListener(OnSliderChange);
 
 		gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameoverEvent);
+		gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, ResetGame);
 	}
 
 	void Start() {
+		ResetHUD ();
+	}
+
+	private void ResetHUD() {
 		HideScreen(respawnScreen);
 		HideScreen(scoreboardScreen);
 		HideScreen(pauseScreen);
 		ShowScreen(ingameScreen);
+		HideScreen (countdownScreen);
 	}
 
 	void Update() {
@@ -76,7 +86,7 @@ public class PlayerHUD : NetworkBehaviour {
 		HandleZooming();
 	}
 
-	// Gameover handling
+	#region Gameover handling
 	private void HandleGameoverEvent(EventObject evt) {
 		bool isHero = (bool)evt.Params[0];
 		RpcShowGameOver(isHero);
@@ -94,16 +104,49 @@ public class PlayerHUD : NetworkBehaviour {
 		}
 		respawnText.text = gameOverText;
 		FadeOutScreen(ingameScreen);
+		if (showingScoreboard) ToggleScoreboard ();
 		FadeInScreen(respawnScreen);
-		StartCoroutine("WaitTheShowScores");
+		HideScreen (pauseScreen);
+		StartCoroutine("WaitThenShowScores");
 	}
 
-	private IEnumerator WaitTheShowScores() {
+	private IEnumerator WaitThenShowScores() {
 		yield return new WaitForSeconds(3.5f);
-		FadeOutScreen(respawnScreen);
+		HideScreen(respawnScreen);
 		showingScoreboard = false;
-		ToggleScoreboard();
+		FadeInScreen (scoreboardScreen);
+		showingScoreboard = true;
+		FadeInScreen (countdownScreen);
+		currentCountdownNumber = Settings.timeBeforeNextRound;
+		countdownText.text = currentCountdownNumber.ToString ();
+		StartCoroutine ("CountdownToNextGame");
 	}
+
+	private IEnumerator CountdownToNextGame() {
+		while (currentCountdownNumber > 0) {
+			yield return new WaitForSeconds (1f);
+			currentCountdownNumber--;
+			countdownText.text = currentCountdownNumber.ToString ();
+		}
+		FadeOutScreen (countdownScreen);
+		CmdReadyForNextGame ();
+	}
+
+	[Command]
+	private void CmdReadyForNextGame() {
+		ServerScoreManager.instance.RestartNextGame ();
+	}
+
+	private void ResetGame(EventObject evt) {
+		RpcResetHUD ();
+	}
+
+	[ClientRpc]
+	private void RpcResetHUD() {
+		ResetHUD ();
+		isGameOver = false;
+	}
+	#endregion
 
 	// Faint handling
 	public void PlayerHasFainted(PlayerInfoPacket lastPlayerTohurt) {
@@ -186,7 +229,7 @@ public class PlayerHUD : NetworkBehaviour {
 
 	// Exiting
 	public void Exit() {
-		gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // Not working
+		gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // TODO Not working, find best solution
 	}
 
 	// util
@@ -194,17 +237,14 @@ public class PlayerHUD : NetworkBehaviour {
 		screen.alpha = 1;
 		screen.interactable = true;
 	}
-
 	private void HideScreen(CanvasGroup screen) {
 		screen.alpha = 0;
 		screen.interactable = false;
 	}
-
 	private void FadeInScreen(CanvasGroup screen) {
 		screen.alpha = 0;
 		screen.DOFade(1, 0.5f);
 	}
-
 	private void FadeOutScreen(CanvasGroup screen) {
 		screen.alpha = 1;
 		screen.DOFade(0, 0.5f);

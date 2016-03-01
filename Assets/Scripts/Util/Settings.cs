@@ -14,8 +14,10 @@ public class Settings : MonoBehaviour {
 
 	// Game settings
 	public const bool FirstPersonMode = true;
+	public const bool TDMGameMode = true;
 	public const int ScorePerKill = 10;
-	public const int TDMWinScore = 50;
+	public const int TDMWinScore = 150;
+	public const int timeBeforeNextRound = 10;
 
 	// Physics
     public const float Gravity = -16f;

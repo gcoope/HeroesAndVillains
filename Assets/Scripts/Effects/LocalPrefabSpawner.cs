@@ -31,6 +31,11 @@ public class LocalPrefabSpawner : NetworkBehaviour	{
 	}
 	[ClientRpc]
 	private void RpcSpawnLocalExplosion(Vector3 position, bool isHero) {
+		if (isHero) {
+			AudioKeys.HeroExplosion.PlaySound (position);
+		} else {
+			AudioKeys.VillainExplosion.PlaySound (position);
+		}
 		if(isServer) return;
 		GameObject explosion = ObjectPooler.instance.SpawnFromPool(isHero ? lightningSparkPrefab : fireBallPrefab, transform);
 		explosion.transform.position = position;

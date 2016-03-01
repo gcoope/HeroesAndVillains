@@ -28,6 +28,9 @@ public class MenuScreenController : MonoBehaviour {
 		MainMenuOptions.alpha = 0;
 		MainMenuButtonsGroup.alpha = 1;
 		MainMenuOptions.blocksRaycasts = false;
+
+		// Playing menu loop here
+		AudioKeys.MenuLoop1.PlayMusic();
 	}
 
 	public void ShowMultiplayerCanvas() {
@@ -53,6 +56,7 @@ public class MenuScreenController : MonoBehaviour {
 	}
 
 	public void ShowOptions() {
+		AudioKeys.UIClick.PlaySound ();
 		MainMenuOptions.DOFade(1, 0.25f);
 		MainMenuOptions.blocksRaycasts = true;
 		MainMenuButtonsGroup.DOFade(0, 0.25f);

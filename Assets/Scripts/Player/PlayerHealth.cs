@@ -28,8 +28,6 @@ public class PlayerHealth : NetworkBehaviour {
 
 	
 	void Update() {
-
-
 		if(!isLocalPlayer) return;
 
 		if(Health <= 0) {
@@ -44,10 +42,12 @@ public class PlayerHealth : NetworkBehaviour {
 				PlayerRespawn();
 			}
 		}
-
+			
+		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Alpha5)) {
 			CmdAddScore(netId, Settings.ScorePerKill, thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
 		}
+		#endif
 	}
 
 	public void TakeDamage(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDmg = false) {

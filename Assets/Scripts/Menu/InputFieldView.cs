@@ -15,6 +15,7 @@ public class InputFieldView : MonoBehaviour {
 
 	public void OnInputChange(string input) {
 		gameObject.DispatchGlobalEvent(MenuEvent.InputFieldChange, new object[]{ new InputFieldVO(inputKey, input) });
+		AudioKeys.InputFieldClick.PlaySound ();
 	}
 
 }

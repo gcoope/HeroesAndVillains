@@ -12,6 +12,10 @@ public class DestructableModel : MonoBehaviour {
 	private int currentHits = 0;
 	protected bool hasChanged = false;
 
+	void Awake() {
+		gameObject.AddGlobalEventListener (GameplayEvent.ResetGame, Reset);
+	}
+
 	public virtual void Hit() {
 		currentHits++;
 		if(currentHits == shotsToDestroy) {
@@ -24,5 +28,12 @@ public class DestructableModel : MonoBehaviour {
 		currentModelRoot.SetActive(false);
 		destroyedModel.SetActive(true);
 		//TODO trigger any script on newly shown destroyed model
+	}
+
+	public virtual void Reset(EventObject evt = null) {
+		currentHits = 0;
+		hasChanged = false;
+		currentModelRoot.SetActive(true);
+		destroyedModel.SetActive(false);
 	}
 }

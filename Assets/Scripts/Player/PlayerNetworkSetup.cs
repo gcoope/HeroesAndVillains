@@ -34,6 +34,9 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			scoreUIController.enabled = true;
 			playerNameText.SetActive(false);
 			modelMaterialManager.HideModel();
+
+			// Playing game music here
+			AudioKeys.GameSong1.PlayMusic();
 		}
 	}
 

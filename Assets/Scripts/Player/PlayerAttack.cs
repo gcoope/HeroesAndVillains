@@ -37,6 +37,7 @@ namespace smoothstudio.heroesandvillains.player
 		void Awake() {
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
 			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
+			gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, HandleResetGameEvent);
 		}
 
 		void Start() {
@@ -62,10 +63,17 @@ namespace smoothstudio.heroesandvillains.player
 		private void HandleGameOverEvent(EventObject evt) {
 			RpcSetGameOver(true);
 		}
-
 		[ClientRpc]
 		private void RpcSetGameOver(bool gameOver) {
 			isGameOver = gameOver;
+		}
+
+		private void HandleResetGameEvent(EventObject evt) {
+			RpcResetGame();
+		}
+		[ClientRpc]
+		private void RpcResetGame() {
+			isGameOver = false;
 		}
 
 		public void SetAllowAnyInput(bool allow) {

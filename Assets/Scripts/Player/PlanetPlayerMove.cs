@@ -71,6 +71,7 @@ namespace smoothstudio.heroesandvillains.player
 
 		void Awake() {
 			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
+			gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, HandleGameResetEvent);
 		}
 
 		void Start() {
@@ -116,11 +117,13 @@ namespace smoothstudio.heroesandvillains.player
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 
 				// Move to top of world for testing
-				if(Input.GetKeyDown(KeyCode.F5)) {
+				#if UNITY_EDITOR
+				if(Input.GetKeyDown(KeyCode.F8)) {
 					Transform topPos = SpawnManager.instance.GetFreeSpawn(true);
 					transform.position = topPos.position;
 					transform.rotation = topPos.rotation;
 				}
+				#endif
 
 //				 Sticking fix
 				if (isGrounded) {
@@ -154,6 +157,12 @@ namespace smoothstudio.heroesandvillains.player
 			}			
 		}
 
+		private void ResetPositionToSpawn() {
+			Transform topPos = SpawnManager.instance.GetFreeSpawn(playerInfo.playerTeam == Settings.HeroTeam);
+			transform.position = topPos.position;
+			transform.rotation = topPos.rotation;
+		}
+
 		private void HandleGameOverEvent(EventObject evt) {
 			RpcSetGameOver(true);
 		}
@@ -163,6 +172,19 @@ namespace smoothstudio.heroesandvillains.player
 			moveDir = new Vector3(0,0,0);
 			playerRigidbody.velocity = new Vector3(0,0,0);
 			isGameOver = gameOver;
+		}
+
+		private void HandleGameResetEvent(EventObject evt) {
+			RpcResetGame();
+		}
+
+		[ClientRpc]
+		private void RpcResetGame() {
+			moveDir = new Vector3(0,0,0);
+			playerRigidbody.velocity = new Vector3(0,0,0);
+			isGameOver = false;
+			SetAllowControl (true);
+			ResetPositionToSpawn ();
 		}
 
 		public void SetAllowControl(bool allow) {
