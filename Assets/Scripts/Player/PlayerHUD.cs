@@ -100,6 +100,7 @@ public class PlayerHUD : NetworkBehaviour {
 
 	private IEnumerator WaitTheShowScores() {
 		yield return new WaitForSeconds(3.5f);
+		FadeOutScreen(respawnScreen);
 		showingScoreboard = false;
 		ToggleScoreboard();
 	}
