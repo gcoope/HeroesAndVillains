@@ -5,7 +5,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	private PlayerFaint playerFaint;
 	private PlayerHealth playerHealth;
-	private PlayerName nameText;
+//	private PlayerName nameText;
 	private PlayerModelChanger modelChanger;
 
 	[Header("Player")]
@@ -28,7 +28,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 	void Awake () {
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		playerHealth = gameObject.GetComponent<PlayerHealth>();
-		nameText = gameObject.GetComponent<PlayerName>();
+//		nameText = gameObject.GetComponent<PlayerName>();
 		modelChanger = gameObject.GetComponent<PlayerModelChanger>();
 	}
 
@@ -48,7 +48,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	public override void OnStartClient () {		
 		base.OnStartClient ();
-		nameText = gameObject.GetComponent<PlayerName>();
+//		nameText = gameObject.GetComponent<PlayerName>();
 		OnNameChange(playerName);
 		OnTeamChange(playerTeam);
 	}
@@ -60,7 +60,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	public void OnNameChange(string name) {
 		if(isLocalPlayer) return;
-		nameText.SetName(name);
+//		nameText.SetName(name);
 		gameObject.name = name;
 	}
 
@@ -70,7 +70,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerTeam = team;
 		gameObject.name = playerName;
 		modelChanger.SetModelColour(playerTeam);
-		nameText.SetName(playerName);
+//		nameText.SetName(playerName);
 		RpcSetClientPlayerInfo(playerName, playerTeam);
 
 		NetworkInstanceId _netID = gameObject.GetComponent<NetworkIdentity>().netId;
@@ -84,6 +84,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerTeam = team;
 		gameObject.name = playerName;
 		modelChanger.SetModelColour(playerTeam);
-		nameText.SetName(playerName);
+//		nameText.SetName(playerName);
 	}
 }

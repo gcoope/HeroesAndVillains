@@ -43,7 +43,8 @@ namespace smoothstudio.heroesandvillains.physics
             attractorTransform = attractor.GetComponent<Transform>();
 
 			if(bodyRigidbody == null) {
-				bodyRigidbody = gameObject.AddComponent<Rigidbody>();
+				bodyRigidbody = gameObject.GetComponent<Rigidbody>();
+				if(bodyRigidbody == null) bodyRigidbody = gameObject.AddComponent<Rigidbody>();
 			}
             bodyTransform = gameObject.GetComponent<Transform>();
 
@@ -58,6 +59,7 @@ namespace smoothstudio.heroesandvillains.physics
         }
 
         private void Attract() {
+			if(bodyRigidbody == null) bodyRigidbody = gameObject.GetComponent<Rigidbody>();
 			if(bodyRigidbody == null) return;
             gravityUp = (bodyTransform.position - attractorTransform.position).normalized;		                                                
             bodyUp = bodyTransform.up;
@@ -65,7 +67,25 @@ namespace smoothstudio.heroesandvillains.physics
 				Quaternion targetRotation = Quaternion.FromToRotation(bodyUp, gravityUp) * bodyTransform.rotation;
 				bodyTransform.rotation = Quaternion.Slerp(bodyTransform.rotation, targetRotation, 50 * Time.deltaTime);
 			}
-			this.bodyRigidbody.AddForce(gravityUp * gravity, ForceMode.Force);
+			this.bodyRigidbody.AddForce(gravityUp * -gravity, ForceMode.Force);
         }
+
+		// Effectors
+		public void AddExplosionForce(Vector3 fromPosition, float power) {
+			//			bodyRigidbody.AddForceAtPosition((transform.position - fromPosition).normalized * 20f, fromPosition, ForceMode.Impulse);
+			if(bodyRigidbody != null) bodyRigidbody.AddForce((transform.position - fromPosition).normalized * power, ForceMode.Impulse);
+		}
+
+		// Setters
+		public void SetGravity(float newG) {
+			gravity = newG;
+		}
+		public void ReduceGravity(float amount) {
+			gravity -= amount;
+			Debug.Log(gravity);
+		}
+		public void ResetGravity() {
+			if(gravity != Settings.Gravity)	gravity = Settings.Gravity;
+		}
     }
 }

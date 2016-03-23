@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using smoothstudio.heroesandvillains.physics;
 
 [NetworkSettings(channel=1)]
 public class SplashDamagerCollider : NetworkBehaviour {
@@ -18,6 +19,10 @@ public class SplashDamagerCollider : NetworkBehaviour {
 
 		if(col.CompareTag(ObjectTagKeys.DestructableObject)) {
 			col.gameObject.GetComponent<DestructableModel>().Hit();
+		}
+
+		if(col.CompareTag(ObjectTagKeys.MoveableObject)) {
+			col.gameObject.GetComponent<FauxGravityBody>().AddExplosionForce(transform.position, 15f);
 		}
 	}
 }

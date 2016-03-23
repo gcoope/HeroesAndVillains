@@ -17,13 +17,13 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public void SetModelColour(string team) {
 		playerTeam = team;
-		UpdateMaterial(playerTeam);
+	//	UpdateMaterial(playerTeam);
 	}
 
 	[ClientRpc]
 	public void RpcSetModelColour(string team) {
 		playerTeam = team;
-		UpdateMaterial(playerTeam);
+		//UpdateMaterial(playerTeam);
 	}
 
 	private void UpdateMaterial(string team) {
@@ -34,7 +34,7 @@ public class PlayerModelChanger : NetworkBehaviour {
 	[Command]
 	public void CmdTellOthersMaterial(string playerTeam) {
 		RpcSetModelColour(playerTeam);
-		gameObject.GetComponent<PlayerModelChanger>().UpdateMaterial(playerTeam);
+//		gameObject.GetComponent<PlayerModelChanger>().UpdateMaterial(playerTeam);
 	}
 
 	public void EnableModel(bool enable) {

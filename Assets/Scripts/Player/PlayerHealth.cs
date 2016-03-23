@@ -43,11 +43,9 @@ public class PlayerHealth : NetworkBehaviour {
 			}
 		}
 			
-		#if UNITY_EDITOR
 		if(Input.GetKeyDown(KeyCode.Alpha5)) {
 			CmdAddScore(netId, Settings.ScorePerKill, thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
 		}
-		#endif
 	}
 
 	public void TakeDamage(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDmg = false) {

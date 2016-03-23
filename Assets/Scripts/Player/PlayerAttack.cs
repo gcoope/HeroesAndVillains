@@ -11,6 +11,7 @@ namespace smoothstudio.heroesandvillains.player
 	[RequireComponent(typeof(BasePlayerInfo))]
 	public class PlayerAttack : NetworkBehaviour
 	{	
+		[SerializeField] private PlayerAnimator playerAnimator;
 		private BasePlayerInfo playerInfo;
 		private PlayerHealth playerHealth;
 		private const float attackCooldown = 0.4f;
@@ -85,7 +86,7 @@ namespace smoothstudio.heroesandvillains.player
 				if(!canNormalFire && useFireCooldown) return;
 				StartCoroutine("NormalFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.2f, new Vector3(0.2f, 0.2f, 0), 1); // TODO rethink camera shake implementation, cause bugs
+				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO rethink camera shake implementation, cause bugs
 			}       
 
 			// Controller needs a bit more help
@@ -93,7 +94,8 @@ namespace smoothstudio.heroesandvillains.player
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.2f, 0.2f, 1);	
+				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO rethink camera shake implementation, cause bugs
+//				playerCameraTransform.DOShakePosition(0.2f, 0.2f, 1);	
 			}
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
@@ -112,6 +114,7 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void RaycastFire() { // Primary attack (for now)
+			playerAnimator.CmdFire();
 			RaycastHit hit;
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);

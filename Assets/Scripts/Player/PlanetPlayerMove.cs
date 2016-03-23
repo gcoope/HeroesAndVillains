@@ -9,6 +9,7 @@ namespace smoothstudio.heroesandvillains.player
 	[NetworkSettings(channel=2, sendInterval=0)]
 	public class PlanetPlayerMove : NetworkBehaviour
     {
+		[SerializeField] private PlayerAnimator playerAnimator;
 		private bool cameraIsFPS = true;
 		private BasePlayerInfo playerInfo;
 		private PlayerGravityBody playerGravityBody;
@@ -26,7 +27,8 @@ namespace smoothstudio.heroesandvillains.player
 		private bool isGrounded;
 		private bool hasDoubleJumped;
 		private bool doubleJumpEnabled;
-		private const float rayLength = 1.8f;
+		private const float rayLength = 1f;
+//		private const float rayLength = 1.8f;
 
 		private PlayerModelChanger playerModel; // So we can turn it on in 3rd person
 
@@ -108,6 +110,7 @@ namespace smoothstudio.heroesandvillains.player
 
 				RecieveInputFirstPerson();
 				HandleJumping();
+				playerAnimator.UpdateIsGrounded(isGrounded);
 
 				RaycastHit sphereHit;
 //				if(Physics.Raycast(transform.position, -transform.up, rayLength)) isGrounded = true; // Grounding check
@@ -117,13 +120,9 @@ namespace smoothstudio.heroesandvillains.player
 				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
 
 				// Move to top of world for testing
-				#if UNITY_EDITOR
 				if(Input.GetKeyDown(KeyCode.F8)) {
-					Transform topPos = SpawnManager.instance.GetFreeSpawn(true);
-					transform.position = topPos.position;
-					transform.rotation = topPos.rotation;
+					ResetPositionToSpawn ();
 				}
-				#endif
 
 //				 Sticking fix
 				if (isGrounded) {
@@ -143,6 +142,7 @@ namespace smoothstudio.heroesandvillains.player
 			if(isLocalPlayer) {
 				if(playerRigidbody == null) playerRigidbody = GetComponent<Rigidbody>();
 
+
 				if(moveDir == Vector3.zero && isGrounded) {
 				//	playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
 				}
@@ -152,6 +152,9 @@ namespace smoothstudio.heroesandvillains.player
 				if(xSpeed < moveSpeed && zSpeed < moveSpeed) {
 					playerRigidbody.velocity += transform.TransformDirection(moveDir);
 				}
+
+				// Sending velocity to animator
+				playerAnimator.CmdUpdateVelocity(playerRigidbody.velocity);
 
 				TransmitTransform(); // Keep other clients updated
 			}			
@@ -195,17 +198,46 @@ namespace smoothstudio.heroesandvillains.player
 			sensitivity = new Vector2(sens, sens);
 		}
 
+		float helpDownTimer = 0;
+		float maxHoldtime = 1f;
+		bool reduceGravity = false;
+
 		private void HandleJumping() {
 			if(!allowAllControl) return;
 			if (Input.GetButtonDown("Jump")) {
+
+				helpDownTimer = 0;
+
 				if(isGrounded) {
-					hasDoubleJumped = false;
-					playerGravityBody.Jump(jumpPower);
-				} else if(!isGrounded && !hasDoubleJumped && doubleJumpEnabled) {
-					hasDoubleJumped = true;
-					playerGravityBody.Jump(jumpPower * 0.5f);
+					playerGravityBody.SetGravity(8f);
+					playerGravityBody.Jump(7f);
+					playerAnimator.CmdJump();
+					reduceGravity = true;
 				}
-			}      
+
+//				if(isGrounded) {
+//					playerGravityBody.Jump(jumpPower);
+//					hasDoubleJumped = false;
+//				} else if(!isGrounded && !hasDoubleJumped && doubleJumpEnabled) {
+//					hasDoubleJumped = true;
+//					playerGravityBody.Jump(jumpPower * 0.5f);
+//				}			
+			}  
+
+			if(Input.GetButton("Jump")) {
+				if(helpDownTimer < maxHoldtime) {
+					if(reduceGravity) {
+						helpDownTimer += Time.deltaTime;
+					}
+				} else {
+					reduceGravity = false;
+					playerGravityBody.ResetGravity();
+				}
+			}
+
+			if(Input.GetButtonUp("Jump")) {
+				playerGravityBody.ResetGravity();
+			}
 		}
 
 		private void RecieveInputFirstPerson() {

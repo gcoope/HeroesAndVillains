@@ -14,6 +14,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	[SerializeField] GameObject playerNameText;
 	[SerializeField] ModelMaterialFader modelMaterialManager;
 	[SerializeField] Camera playerCamera;
+	[SerializeField] PlayerAnimator playerAnimator;
 
 	void Awake() { 
 		audioListener = GetComponent<AudioListener>();
@@ -29,6 +30,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			playerCamera.enabled = true;
 			audioListener.enabled = true;
 			gravityBody.enabled = true;
+			playerAnimator.enabled = true;
 			gravityBody.Setup(gameObject.AddComponent<Rigidbody>());
 			playerHUD.enabled = true;
 			scoreUIController.enabled = true;

@@ -16,11 +16,11 @@ public class Settings : MonoBehaviour {
 	public const bool FirstPersonMode = true;
 	public const bool TDMGameMode = true;
 	public const int ScorePerKill = 10;
-	public const int TDMWinScore = 150;
-	public const int timeBeforeNextRound = 10;
+	public const int TDMWinScore = 50;
+	public const int timeBeforeNextRound = 5;
 
 	// Physics
-    public const float Gravity = -16f;
+    public const float Gravity = 16f;
 
 	// Networking
 	public const string HostIP = "localhost";

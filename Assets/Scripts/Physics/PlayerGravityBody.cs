@@ -21,10 +21,5 @@ namespace smoothstudio.heroesandvillains.physics {
 			if(bodyRigidbody != null) bodyRigidbody.AddForce(gravityUp * jumpPower, ForceMode.Impulse);
         }	
 
-		public void AddExplosionForce(Vector3 fromPosition, float power) {
-//			bodyRigidbody.AddForceAtPosition((transform.position - fromPosition).normalized * 20f, fromPosition, ForceMode.Impulse);
-			if(bodyRigidbody != null) bodyRigidbody.AddForce((transform.position - fromPosition).normalized * power, ForceMode.Impulse);
-		}
-
     }
 }
