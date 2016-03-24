@@ -56,9 +56,7 @@ public class ServerScoreManager : NetworkBehaviour {
 		if (!restartingGame) {
 			restartingGame = true;
 			ResetGameScores ();
-			gameOver.DispatchGlobalEvent (GameplayEvent.ResetGame);
-			ServerPlayerManager.instance.ResetAllScores ();
-
+			ServerPlayerManager.instance.ResetGame ();
 		}
 	}
 }

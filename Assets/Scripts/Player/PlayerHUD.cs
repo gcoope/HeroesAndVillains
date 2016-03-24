@@ -138,11 +138,6 @@ public class PlayerHUD : NetworkBehaviour {
 	}
 
 	private void ResetGame(EventObject evt) {
-		RpcResetHUD ();
-	}
-
-	[ClientRpc]
-	private void RpcResetHUD() {
 		ResetHUD ();
 		isGameOver = false;
 	}

@@ -1,9 +1,6 @@
 using UnityEngine;
-using System.Collections;
 using smoothstudio.heroesandvillains.player.events;
 using UnityEngine.UI;
-using UnityEngine.Networking;
-using smoothstudio.heroesandvillains.player;
 
 public class LocalPlayerSetupInfo : MonoBehaviour {
 
@@ -15,6 +12,8 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 	void Awake() {
 		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, UpdateItems); 
 		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, UpdateItems); 
+		gameObject.AddGlobalEventListener(MenuEvent.CreateOnlineRoom, UpdateItems); 
+		gameObject.AddGlobalEventListener(MenuEvent.JoinDefaultRoom, UpdateItems); 
 		gameObject.AddGlobalEventListener(MenuEvent.InputFieldChange, HandleInputFieldChange);
 	}
 

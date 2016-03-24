@@ -70,10 +70,10 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void HandleResetGameEvent(EventObject evt) {
-			RpcResetGame();
+			ResetGame();
 		}
-		[ClientRpc]
-		private void RpcResetGame() {
+
+		private void ResetGame() {
 			isGameOver = false;
 		}
 

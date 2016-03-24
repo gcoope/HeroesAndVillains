@@ -5,7 +5,7 @@ using DG.Tweening;
 public class ModelMaterialFader : MonoBehaviour {
 
 	private Renderer[] playerRenderers;
-	private float fadeDuration = 1f;
+	private const float fadeDuration = 1f;
 	private bool modelShouldShow = false;
 
 	void Awake() {
@@ -23,22 +23,24 @@ public class ModelMaterialFader : MonoBehaviour {
 	}
 
 	public void FadeIn(bool delay = false) {
-
 		if(delay) {
 			StartCoroutine("WaitToVisuallyActivate");
 		} else {
-			for(int i = 0; i < playerRenderers.Length; i++) {
-				//			playerRenderers[i].material.DOFade(1, fadeDuration);
-				if(modelShouldShow) playerRenderers[i].enabled = true;
-			}
+			FadeInRenderers();
 		}
 	}
 
 	IEnumerator WaitToVisuallyActivate() {
 		yield return new WaitForSeconds(0.5f);
-		for(int i = 0; i < playerRenderers.Length; i++) {
-			//			playerRenderers[i].material.DOFade(1, fadeDuration);
-			if(modelShouldShow) playerRenderers[i].enabled = true;
+		FadeInRenderers();
+	}
+
+	private void FadeInRenderers() {
+		if(modelShouldShow) {
+			for(int i = 0; i < playerRenderers.Length; i++) {
+//			playerRenderers[i].material.DOFade(1, fadeDuration);
+				playerRenderers[i].enabled = true;
+			}
 		}
 	}
 

@@ -21,7 +21,7 @@ public class PlayerFaint : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcLocalFaint() {
-		GetComponent<PlayerName>().DisableText();
+//		GetComponent<PlayerName>().DisableText();
 		GetComponent<PlanetPlayerMove>().enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
 		GetComponent<PlayerMeleeSwing>().enabled = false;
@@ -48,7 +48,7 @@ public class PlayerFaint : NetworkBehaviour {
 		GetComponent<PlanetPlayerMove>().enabled = true;
 		GetComponent<PlayerAttack>().enabled = true;
 		GetComponent<PlayerMeleeSwing>().enabled = true;
-		GetComponent<PlayerName>().EnableText();
+//		GetComponent<PlayerName>().EnableText();
 
 		if(isLocalPlayer) {
 			GetComponent<PlayerGravityBody>().enabled = true;

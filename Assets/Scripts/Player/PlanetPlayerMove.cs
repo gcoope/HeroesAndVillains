@@ -78,11 +78,11 @@ namespace smoothstudio.heroesandvillains.player
 
 		void Start() {
 			playerModel = GetComponent<PlayerModelChanger>();
+			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 			if(isLocalPlayer) {
 				colliderMaterial = GetComponent<Collider>().material;
 				playerRigidbody = GetComponent<Rigidbody>();
 				playerGravityBody = GetComponent<PlayerGravityBody>();			
-				playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 				playerCameraTransform = GetComponentInChildren<Camera>().transform;
 
 				moveSpeed = playerInfo.speed;
@@ -173,18 +173,17 @@ namespace smoothstudio.heroesandvillains.player
 		[ClientRpc]
 		private void RpcSetGameOver(bool gameOver) {
 			moveDir = new Vector3(0,0,0);
-			playerRigidbody.velocity = new Vector3(0,0,0);
+			if(playerRigidbody != null) playerRigidbody.velocity = new Vector3(0,0,0);
 			isGameOver = gameOver;
 		}
 
 		private void HandleGameResetEvent(EventObject evt) {
-			RpcResetGame();
+			ResetGame();
 		}
 
-		[ClientRpc]
-		private void RpcResetGame() {
+		private void ResetGame() {
 			moveDir = new Vector3(0,0,0);
-			playerRigidbody.velocity = new Vector3(0,0,0);
+			if(playerRigidbody != null) playerRigidbody.velocity = new Vector3(0,0,0);
 			isGameOver = false;
 			SetAllowControl (true);
 			ResetPositionToSpawn ();

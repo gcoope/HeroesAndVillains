@@ -83,4 +83,16 @@ public class ServerPlayerManager : NetworkBehaviour {
 		gameObject.DispatchGlobalEvent(NetworkEvent.UpdatePlayerInfo, new object[]{updatedPlayerDetails});
 	}
 
+	[Server]
+	public void ResetGame() {
+		gameObject.DispatchGlobalEvent (GameplayEvent.ResetGame);
+		ResetAllScores();
+		RpcResetGame();
+	}
+
+	[ClientRpc]
+	private void RpcResetGame() {
+		gameObject.DispatchGlobalEvent (GameplayEvent.ResetGame);
+	}
+
 }

@@ -70,11 +70,6 @@ public class PlayerAnimator : NetworkBehaviour {
 //		ySpeed = clampedY;
 
 //		anim.animator.SetFloat("AirSpeed", ySpeed);
-
 	
-	}
-
-	void OnGUI() {
-		GUI.Label(new Rect(0.1f, 0.5f, 100, 100), playerVel.ToString());
 	}
 }

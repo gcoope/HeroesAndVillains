@@ -11,5 +11,10 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public static string ClientDisconnect = "MenuEvent.ClientDisconnect";
 		public static string InputFieldChange = "MenuEvent.InputFieldChange";
 		public const string ToggleVisibleCanvas = "MenuEvent.ToggleVisibleCanvas";
+
+		public const string StartMatchMaker = "MenuEvent.StartMatchMaker";
+		public const string StopMatchMaker = "MenuEvent.StopMatchMaker";
+		public const string CreateOnlineRoom = "MenuEvent.CreateOnlineRoom";
+		public const string JoinDefaultRoom = "MenuEvent.JoinDefaultRoom";
 	}
 }
