@@ -50,6 +50,8 @@ namespace smoothstudio.heroesandvillains.player
 		private Vector2 targetDirection;
 		private Vector2 targetCharacterDirection;
 
+		private bool useMouseSmoothing = true;
+
 		// Pause menu control
 		private bool allowAllControl = true;
 
@@ -74,7 +76,15 @@ namespace smoothstudio.heroesandvillains.player
 		void Awake() {
 			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
 			gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, HandleGameResetEvent);
-		}
+
+			// Mouse smoothing option
+			gameObject.AddGlobalEventListener(MenuEvent.EnableMouseSmoothing, (EventObject evt)=>{
+				useMouseSmoothing = true;
+			});
+			gameObject.AddGlobalEventListener(MenuEvent.DisableMouseSmoothing, (EventObject evt)=>{
+				useMouseSmoothing = false;
+			});
+	}
 
 		void Start() {
 			playerModel = GetComponent<PlayerModelChanger>();
@@ -144,7 +154,7 @@ namespace smoothstudio.heroesandvillains.player
 
 
 				if(moveDir == Vector3.zero && isGrounded) {
-				//	playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
+					playerRigidbody.velocity = new Vector3(playerRigidbody.velocity.x * 0.9f, playerRigidbody.velocity.y, playerRigidbody.velocity.z * 0.9f);
 				}
 
 				float xSpeed = Mathf.Abs(transform.InverseTransformDirection(playerRigidbody.velocity).x);
@@ -248,22 +258,25 @@ namespace smoothstudio.heroesandvillains.player
 
 			moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized; // Forward/Back, strafe Left/Right
 
-			// [NOT MINE] Smooth mouse look - http://forum.unity3d.com/threads/a-free-simple-smooth-mouselook.73117/
-			// TODO Reference this
+			// [NOT MINE] Smooth mouse look - http://forum.unity3d.com/threads/a-free-simple-smooth-mouselook.73117/ // TODO reference me
+
+			// Get raw mouse input for a cleaner reading on more sensitive mice.
+			Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
 			// Allow the script to clamp based on a desired target value.
 			Quaternion targetOrientation = Quaternion.Euler(targetDirection);
 			Quaternion targetCharacterOrientation = Quaternion.Euler(targetCharacterDirection);
 
-			// Get raw mouse input for a cleaner reading on more sensitive mice.
-			Vector2 mouseDelta = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
-				
 			// Scale input against the sensitivity setting and multiply that against the smoothing value.
 			mouseDelta = Vector2.Scale(mouseDelta, new Vector2(sensitivity.x * smoothing.x, sensitivity.y * smoothing.y));
-			
-			// Interpolate mouse movement over time to apply smoothing delta.
-			_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
-			_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+
+			if(useMouseSmoothing) { // Quite intensive so have the ability to turn it off			
+				_smoothMouse.x = Mathf.Lerp(_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+				_smoothMouse.y = Mathf.Lerp(_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
+			} else {
+				_smoothMouse.x = mouseDelta.x;
+				_smoothMouse.y = mouseDelta.y;
+			}
 			
 			// Find the absolute mouse movement value from point zero.
 			_mouseAbsolute += _smoothMouse;

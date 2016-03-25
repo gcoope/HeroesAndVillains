@@ -109,7 +109,6 @@ public class StartMenuController : MonoBehaviour {
 			foreach(MatchDesc m in response.matches) {
 				Debug.Log(m.name);
 				if(m.name == "default") {
-					MatchDesc match = NetworkManager.singleton.matches[0];
 					NetworkManager.singleton.matchName = m.name;
 					NetworkManager.singleton.matchSize = (uint)m.currentSize;
 					NetworkManager.singleton.matchMaker.JoinMatch(m.networkId, "", NetworkManager.singleton.OnMatchJoined);

@@ -103,6 +103,15 @@ public class SoundManager : MonoBehaviour
         OnLevelWasLoaded();
     }
 
+	// Sliders from options menus
+	public void SetSFXVolume(float volume) {
+		SFXVolume = volume;
+	}
+
+	public void SetMusicVolume(float volume) {
+		MusicVolume = volume;
+	}
+
     /// <summary>
     /// This method creates the containers for the pooling system to use.
     /// </summary>
@@ -152,7 +161,7 @@ public class SoundManager : MonoBehaviour
     void OnLevelWasLoaded()
     {
         //Update the Volumes based on playerprefs.
-        PickPlayerPrefsVolume();
+//        PickPlayerPrefsVolume();
 
         //Attempt to play a soundgroup with the current scene name if there is one available.
         Play(Application.loadedLevelName);

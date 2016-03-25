@@ -20,6 +20,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 using UnityEngine;
 using System.Collections;
+using smoothstudio.heroesandvillains.player.events;
 
 /// <summary>
 /// Soundgroup is used in conjunction with SoundManager.
@@ -48,6 +49,9 @@ public class SoundGroup : MonoBehaviour {
     public AudioSource mAudio;
 	
 	void Awake() {
+
+		gameObject.AddGlobalEventListener(MenuEvent.UpdateAudioVolumes, UpdateVolume);
+
         mAudio = GetComponent<AudioSource>();
 
         //Save the volume set on the inspector as our starting volume.
@@ -57,6 +61,10 @@ public class SoundGroup : MonoBehaviour {
         //it persists on level changes.
         if(Music)
             DontDestroyOnLoad(this.gameObject);
+	}
+
+	void UpdateVolume(EventObject evt) {
+		SetVolume();
 	}
 	
     /// <summary>

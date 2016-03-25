@@ -12,6 +12,10 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public static string InputFieldChange = "MenuEvent.InputFieldChange";
 		public const string ToggleVisibleCanvas = "MenuEvent.ToggleVisibleCanvas";
 
+		public const string UpdateAudioVolumes = "MenuEvent.UpdateAudioVolumes";
+		public const string EnableMouseSmoothing = "MenuEvent.EnableMouseSmoothing";
+		public const string DisableMouseSmoothing = "MenuEvent.DisableMouseSmoothing";
+
 		public const string StartMatchMaker = "MenuEvent.StartMatchMaker";
 		public const string StopMatchMaker = "MenuEvent.StopMatchMaker";
 		public const string CreateOnlineRoom = "MenuEvent.CreateOnlineRoom";
