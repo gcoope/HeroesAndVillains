@@ -21,7 +21,7 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 	[SerializeField] private Text consoleText;
 	[SerializeField] private Text serverIPText;
 
-	private bool isVisible = true;
+	private bool isVisible = false;
 
 	public override void OnStartServer ()
 	{

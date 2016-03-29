@@ -4,6 +4,7 @@ using DG.Tweening;
 
 public class ModelMaterialFader : MonoBehaviour {
 
+	public Renderer[] headRenderers;
 	private Renderer[] playerRenderers;
 	private const float fadeDuration = 1f;
 	private bool modelShouldShow = false;
@@ -52,15 +53,23 @@ public class ModelMaterialFader : MonoBehaviour {
 	}
 		
 	public void ShowModel() {
-		for(int i = 0; i < playerRenderers.Length; i++) {
-			if(!modelShouldShow) return;
-			playerRenderers[i].enabled = true;
+//		for(int i = 0; i < playerRenderers.Length; i++) {
+//			if(!modelShouldShow) return;
+//			playerRenderers[i].enabled = true;
+//		}
+
+		for(int i = 0; i < headRenderers.Length; i++) {
+			headRenderers[i].enabled = true;
 		}
 	}
 
 	public void HideModel() {
-		for(int i = 0; i < playerRenderers.Length; i++) {
-			playerRenderers[i].enabled = false;
+//		for(int i = 0; i < playerRenderers.Length; i++) {
+//		//	playerRenderers[i].enabled = false;
+//		}
+
+		for(int i = 0; i < headRenderers.Length; i++) {
+			headRenderers[i].enabled = false;
 		}
 	}
 

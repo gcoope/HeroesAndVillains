@@ -19,10 +19,10 @@ namespace smoothstudio.heroesandvillains.player
 		private Vector3 cameraFpsPosition;
 		private Vector3 cameraThirdPersonPosition;
 
-        private float moveSpeed;
-        private const float rotateSpeed = 25f;
-        private float jumpPower;
-        private Vector3 moveDir;
+		private float moveSpeed;
+		private const float rotateSpeed = 25f;
+		private float jumpPower;
+		private Vector3 moveDir;
 
 		private bool isGrounded;
 		private bool hasDoubleJumped;
@@ -100,7 +100,7 @@ namespace smoothstudio.heroesandvillains.player
 
 				doubleJumpEnabled = playerInfo.doubleJumpEnabled;
 
-				cameraFpsPosition = new Vector3(0, 0.5f, 0f);
+				cameraFpsPosition = new Vector3(0.048f, 0.468f, 0.408f);
 				cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
 
 

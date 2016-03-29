@@ -141,7 +141,6 @@ public class PlayerHealth : NetworkBehaviour {
 		playerHUD.PlayerHasRespawned();
 		Health = Settings.BaseHealth;
 		UpdateHealthText();
-		Debug.Log(gameObject.name + " has respawned!");
 	}
 
 	[Command]

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpawnManager : MonoBehaviour {
 
@@ -24,14 +25,15 @@ public class SpawnManager : MonoBehaviour {
 
 	public Transform GetFreeSpawn(bool hero) {
 		SpawnPoint[] checkArray = hero ? heroSpawnPoints : villainSpawnPoints;
+		List<SpawnPoint> freeSpawns = new List<SpawnPoint>();
 		for(int i = 0; i < checkArray.Length; i++) {
 			if(checkArray[i].IsFree) {
-				checkArray[i].SpawnedOn();
-				return checkArray[i].transform;
+//				checkArray[i].SpawnedOn();
+				freeSpawns.Add(checkArray[i]);
+//				return checkArray[i].transform;
 			}
 		}
-		Debug.Log("[SpawnManager] No free spawns found!");
-		return transform; // As long as there are 5 spawn points this shouldn't happen
+		return freeSpawns[Random.Range(0, freeSpawns.Count)].transform; // Get random from the free spawns
 	}
 
 }

@@ -54,15 +54,5 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	void OnDisable() {
 		if(ServerPlayerManager.instance != null && netId != null) ServerPlayerManager.instance.UnregisterPlayer(netId);
 	}
-
-	[Command]
-	void CmdOnDisable(NetworkInstanceId id) {
-		ServerPlayerManager.instance.UnregisterPlayer(id);
-	}
-
-	[Command]
-	private void CmdLogSomething(string msg) {
-		ServerOnlyPlayerDisplay.instance.Log(msg);
-	}
 }
 

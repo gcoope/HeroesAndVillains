@@ -86,7 +86,7 @@ namespace smoothstudio.heroesandvillains.player
 				if(!canNormalFire && useFireCooldown) return;
 				StartCoroutine("NormalFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO rethink camera shake implementation, cause bugs
+				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO test camera shake implementation, causes bugs
 			}       
 
 			// Controller needs a bit more help
@@ -94,8 +94,7 @@ namespace smoothstudio.heroesandvillains.player
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO rethink camera shake implementation, cause bugs
-//				playerCameraTransform.DOShakePosition(0.2f, 0.2f, 1);	
+				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO test camera shake implementation, causes bugs
 			}
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
@@ -119,11 +118,11 @@ namespace smoothstudio.heroesandvillains.player
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
 				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
-//				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
-//					CmdRaycastHit(hit.collider.gameObject);
-//				} else {
+				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
+					CmdRaycastHit(hit.collider.gameObject, localPlayerInfoPacket);
+				} else {
 					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
-//				}
+				}
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
 				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
 				CmdSpawnExplosion(projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
@@ -154,8 +153,8 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		[Command]
-		private void CmdRaycastHit(GameObject player) {
-			player.GetComponent<PlayerHealth>().ServerTakeDamage(20, localPlayerInfoPacket);
+		private void CmdRaycastHit(GameObject player, PlayerInfoPacket playerInfoPacket) {
+			player.GetComponent<PlayerHealth>().ServerTakeDamage(20, playerInfoPacket);
 		}
 
 		// TODO Falcon kick

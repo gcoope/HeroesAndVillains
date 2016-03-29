@@ -249,7 +249,7 @@ public class PlayerHUD : NetworkBehaviour {
 	private void HandleZooming() {
 		if(playerCamera != null) {
 			// TODO Console controller zooming
-			if(Input.GetMouseButton(1)) {
+			if(Input.GetMouseButton(1) && !showingPauseMenu && !isGameOver) {
 				targetFOV = 35;
 			} else {
 				targetFOV = 80;

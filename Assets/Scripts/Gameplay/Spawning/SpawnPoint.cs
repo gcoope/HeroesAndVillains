@@ -3,6 +3,7 @@ using System.Collections;
 
 public class SpawnPoint : MonoBehaviour {	
 
+
 	private bool _isFree = true;
 	public bool IsFree {
 		get {
@@ -13,14 +14,31 @@ public class SpawnPoint : MonoBehaviour {
 		}
 	}
 
-	public void SpawnedOn() {
-		_isFree = false;
-		StartCoroutine("WaitASec");
+//	public void SpawnedOn() {
+//		_isFree = false;
+//		StartCoroutine("WaitASec");
+////	}
+//
+//	IEnumerator WaitASec() {
+//		yield return new WaitForSeconds(3f);
+//		_isFree = true;
+//	}
+
+	void OnTriggerEnter(Collider col) {
+		if(col.CompareTag(ObjectTagKeys.Player)) {
+			_isFree = false;
+		}
 	}
 
-	IEnumerator WaitASec() {
-		yield return new WaitForSeconds(3f);
-		_isFree = true;
+	void OnTriggerStay(Collider col) {
+		if(col.CompareTag(ObjectTagKeys.Player)) {
+			_isFree = false;
+		}
 	}
 
+	void OnTriggerExit(Collider col) {
+		if(col.CompareTag(ObjectTagKeys.Player)) {
+			_isFree = true;
+		}
+	}
 }
