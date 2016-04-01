@@ -100,7 +100,7 @@ namespace smoothstudio.heroesandvillains.player
 
 				doubleJumpEnabled = playerInfo.doubleJumpEnabled;
 
-				cameraFpsPosition = new Vector3(0.048f, 0.468f, 0.408f);
+				cameraFpsPosition = new Vector3(0.05f, 0.45f, 0.4f);
 				cameraThirdPersonPosition = new Vector3(0, 2f, -4.5f);
 
 

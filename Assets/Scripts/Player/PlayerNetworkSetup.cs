@@ -50,8 +50,11 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 		}
 	}
 
-	[Server]
 	void OnDisable() {
+		if(isServer) ServerDisable();
+	}
+
+	void ServerDisable() {
 		if(ServerPlayerManager.instance != null && netId != null) ServerPlayerManager.instance.UnregisterPlayer(netId);
 	}
 }
