@@ -18,7 +18,9 @@ namespace smoothstudio.heroesandvillains.physics {
 		}
 
         public void Jump(float jumpPower) {
-			if(bodyRigidbody != null) bodyRigidbody.AddForce(gravityUp * jumpPower, ForceMode.Impulse);
+			if (bodyRigidbody != null) {
+				bodyRigidbody.AddForce (gravityUp * jumpPower, ForceMode.Impulse);
+			}
         }	
 
     }

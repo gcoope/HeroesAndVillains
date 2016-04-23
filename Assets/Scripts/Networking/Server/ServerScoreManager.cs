@@ -39,16 +39,18 @@ public class ServerScoreManager : NetworkBehaviour {
 	}
 
 	private void CheckWinCondition() {
-		if(heroScore >= Settings.TDMWinScore) {
-			gameOver = true;
-			gameObject.DispatchGlobalEvent(GameplayEvent.GameOver, new object[]{true});
-			ServerOnlyPlayerDisplay.instance.Log("<color=cyan>Heroes win!</color>");
-		}
+		if (isServer) {
+			if (heroScore >= Settings.TDMWinScore) {
+				gameOver = true;
+				gameObject.DispatchGlobalEvent (GameplayEvent.GameOver, new object[]{ true });
+				ServerOnlyPlayerDisplay.instance.Log ("<color=cyan>Heroes win!</color>");
+			}
 
-		if(villainScore >= Settings.TDMWinScore) {
-			gameOver = true;
-			gameObject.DispatchGlobalEvent(GameplayEvent.GameOver, new object[]{false});
-			ServerOnlyPlayerDisplay.instance.Log("<color=red>Villains win!</color>");
+			if (villainScore >= Settings.TDMWinScore) {
+				gameOver = true;
+				gameObject.DispatchGlobalEvent (GameplayEvent.GameOver, new object[]{ false });
+				ServerOnlyPlayerDisplay.instance.Log ("<color=red>Villains win!</color>");
+			}
 		}
 	}
 

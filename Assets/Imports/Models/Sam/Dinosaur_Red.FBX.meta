@@ -1,0 +1,129 @@
+fileFormatVersion: 2
+guid: af4ab21feb314f04b9086592df2f10ca
+timeCreated: 1461430469
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Base006
+    100002: Bolts005
+    100004: Bolts006
+    100006: Dinosaur Body002
+    100008: Dinosaur Sides002
+    100010: //RootNode
+    100012: Eyes002
+    100014: Foot Rests002
+    100016: Handles002
+    100018: Object015
+    100020: Seat006
+    100022: Spring007
+    400000: Base006
+    400002: Bolts005
+    400004: Bolts006
+    400006: Dinosaur Body002
+    400008: Dinosaur Sides002
+    400010: //RootNode
+    400012: Eyes002
+    400014: Foot Rests002
+    400016: Handles002
+    400018: Object015
+    400020: Seat006
+    400022: Spring007
+    2300000: Base006
+    2300002: Bolts005
+    2300004: Bolts006
+    2300006: Dinosaur Body002
+    2300008: Dinosaur Sides002
+    2300010: Eyes002
+    2300012: Foot Rests002
+    2300014: Handles002
+    2300016: Object015
+    2300018: Seat006
+    2300020: Spring007
+    3300000: Base006
+    3300002: Bolts005
+    3300004: Bolts006
+    3300006: Dinosaur Body002
+    3300008: Dinosaur Sides002
+    3300010: Eyes002
+    3300012: Foot Rests002
+    3300014: Handles002
+    3300016: Object015
+    3300018: Seat006
+    3300020: Spring007
+    4300000: Foot Rests002
+    4300002: Seat006
+    4300004: Dinosaur Sides002
+    4300006: Bolts005
+    4300008: Bolts006
+    4300010: Handles002
+    4300012: Object015
+    4300014: Eyes002
+    4300016: Base006
+    4300018: Spring007
+    4300020: Dinosaur Body002
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

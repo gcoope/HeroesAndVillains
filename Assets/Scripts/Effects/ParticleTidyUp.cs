@@ -6,7 +6,7 @@ public class ParticleTidyUp : MonoBehaviour {
 
 	public float stayDuration = 0.25f;
 
-	void Start () {
+	void OnEnable () {
 		StartCoroutine("TidyUp");
 	}
 

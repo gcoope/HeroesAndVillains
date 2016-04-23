@@ -12,6 +12,9 @@ public class MenuScreenController : MonoBehaviour {
 	[SerializeField] private CanvasGroup MainMenuButtonsGroup;
 	[SerializeField] private CanvasGroup MainMenuOptions;
 	[SerializeField] private GameObject CreditsPanel;
+	[SerializeField] private GameObject ActualOptions;
+	[SerializeField] private GameObject QuitPanel;
+
 	private CanvasGroup mainMenuCanvasGroup;
 	private CanvasGroup multiplayerCanvasGroup;
 
@@ -31,6 +34,7 @@ public class MenuScreenController : MonoBehaviour {
 
 		MainMenuCanvas.SetActive(true);
 		MultiplayerCanvas.SetActive(false);
+		QuitPanel.SetActive (false);
 
 		MainMenuOptions.alpha = 0;
 		MainMenuButtonsGroup.alpha = 1;
@@ -91,7 +95,18 @@ public class MenuScreenController : MonoBehaviour {
 	}
 
 	public void Quit() {
-		Application.Quit();
+		MainMenuButtonsGroup.alpha = 0;
+		QuitPanel.SetActive (true);
+	}
+
+	public void ConfirmQuit() {
+		Application.Quit ();
+	}
+
+	public void CancelQuit() {
+		QuitPanel.SetActive (false);
+		MainMenuButtonsGroup.alpha = 0;
+		MainMenuButtonsGroup.DOFade (1, 0.25f);
 	}
 
 	// Options menu handlers
@@ -108,10 +123,12 @@ public class MenuScreenController : MonoBehaviour {
 	}
 
 	public void ShowCredits() {
+		ActualOptions.SetActive (false);
 		CreditsPanel.SetActive(true);
 	}
 
 	public void HideCredits() {
+		ActualOptions.SetActive (true);
 		CreditsPanel.SetActive(false);
 	}
 }

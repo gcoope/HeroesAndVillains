@@ -35,7 +35,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 			playerHUD.enabled = true;
 			scoreUIController.enabled = true;
 			playerNameText.SetActive(false);
-			modelMaterialManager.HideModel();
+			modelMaterialManager.HideHeadModel();
 
 			// Playing game music here
 			AudioKeys.GameSong1.PlayMusic();
@@ -46,7 +46,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 		if(!isLocalPlayer && !isServer) {
 			gameObject.DispatchGlobalEvent(PlayerEvent.UpdateScoreboard);
 			modelMaterialManager.SetModelShowing(true);
-			modelMaterialManager.ShowModel();
+			modelMaterialManager.ShowHeadModel();
 		}
 	}
 

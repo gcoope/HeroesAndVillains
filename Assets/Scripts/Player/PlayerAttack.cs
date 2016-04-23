@@ -14,9 +14,12 @@ namespace smoothstudio.heroesandvillains.player
 		[SerializeField] private PlayerAnimator playerAnimator;
 		private BasePlayerInfo playerInfo;
 		private PlayerHealth playerHealth;
-		private const float attackCooldown = 0.4f;
+		private float attackCooldown = 0.4f;
+		private float rapidFireCooldown = 0.2f;
 		private bool useFireCooldown = true;
 		private bool canNormalFire = true;
+		private bool canRapidFire = true;
+		private bool cameraShaking = false;
 
 		private Transform playerCameraTransform;
 		PlayerGravityBody playerGravityBody;
@@ -35,6 +38,12 @@ namespace smoothstudio.heroesandvillains.player
 
 		private PlayerInfoPacket localPlayerInfoPacket;
 
+		// Rapid fire
+		private bool rapidFireEnabled = false;
+
+		// Hitmarker handling
+		private PlayerHUD playerHUD;
+
 		void Awake() {
 			gameObject.AddGlobalEventListener(ProjectileEvent.MeleeHitPlayer, MeleeHitSomePlayer);
 			gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameOverEvent);
@@ -47,9 +56,12 @@ namespace smoothstudio.heroesandvillains.player
 
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
 
+			rapidFireCooldown = Settings.RapidFireCooldownSpeed;
+
 			playerCameraTransform = gameObject.GetComponentInChildren<Camera>().transform;
 			if(isLocalPlayer) {
-				playerGravityBody = GetComponent<PlayerGravityBody>();
+				playerGravityBody = gameObject.GetComponent<PlayerGravityBody>();
+				playerHUD = gameObject.GetComponent<PlayerHUD> ();
 			}
 
 			localPlayerInfoPacket = new PlayerInfoPacket(playerInfo.playerName, playerInfo.playerTeam, netId);
@@ -82,19 +94,30 @@ namespace smoothstudio.heroesandvillains.player
 		}
 
 		private void RecieveInput() {
-			if (Input.GetMouseButtonDown(0)) {
-				if(!canNormalFire && useFireCooldown) return;
-				StartCoroutine("NormalFireCooldown");
-				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO test camera shake implementation, causes bugs
-			}       
+
+			if (rapidFireEnabled) {
+				if (Input.GetMouseButton (0)) {
+					if (!canRapidFire)
+						return;
+					StartCoroutine ("RapidFireCooldown");
+					RaycastFire ();
+				}
+			} else {
+				if (Input.GetMouseButtonDown (0)) {
+					if (!canNormalFire && useFireCooldown)
+						return;
+					StartCoroutine ("NormalFireCooldown");
+					RaycastFire ();
+				} 
+
+			}
 
 			// Controller needs a bit more help
 			if(Input.GetAxis("ControllerFire") < 0 && !controllerHasFired && controllerCanFire) {
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
 				RaycastFire();
-				playerCameraTransform.DOShakePosition(0.3f, new Vector3(0.3f, 0.3f, 0), 2); // TODO test camera shake implementation, causes bugs
+				ShakeCamera ();
 			}
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
@@ -111,6 +134,21 @@ namespace smoothstudio.heroesandvillains.player
 			yield return new WaitForSeconds(attackCooldown);
 			controllerCanFire = true;
 		}
+		IEnumerator RapidFireCooldown() { // Adds cooldown so you can't spam fire
+			canRapidFire = false;
+			yield return new WaitForSeconds(rapidFireCooldown);
+			canRapidFire = true;
+		}
+
+		private void ShakeCamera() {
+			if(!cameraShaking) {
+				cameraShaking = true;
+				playerCameraTransform.DOShakePosition (0.3f, new Vector3 (0.3f, 0.3f, 0), 2).OnComplete (()=>{
+					cameraShaking = false;
+				});
+			}
+
+		}
 
 		private void RaycastFire() { // Primary attack (for now)
 			playerAnimator.CmdFire();
@@ -120,6 +158,7 @@ namespace smoothstudio.heroesandvillains.player
 				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
 				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
 					CmdRaycastHit(hit.collider.gameObject, localPlayerInfoPacket);
+					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker();
 				} else {
 					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
 				}
@@ -164,6 +203,20 @@ namespace smoothstudio.heroesandvillains.player
 					playerHealth.TakeDamage((int)evt.Params[1], localPlayerInfoPacket);
 				}
 			}
+		}
+
+
+		// Powerups
+		public void EnableRapidFire() {
+			if (!rapidFireEnabled) {
+				StartCoroutine ("RapidFireCooldownTimer");
+			}
+		}
+
+		IEnumerator RapidFireCooldownTimer() {
+			rapidFireEnabled = true;
+			yield return new WaitForSeconds (Settings.RapidFirePowerupDuration);
+			rapidFireEnabled = false;
 		}
 
 

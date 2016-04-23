@@ -17,9 +17,9 @@ public class LocalPrefabSpawner : NetworkBehaviour	{
 	[SerializeField] private GameObject linePrefab;
 
 	void Start() {
-		ObjectPooler.instance.CreatePool(lightningSparkPrefab, 50);
-		ObjectPooler.instance.CreatePool(fireBallPrefab, 50);
-		ObjectPooler.instance.CreatePool(linePrefab, 50);
+		ObjectPooler.instance.CreatePool(lightningSparkPrefab, 75);
+		ObjectPooler.instance.CreatePool(fireBallPrefab, 75);
+		ObjectPooler.instance.CreatePool(linePrefab, 75);
 	}
 
 	// Primary attack explosions

@@ -13,6 +13,11 @@ public class PlayerHUD : NetworkBehaviour {
 	[SerializeField] private ColorCorrectionCurves colorCorrectionEffect;
 	[SerializeField] private Camera playerCamera;
 
+	// Hitmarker stuff
+	[SerializeField] private Image hitmarkerImage;
+	private float showHitmarkerDuration = 0.25f;
+	private bool isShowingHitmarker = false;
+
 	public Text healthText;
 	public Image healthAmountBar;
 	public Text sensitivityValueLabel;
@@ -47,6 +52,7 @@ public class PlayerHUD : NetworkBehaviour {
 
 		gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameoverEvent);
 		gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, ResetGame);
+		hitmarkerImage.enabled = false;
 	}
 
 	void Start() {
@@ -88,8 +94,7 @@ public class PlayerHUD : NetworkBehaviour {
 
 	#region Gameover handling
 	private void HandleGameoverEvent(EventObject evt) {
-		bool isHero = (bool)evt.Params[0];
-		RpcShowGameOver(isHero);
+		RpcShowGameOver((bool)evt.Params[0]);
 	}
 
 	[ClientRpc]
@@ -259,6 +264,21 @@ public class PlayerHUD : NetworkBehaviour {
 				playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, Time.deltaTime * 10f);
 			}
 		}
+	}
+
+	// Hitmarker handling
+	public void ShowHitmarker() {
+		if (!isShowingHitmarker) {
+			isShowingHitmarker = true;
+			hitmarkerImage.enabled = true;
+			StartCoroutine ("ShowHitmarkerCooldown");
+		}
+	}
+
+	IEnumerator ShowHitmarkerCooldown() {
+		yield return new WaitForSeconds (showHitmarkerDuration);
+		isShowingHitmarker = false;
+		hitmarkerImage.enabled = false;
 	}
 
 }

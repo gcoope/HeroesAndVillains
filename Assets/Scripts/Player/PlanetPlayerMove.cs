@@ -30,6 +30,9 @@ namespace smoothstudio.heroesandvillains.player
 		private const float rayLength = 1f;
 //		private const float rayLength = 1.8f;
 
+		// Powerups
+		private bool usingMoveSpeedPowerup = false;
+
 		private PlayerModelChanger playerModel; // So we can turn it on in 3rd person
 
 		// Sent over network
@@ -367,5 +370,21 @@ namespace smoothstudio.heroesandvillains.player
 			}
 			return false;
 		}
+
+		// Powerups
+		public void SetMoveSpeedPowerup() {
+			if (!usingMoveSpeedPowerup) {
+				StartCoroutine ("MoveSpeedCooldown");
+			}
+		}
+
+		IEnumerator MoveSpeedCooldown() {
+			usingMoveSpeedPowerup = true;
+			moveSpeed = Settings.MoveSpeedPowerupSpeed;
+			yield return new WaitForSeconds (Settings.MoveSpeedPowerupDuration);
+			moveSpeed = playerInfo.speed;
+			usingMoveSpeedPowerup = false;
+		}
+
     }
 }

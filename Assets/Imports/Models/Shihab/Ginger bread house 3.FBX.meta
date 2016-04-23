@@ -1,0 +1,143 @@
+fileFormatVersion: 2
+guid: b5883adb80c47c649b730a46cf4433f3
+timeCreated: 1461430548
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Box015
+    100002: Box016
+    100004: Box017
+    100006: Box018
+    100008: Box019
+    100010: Box020
+    100012: Box021
+    100014: Candy Cane010
+    100016: Candy Cane011
+    100018: Candy Cane012
+    100020: Candy Cane013
+    100022: //RootNode
+    100024: Gummy Bear005
+    100026: Gummy Bear006
+    100028: Gummy Bear013
+    400000: Box015
+    400002: Box016
+    400004: Box017
+    400006: Box018
+    400008: Box019
+    400010: Box020
+    400012: Box021
+    400014: Candy Cane010
+    400016: Candy Cane011
+    400018: Candy Cane012
+    400020: Candy Cane013
+    400022: //RootNode
+    400024: Gummy Bear005
+    400026: Gummy Bear006
+    400028: Gummy Bear013
+    2300000: Box015
+    2300002: Box016
+    2300004: Box017
+    2300006: Box018
+    2300008: Box019
+    2300010: Box020
+    2300012: Box021
+    2300014: Candy Cane010
+    2300016: Candy Cane011
+    2300018: Candy Cane012
+    2300020: Candy Cane013
+    2300022: Gummy Bear005
+    2300024: Gummy Bear006
+    2300026: Gummy Bear013
+    3300000: Box015
+    3300002: Box016
+    3300004: Box017
+    3300006: Box018
+    3300008: Box019
+    3300010: Box020
+    3300012: Box021
+    3300014: Candy Cane010
+    3300016: Candy Cane011
+    3300018: Candy Cane012
+    3300020: Candy Cane013
+    3300022: Gummy Bear005
+    3300024: Gummy Bear006
+    3300026: Gummy Bear013
+    4300000: Box015
+    4300002: Box016
+    4300004: Box020
+    4300006: Gummy Bear005
+    4300008: Gummy Bear006
+    4300010: Box018
+    4300012: Box017
+    4300014: Gummy Bear013
+    4300016: Candy Cane013
+    4300018: Candy Cane010
+    4300020: Box019
+    4300022: Candy Cane011
+    4300024: Candy Cane012
+    4300026: Box021
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

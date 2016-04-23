@@ -9,7 +9,7 @@ public class FireHydrant : DestructableModel {
 			if(col.gameObject.CompareTag(ObjectTagKeys.Player)) {
 				PlayerGravityBody playerGravBod = col.gameObject.GetComponent<PlayerGravityBody>();
 				if(playerGravBod != null) {
-					playerGravBod.Jump(35f);
+					playerGravBod.Jump(22f);
 				}
 				col.gameObject.GetComponent<PlayerAnimator>().CmdJump();
 			}

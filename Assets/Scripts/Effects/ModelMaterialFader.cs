@@ -39,7 +39,6 @@ public class ModelMaterialFader : MonoBehaviour {
 	private void FadeInRenderers() {
 		if(modelShouldShow) {
 			for(int i = 0; i < playerRenderers.Length; i++) {
-//			playerRenderers[i].material.DOFade(1, fadeDuration);
 				playerRenderers[i].enabled = true;
 			}
 		}
@@ -47,29 +46,19 @@ public class ModelMaterialFader : MonoBehaviour {
 
 	public void FadeOut() {
 		for(int i = 0; i < playerRenderers.Length; i++) {
-//			playerRenderers[i].material.DOFade(0, fadeDuration);
 			playerRenderers[i].enabled = false;
 		}
 	}
 		
-	public void ShowModel() {
-//		for(int i = 0; i < playerRenderers.Length; i++) {
-//			if(!modelShouldShow) return;
-//			playerRenderers[i].enabled = true;
-//		}
-
+	public void ShowHeadModel() {
 		for(int i = 0; i < headRenderers.Length; i++) {
-			headRenderers[i].enabled = true;
+			headRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
 		}
 	}
 
-	public void HideModel() {
-//		for(int i = 0; i < playerRenderers.Length; i++) {
-//		//	playerRenderers[i].enabled = false;
-//		}
-
+	public void HideHeadModel() {
 		for(int i = 0; i < headRenderers.Length; i++) {
-			headRenderers[i].enabled = false;
+			headRenderers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 		}
 	}
 

@@ -15,6 +15,7 @@ public class SplashDamagerCollider : NetworkBehaviour {
 	void OnTriggerEnter(Collider col) {
 		if(col.CompareTag(ObjectTagKeys.Player)) {
 			col.gameObject.GetComponent<PlayerHealth>().TakeDamage(20, playerPacket);
+			//if(col.gameObject.GetComponent<BasePlayerInfo>().playerTeam != playerPacket.playerTeam) NetworkServer.FindLocalObject (playerPacket.networkID).GetComponent<PlayerHUD> ().ShowHitmarker ();
 		}
 
 		if(col.CompareTag(ObjectTagKeys.DestructableObject)) {

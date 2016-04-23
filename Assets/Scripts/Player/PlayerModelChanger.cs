@@ -39,8 +39,8 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public void EnableModel(bool enable) {
 		materialFader.SetModelShowing(enable);
-		if(enable) materialFader.ShowModel();
-		else materialFader.HideModel();
+		if(enable) materialFader.ShowHeadModel();
+		else materialFader.HideHeadModel();
 	}
 }
 

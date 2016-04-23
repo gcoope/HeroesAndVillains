@@ -78,7 +78,8 @@ public class StartMenuController : MonoBehaviour {
 		} else {
 			if(NetworkManager.singleton.IsClientConnected()) {
 				NetworkManager.singleton.client.Disconnect();
-				SceneManager.LoadScene(0);
+				//SceneManager.LoadScene(0);
+				Application.LoadLevel (0);
 			}
 		}
 	}

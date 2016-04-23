@@ -16,4 +16,13 @@ public class EditorSceneChange {
 		EditorSceneManager.OpenScene("Assets/Scenes/World1.unity");
 	}
 
+	[MenuItem("Scenes/Run Menu #`")]
+	private static void LoadAndRunMainMenu() {
+		EditorSceneManager.SaveOpenScenes();
+		EditorSceneManager.OpenScene("Assets/Scenes/MainMenu.unity");
+		if(!EditorApplication.isPlaying && !EditorApplication.isCompiling) {
+			EditorApplication.isPlaying = true;
+		}
+	}
+
 }

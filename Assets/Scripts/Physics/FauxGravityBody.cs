@@ -22,8 +22,11 @@ namespace smoothstudio.heroesandvillains.physics
         protected Vector3 gravityUp;
         public Vector3 bodyUp;
 
+		PlayerAnimator playerAnimator; // This shouldn't be here really
+
         public virtual void Awake() {
             gravityAttractors = GameObject.FindObjectsOfType<FauxGravityAttractor>();
+			playerAnimator = gameObject.GetComponent<PlayerAnimator> ();
         }
 
         void Start() {
@@ -72,8 +75,8 @@ namespace smoothstudio.heroesandvillains.physics
 
 		// Effectors
 		public void AddExplosionForce(Vector3 fromPosition, float power) {
-			//			bodyRigidbody.AddForceAtPosition((transform.position - fromPosition).normalized * 20f, fromPosition, ForceMode.Impulse);
 			if(bodyRigidbody != null) bodyRigidbody.AddForce((transform.position - fromPosition).normalized * power, ForceMode.Impulse);
+			//if (playerAnimator != null)	playerAnimator.CmdJump (); // TODO this should REALLY be player specific
 		}
 
 		// Setters
