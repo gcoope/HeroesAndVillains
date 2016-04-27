@@ -54,7 +54,7 @@ LightmapSettings:
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 3
-    m_Resolution: 2
+    m_Resolution: 1
     m_BakeResolution: 40
     m_TextureWidth: 1024
     m_TextureHeight: 1024
@@ -5790,65 +5790,69 @@ Prefab:
       propertyPath: m_LocalRotation.w
       value: -0.09027769
       objectReference: {fileID: 0}
-    - target: {fileID: 22414266, guid: 5cc213af753087b4384a299603d85056, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22414266, guid: 5cc213af753087b4384a299603d85056, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 22462484, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.34210527
       objectReference: {fileID: 0}
     - target: {fileID: 22462484, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22466040, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.34210527
       objectReference: {fileID: 0}
     - target: {fileID: 22466040, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 0.34210527
       objectReference: {fileID: 0}
     - target: {fileID: 22466040, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22414266, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22414266, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22407764, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22452880, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22452880, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22403248, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22403248, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22403248, guid: 5cc213af753087b4384a299603d85056, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11495760, guid: 5cc213af753087b4384a299603d85056, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5cc213af753087b4384a299603d85056, type: 2}
@@ -8067,7 +8071,7 @@ MonoBehaviour:
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: MainMenu
-  m_OnlineScene: World1
+  m_OnlineScene: DylanWorld
   m_SpawnPrefabs:
   - {fileID: 119806, guid: cbac0e78d652a8141a1cce4985561dad, type: 2}
   m_CustomConfig: 1

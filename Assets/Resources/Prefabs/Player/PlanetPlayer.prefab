@@ -7239,7 +7239,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 144838}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fd999d1b2cf94a45a5b0a47ce074bef, type: 3}
   m_Name: 
@@ -7363,9 +7363,12 @@ MonoBehaviour:
   selectiveToColor: {r: 1, g: 1, b: 1, a: 1}
   mode: 0
   updateTextures: 1
-  colorCorrectionCurvesShader: {fileID: 0}
-  simpleColorCorrectionCurvesShader: {fileID: 0}
-  colorCorrectionSelectiveShader: {fileID: 0}
+  colorCorrectionCurvesShader: {fileID: 4800000, guid: 62bcade1028c24ca1a39760ed84b9487,
+    type: 3}
+  simpleColorCorrectionCurvesShader: {fileID: 4800000, guid: 438ddd58d82c84d9eb1fdc56111702e1,
+    type: 3}
+  colorCorrectionSelectiveShader: {fileID: 4800000, guid: e515e0f94cefc4c0db54b45cba621544,
+    type: 3}
 --- !u!114 &11496818
 MonoBehaviour:
   m_ObjectHideFlags: 1

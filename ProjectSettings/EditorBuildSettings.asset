@@ -13,3 +13,5 @@ EditorBuildSettings:
     path: Assets/Scenes/World1.unity
   - enabled: 1
     path: Assets/Scenes/DylanWorld.unity
+  - enabled: 1
+    path: Assets/Scenes/CyborgWorld.unity

@@ -953,6 +953,178 @@ ModelImporter:
     4300338: Box104
     4300340: Box105
     4300342: Object052
+    6400000: Box029
+    6400002: Box030
+    6400004: Box031
+    6400006: Box032
+    6400008: Box033
+    6400010: Box034
+    6400012: Box035
+    6400014: Box036
+    6400016: Box037
+    6400018: Box054
+    6400020: Box055
+    6400022: Box056
+    6400024: Box057
+    6400026: Box058
+    6400028: Box059
+    6400030: Box060
+    6400032: Box061
+    6400034: Box062
+    6400036: Box063
+    6400038: Box064
+    6400040: Box065
+    6400042: Box066
+    6400044: Box067
+    6400046: Box068
+    6400048: Box069
+    6400050: Box070
+    6400052: Box071
+    6400054: Box072
+    6400056: Box073
+    6400058: Box074
+    6400060: Box075
+    6400062: Box076
+    6400064: Box077
+    6400066: Box078
+    6400068: Box079
+    6400070: Box080
+    6400072: Box081
+    6400074: Box082
+    6400076: Box083
+    6400078: Box084
+    6400080: Box085
+    6400082: Box086
+    6400084: Box087
+    6400086: Box088
+    6400088: Box089
+    6400090: Box090
+    6400092: Box091
+    6400094: Box092
+    6400096: Box093
+    6400098: Box094
+    6400100: Box095
+    6400102: Box096
+    6400104: Box097
+    6400106: Box098
+    6400108: Box099
+    6400110: Box100
+    6400112: Box101
+    6400114: Box102
+    6400116: Box103
+    6400118: Box104
+    6400120: Box105
+    6400122: Building 018
+    6400124: Building 019
+    6400126: Building 020
+    6400128: Building 021
+    6400130: Building 022
+    6400132: Building 023
+    6400134: Circle004
+    6400136: Circle005
+    6400138: Circle006
+    6400140: Cylinder081
+    6400142: Cylinder082
+    6400144: Cylinder083
+    6400146: Cylinder084
+    6400148: Cylinder085
+    6400150: Cylinder086
+    6400152: Cylinder087
+    6400154: Cylinder088
+    6400156: Cylinder089
+    6400158: Cylinder090
+    6400160: Cylinder091
+    6400162: Cylinder092
+    6400164: Cylinder093
+    6400166: Cylinder094
+    6400168: Cylinder095
+    6400170: Cylinder096
+    6400172: Cylinder097
+    6400174: Cylinder098
+    6400176: Cylinder099
+    6400178: Cylinder100
+    6400180: Cylinder101
+    6400182: Cylinder102
+    6400184: Cylinder103
+    6400186: Cylinder104
+    6400188: Cylinder105
+    6400190: Cylinder106
+    6400192: Cylinder107
+    6400194: Cylinder108
+    6400196: Cylinder109
+    6400198: Cylinder110
+    6400200: Cylinder111
+    6400202: Cylinder112
+    6400204: Cylinder113
+    6400206: Cylinder114
+    6400208: Cylinder115
+    6400210: Cylinder116
+    6400212: Cylinder117
+    6400214: Cylinder118
+    6400216: Cylinder119
+    6400218: Cylinder120
+    6400220: Cylinder121
+    6400222: Cylinder122
+    6400224: Cylinder123
+    6400226: Cylinder124
+    6400228: Cylinder125
+    6400230: Cylinder126
+    6400232: Cylinder127
+    6400234: Cylinder128
+    6400236: Cylinder129
+    6400238: Cylinder130
+    6400240: Cylinder131
+    6400242: Cylinder132
+    6400244: Cylinder133
+    6400246: Cylinder134
+    6400248: Cylinder135
+    6400250: Cylinder136
+    6400252: Cylinder137
+    6400254: Cylinder138
+    6400256: Cylinder139
+    6400258: Cylinder140
+    6400260: Cylinder141
+    6400262: Cylinder142
+    6400264: Cylinder143
+    6400266: Cylinder144
+    6400268: Cylinder145
+    6400270: Object026
+    6400272: Object027
+    6400274: Object028
+    6400276: Object029
+    6400278: Object030
+    6400280: Object031
+    6400282: Object032
+    6400284: Object033
+    6400286: Object034
+    6400288: Object035
+    6400290: Object036
+    6400292: Object037
+    6400294: Object038
+    6400296: Object039
+    6400298: Object040
+    6400300: Object041
+    6400302: Object042
+    6400304: Object043
+    6400306: Object045
+    6400308: Object046
+    6400310: Object047
+    6400312: Object048
+    6400314: Object049
+    6400316: Object050
+    6400318: Object051
+    6400320: Object052
+    6400322: Sphere004
+    6400324: Sphere008
+    6400326: Sphere009
+    6400328: Sphere010
+    6400330: Sphere011
+    6400332: Sphere012
+    6400334: Sphere013
+    6400336: Sphere014
+    6400338: Sphere015
+    6400340: Sphere016
+    6400342: Sphere017
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -980,7 +1152,7 @@ ModelImporter:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 0
+    addColliders: 1
     importBlendShapes: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
