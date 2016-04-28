@@ -27,10 +27,8 @@ public class SpawnManager : MonoBehaviour {
 		SpawnPoint[] checkArray = hero ? heroSpawnPoints : villainSpawnPoints;
 		List<SpawnPoint> freeSpawns = new List<SpawnPoint>();
 		for(int i = 0; i < checkArray.Length; i++) {
-			if(checkArray[i].IsFree) {
-//				checkArray[i].SpawnedOn();
+			if(checkArray[i].CheckIsFree()) {
 				freeSpawns.Add(checkArray[i]);
-//				return checkArray[i].transform;
 			}
 		}
 		return freeSpawns[Random.Range(0, freeSpawns.Count)].transform; // Get random from the free spawns

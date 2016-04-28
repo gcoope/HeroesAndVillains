@@ -68,7 +68,7 @@ public class PlayerHUD : NetworkBehaviour {
 	}
 
 	void Update() {
-		// TODO Move this to own video settings class
+		// TODO Move this to own video settings class?
 		if(Input.GetKeyDown(KeyCode.F5)) {
 			if(antiAliasEffect != null) {
 				antiAliasEffect.enabled = !antiAliasEffect.enabled;

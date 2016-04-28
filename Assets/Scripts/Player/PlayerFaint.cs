@@ -87,7 +87,6 @@ public class PlayerFaint : NetworkBehaviour {
 		isFainted = false;
 		materialFader.FadeIn();
 		playerHealth.ResetHealthAfterRespawn();
-		// TODO reset health
 	}
 
 	[ClientRpc]
