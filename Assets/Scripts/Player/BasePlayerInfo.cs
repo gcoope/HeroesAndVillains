@@ -14,7 +14,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public string playerName = "Player Name";
 
 	[SyncVar(hook = "OnTeamChange")] 
-	public string playerTeam = Settings.HeroTeam;
+	public string playerTeam = Settings.HeroTeam; // TODO change this to int hero = 1 villain = 2 etc.
 
 	[Header("Stats")]
 	public int overShield = Settings.OverShield;  // as above
@@ -28,7 +28,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 	void Awake () {
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		playerHealth = gameObject.GetComponent<PlayerHealth>();
-//		nameText = gameObject.GetComponent<PlayerName>();
 		modelChanger = gameObject.GetComponent<PlayerModelChanger>();
 	}
 
@@ -48,7 +47,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	public override void OnStartClient () {		
 		base.OnStartClient ();
-//		nameText = gameObject.GetComponent<PlayerName>();
 		OnNameChange(playerName);
 		OnTeamChange(playerTeam);
 	}
@@ -60,7 +58,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	public void OnNameChange(string name) {
 		if(isLocalPlayer) return;
-//		nameText.SetName(name);
 		gameObject.name = name;
 	}
 
@@ -70,7 +67,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerTeam = team;
 		gameObject.name = playerName;
 		modelChanger.SetModelColour(playerTeam);
-//		nameText.SetName(playerName);
 		RpcSetClientPlayerInfo(playerName, playerTeam);
 
 		NetworkInstanceId _netID = gameObject.GetComponent<NetworkIdentity>().netId;
@@ -84,6 +80,5 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerTeam = team;
 		gameObject.name = playerName;
 		modelChanger.SetModelColour(playerTeam);
-//		nameText.SetName(playerName);
 	}
 }

@@ -1,0 +1,15 @@
+Server handles
+
+- Getting hit
+- Send hitmarker back to client who fired
+- Taking health of it's version of client
+- Syncing that health with client owner
+- If we died on server version because of being hit
+	- faint on server
+	- give points on server
+	- sync
+
+Client 
+- handle health sync
+- handle getting hit (hit notification?)
+- handle being told to faint

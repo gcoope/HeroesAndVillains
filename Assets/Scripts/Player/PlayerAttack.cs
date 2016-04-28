@@ -73,6 +73,7 @@ namespace smoothstudio.heroesandvillains.player
 			}
 		}
 
+		// Game over handling
 		private void HandleGameOverEvent(EventObject evt) {
 			RpcSetGameOver(true);
 		}
@@ -80,15 +81,12 @@ namespace smoothstudio.heroesandvillains.player
 		private void RpcSetGameOver(bool gameOver) {
 			isGameOver = gameOver;
 		}
-
 		private void HandleResetGameEvent(EventObject evt) {
 			ResetGame();
 		}
-
 		private void ResetGame() {
 			isGameOver = false;
 		}
-
 		public void SetAllowAnyInput(bool allow) {
 			allowAnyInput = allow;
 		}
@@ -149,7 +147,6 @@ namespace smoothstudio.heroesandvillains.player
 					cameraShaking = false;
 				});
 			}
-
 		}
 
 		private void RaycastFire() { // Primary attack (for now)
@@ -158,12 +155,12 @@ namespace smoothstudio.heroesandvillains.player
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
 				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
-					CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
+					CmdSpawnExplosionWithNormal(hit.point, hit.normal, playerInfo.playerTeam);
 					CmdRaycastHit(hit.collider.gameObject, localPlayerInfoPacket);
-					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker();
+					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker(); // TODO this as a callback from server
 				} else {
 					CmdSpawnExplosionWithNormal(hit.point, hit.normal, playerInfo.playerTeam);
-					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
+					CmdSpawnExplosionCollider(hit.point, localPlayerInfoPacket);
 				}
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
 				CmdSpawnLine(transform.position, projectileLauncher.position + (projectileLauncher.forward * 100f), playerInfo.playerTeam);
@@ -180,35 +177,32 @@ namespace smoothstudio.heroesandvillains.player
 		private void CmdSpawnLine(Vector3 start, Vector3 end, string team)	{
 			LocalPrefabSpawner.instance.ServerSpawnLine(start, end, team);	
 		}
-
 		[Command]
 		private void CmdSpawnExplosion(Vector3 pos, string team)	{
 			LocalPrefabSpawner.instance.ServerSpawnExplosion(pos, team);
 		}
-
 		[Command]
 		private void CmdSpawnExplosionWithNormal(Vector3 pos, Vector3 hitNormal, string team)	{
 			LocalPrefabSpawner.instance.ServerSpawnExplosionWithNormal(pos, hitNormal, team);
 		}
-
-		[Command] // TODO Make this server only?
-		private void CmdSpawnExplosioncollider(Vector3 pos, PlayerInfoPacket playerInfoPacket) {
+		[Command]
+		private void CmdSpawnExplosionCollider(Vector3 pos, PlayerInfoPacket playerInfoPacket) {
 			GameObject col = Instantiate(splashCollider);
 			col.transform.position = pos;
 			col.GetComponent<SplashDamagerCollider>().SetOwner(playerInfoPacket);
-			NetworkServer.Spawn(col); // TODO We might be able to do all collisions on the server someday..		
+			NetworkServer.Spawn(col); // TODO We might be able to do all collisions on the server?
 		}
 
 		[Command]
 		private void CmdRaycastHit(GameObject player, PlayerInfoPacket playerInfoPacket) {
-			player.GetComponent<PlayerHealth>().ServerTakeDamage(20, playerInfoPacket);
+			player.GetComponent<PlayerHealth>().TakeDamageOnServer(20, playerInfoPacket);
 		}
 
 		// TODO Falcon kick
 		private void MeleeHitSomePlayer(EventObject evt) {
 			if (evt.Params != null) {
 				if((BasePlayerInfo)evt.Params[0] == playerInfo) { // If the person hit was us
-					playerHealth.TakeDamage((int)evt.Params[1], localPlayerInfoPacket);
+					playerHealth.CmdTakeDamageOnServer((int)evt.Params[1], localPlayerInfoPacket, false);
 				}
 			}
 		}

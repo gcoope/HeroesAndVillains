@@ -45,11 +45,11 @@ public class ModelMaterialHandler : MonoBehaviour {
 	}
 
 	private void FadeInRenderers() {
-		if(modelShouldShow) {
+//		if(modelShouldShow) {
 			for(int i = 0; i < playerRenderers.Length; i++) {
 				playerRenderers[i].enabled = true;
 			}
-		}
+//		}
 	}
 
 	public void FadeOut() {
