@@ -14,8 +14,9 @@ public class Settings : MonoBehaviour {
 
 	// Game settings
 	public const bool FirstPersonMode = true;
+	public static SettingsGameMode currentGameMode = SettingsGameMode.TEAM_DEATHMATCH;
 	public const bool TDMGameMode = true;
-	public const int ScorePerKill = 10;
+	public const int ScorePerKill = 1;
 	public const int TDMWinScore = 50;
 	public const int timeBeforeNextRound = 5;
 
@@ -38,4 +39,11 @@ public class Settings : MonoBehaviour {
 	public static float RapidFirePowerupDuration = 8f;
 	public static float RapidFireCooldownSpeed = 0.15f;
 
+}
+
+public enum SettingsGameMode {
+	TEAM_DEATHMATCH,
+	CAPTURE_THE_FLAG,
+	CONTROL_POINTS,
+	PAYLOAD
 }

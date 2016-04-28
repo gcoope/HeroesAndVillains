@@ -49,7 +49,6 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 			if(consoleMessages.Count + 1 < 50) {
 				consoleMessages.Add("> " + msg + "\n");
 			} else {
-				Debug.Log("Removing");
 				consoleMessages.RemoveAt(0);
 				consoleMessages.Add("> " + msg + "\n");
 			}

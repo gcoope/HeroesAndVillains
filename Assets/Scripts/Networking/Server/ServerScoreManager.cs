@@ -31,27 +31,33 @@ public class ServerScoreManager : NetworkBehaviour {
 	}
 
 	public void AddScore(bool isHeroTeam, int amount) {
-		if(gameOver) return;
+		if(isLocalPlayer || gameOver) return;
+
 		if(isHeroTeam) heroScore += amount;
 		else villainScore += amount;
-		if(Settings.TDMGameMode) CheckWinCondition();
-		if (restartingGame)	restartingGame = false; // No harm in doing this here - means we know it's a new round/game
+
+//		ServerOnlyPlayerDisplay.instance.Log (isHeroTeam ? "<color=cyan>Heroes scored a point</color>" : "<color=red>Villains scored a point</color>");
+
+		if(Settings.currentGameMode == SettingsGameMode.TEAM_DEATHMATCH) CheckTDMWinCondition();
+
+		if (restartingGame)	restartingGame = false; // No harm in doing this here(?) - means we know it's a new round/game
 	}
 
-	private void CheckWinCondition() {
+	private void CheckTDMWinCondition() {
 		if (isServer) {
 			if (heroScore >= Settings.TDMWinScore) {
-				gameOver = true;
-				gameObject.DispatchGlobalEvent (GameplayEvent.GameOver, new object[]{ true });
-				ServerOnlyPlayerDisplay.instance.Log ("<color=cyan>Heroes win!</color>");
+				EndGame (true);
 			}
-
 			if (villainScore >= Settings.TDMWinScore) {
-				gameOver = true;
-				gameObject.DispatchGlobalEvent (GameplayEvent.GameOver, new object[]{ false });
-				ServerOnlyPlayerDisplay.instance.Log ("<color=red>Villains win!</color>");
+				EndGame (false);
 			}
 		}
+	}
+
+	private void EndGame(bool isHeroes) {
+		gameOver = true;
+		gameObject.DispatchGlobalEvent (GameplayEvent.GameOver, new object[]{ isHeroes });
+		ServerOnlyPlayerDisplay.instance.Log (isHeroes ? "<color=cyan>Heroes win!</color>" : "<color=red>Villains win!</color>");
 	}
 
 	public void RestartNextGame() {

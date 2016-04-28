@@ -18,6 +18,9 @@ public class ScoreUIController : NetworkBehaviour {
 	private int heroTeamTotalScore = 0;
 	private int villainTeamTotalScore = 0;
 
+	public Text heroCornerScore;
+	public Text villainCornerScore;
+
 	void Awake() {
 		ClearBoard();
 		localPlayerDetails = new Dictionary<NetworkInstanceId, PlayerInfoPacket>();
@@ -82,6 +85,9 @@ public class ScoreUIController : NetworkBehaviour {
 
 		heroTeamScoreText.text = heroTeamTotalScore.ToString();
 		villainTeamScoreText.text = villainTeamTotalScore.ToString();
+
+		heroCornerScore.text = heroTeamTotalScore.ToString ();
+		villainCornerScore.text = villainTeamTotalScore.ToString ();
 
 		heroScorePackets = heroScorePackets.OrderByDescending(o=>o.score).ToList();
 		for(int i = 0; i < heroScorePackets.Count; i++) {

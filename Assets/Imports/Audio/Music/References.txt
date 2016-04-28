@@ -1,2 +1,4 @@
 MenuLoop1 = http://www.newgrounds.com/audio/listen/491893
 GameSong1 = http://www.newgrounds.com/audio/listen/517360
+
+All audio prefixed with bensound- are from www.bensound.com

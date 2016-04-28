@@ -11,7 +11,7 @@ GameObject:
   - 114: {fileID: 11496632}
   - 114: {fileID: 11443910}
   - 65: {fileID: 6594242}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
@@ -24,8 +24,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 178146}
-  m_LocalRotation: {x: 0, y: 0.8709752, z: 0, w: 0.49132714}
-  m_LocalPosition: {x: -2.88, y: -20.73, z: 1.04}
+  m_LocalRotation: {x: 0, y: -0.5876433, z: 0, w: 0.8091201}
+  m_LocalPosition: {x: 2.75, y: -20.73, z: -0.48}
   m_LocalScale: {x: 0.88709795, y: 0.8870969, z: 0.8870969}
   m_Children: []
   m_Father: {fileID: 0}

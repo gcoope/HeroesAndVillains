@@ -21,9 +21,14 @@ public class PlayerHealth : NetworkBehaviour {
 
 	void Awake () {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
-		thisPlayerInfo = gameObject.GetComponent<BasePlayerInfo>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
 		UpdateHealthText ();
+	}
+
+	void Start() {
+		if (isLocalPlayer) {
+			thisPlayerInfo = gameObject.GetComponent<BasePlayerInfo>();
+		}
 	}
 
 	
@@ -114,9 +119,7 @@ public class PlayerHealth : NetworkBehaviour {
 		if(isLocalPlayer) {
 			playerFaint.CmdFaint(gameObject);
 			playerHUD.PlayerHasFainted(lastPlayerToDamage);
-		}
 
-		if(isLocalPlayer) {
 			if(lastPlayerToDamage.playerName == thisPlayerInfo.playerName) {
 				if(thisPlayerInfo.playerTeam == Settings.HeroTeam) {
 					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed themselves!");
@@ -129,7 +132,7 @@ public class PlayerHealth : NetworkBehaviour {
 				} else {
 					CmdLogSomething("<color=cyan>" + lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  thisPlayerInfo.playerName + "</color>");
 				}
-				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill, thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
+				CmdAddScore(lastPlayerToDamage.networkID, Settings.ScorePerKill, lastPlayerToDamage.playerTeam == Settings.HeroTeam); // findme Points added here
 			}
 		}
 

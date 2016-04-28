@@ -12,7 +12,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 	[SerializeField] PlayerHUD playerHUD;
 	[SerializeField] ScoreUIController scoreUIController;
 	[SerializeField] GameObject playerNameText;
-	[SerializeField] ModelMaterialFader modelMaterialManager;
+	[SerializeField] ModelMaterialHandler modelMaterialManager;
 	[SerializeField] Camera playerCamera;
 	[SerializeField] PlayerAnimator playerAnimator;
 

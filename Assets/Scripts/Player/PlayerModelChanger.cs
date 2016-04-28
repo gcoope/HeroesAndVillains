@@ -6,10 +6,13 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public Material heroMat;
 	public Material villainMat;
+	public Color heroCol;
+	public Color villainCol;
+
 	private Material currentMaterial;
 	[SyncVar(hook = "OnChangeTeam")]
 	private string playerTeam;
-	[SerializeField] private ModelMaterialFader materialFader;
+	[SerializeField] private ModelMaterialHandler materialHandler;
 
 	private void OnChangeTeam(string team) {
 		if(team != playerTeam) CmdTellOthersMaterial(team);
@@ -17,18 +20,19 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public void SetModelColour(string team) {
 		playerTeam = team;
-	//	UpdateMaterial(playerTeam);
+		UpdateMaterial(playerTeam);
 	}
 
 	[ClientRpc]
 	public void RpcSetModelColour(string team) {
 		playerTeam = team;
-		//UpdateMaterial(playerTeam);
+		UpdateMaterial(playerTeam);
 	}
 
 	private void UpdateMaterial(string team) {
-		currentMaterial = team == Settings.HeroTeam ? heroMat : villainMat;
-		materialFader.PassMaterial(currentMaterial);
+//		currentMaterial = team == Settings.HeroTeam ? heroMat : villainMat;
+//		materialHandler.PassMaterial(currentMaterial);
+		materialHandler.SetTeamColours (team == Settings.HeroTeam ? heroCol : villainCol);
 	}
 
 	[Command]
@@ -38,9 +42,9 @@ public class PlayerModelChanger : NetworkBehaviour {
 	}
 
 	public void EnableModel(bool enable) {
-		materialFader.SetModelShowing(enable);
-		if(enable) materialFader.ShowHeadModel();
-		else materialFader.HideHeadModel();
+		materialHandler.SetModelShowing(enable);
+		if(enable) materialHandler.ShowHeadModel();
+		else materialHandler.HideHeadModel();
 	}
 }
 

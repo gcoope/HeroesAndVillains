@@ -101,6 +101,7 @@ namespace smoothstudio.heroesandvillains.player
 						return;
 					StartCoroutine ("RapidFireCooldown");
 					RaycastFire ();
+					ShakeCamera();
 				}
 			} else {
 				if (Input.GetMouseButtonDown (0)) {
@@ -108,6 +109,7 @@ namespace smoothstudio.heroesandvillains.player
 						return;
 					StartCoroutine ("NormalFireCooldown");
 					RaycastFire ();
+					ShakeCamera();
 				} 
 
 			}
@@ -143,7 +145,7 @@ namespace smoothstudio.heroesandvillains.player
 		private void ShakeCamera() {
 			if(!cameraShaking) {
 				cameraShaking = true;
-				playerCameraTransform.DOShakePosition (0.3f, new Vector3 (0.3f, 0.3f, 0), 2).OnComplete (()=>{
+				playerCameraTransform.DOShakePosition (0.2f, new Vector3 (0.4f, 0.4f, 0), 4).OnComplete (()=>{
 					cameraShaking = false;
 				});
 			}
@@ -155,11 +157,12 @@ namespace smoothstudio.heroesandvillains.player
 			RaycastHit hit;
 			if(Physics.Raycast(projectileLauncher.position, projectileLauncher.forward, out hit)) {
 				CmdSpawnLine(transform.position, hit.point, playerInfo.playerTeam);
-				CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
 				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
+					CmdSpawnExplosion(hit.point, playerInfo.playerTeam);
 					CmdRaycastHit(hit.collider.gameObject, localPlayerInfoPacket);
 					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker();
 				} else {
+					CmdSpawnExplosionWithNormal(hit.point, hit.normal, playerInfo.playerTeam);
 					CmdSpawnExplosioncollider(hit.point, localPlayerInfoPacket);
 				}
 			} else { // Missed everything so we draw a line 100 units and spawn an explosion (with no collider)
@@ -181,6 +184,11 @@ namespace smoothstudio.heroesandvillains.player
 		[Command]
 		private void CmdSpawnExplosion(Vector3 pos, string team)	{
 			LocalPrefabSpawner.instance.ServerSpawnExplosion(pos, team);
+		}
+
+		[Command]
+		private void CmdSpawnExplosionWithNormal(Vector3 pos, Vector3 hitNormal, string team)	{
+			LocalPrefabSpawner.instance.ServerSpawnExplosionWithNormal(pos, hitNormal, team);
 		}
 
 		[Command] // TODO Make this server only?

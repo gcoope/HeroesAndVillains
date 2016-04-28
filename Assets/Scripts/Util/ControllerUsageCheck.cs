@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿/*
+ * NOTE: This is not my script - if I forget to remove this before final submit please disregard it
+ */
+
+using UnityEngine;
 using System.Collections;
  
  public class ControllerUsageCheck : MonoBehaviour {

@@ -10,7 +10,7 @@ public class BuildText : MonoBehaviour
     void Start() {
 		DontDestroyOnLoad(this.transform.parent);
 		textBox = GetComponent<Text>();
-		textBox.text = Application.productName + " - " + DateTime.Today.Date.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString();
+		textBox.text = "Alpha build " +  Application.productName + " - " + DateTime.Today.Date.Day.ToString() + "/" + DateTime.Today.Month.ToString() + "/" + DateTime.Today.Year.ToString();
     }
 
 }

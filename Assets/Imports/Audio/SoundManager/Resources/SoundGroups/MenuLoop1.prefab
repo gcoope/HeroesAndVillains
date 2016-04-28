@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Sounds:
-  - {fileID: 8300000, guid: 0243cb624128170488b627f957800aa3, type: 3}
+  - {fileID: 8300000, guid: fb5f4bf3040528846bebaac0493738ab, type: 3}
   Music: 1
   RandomPitch: 0
   RandomPitchMin: 0.8

@@ -8,7 +8,7 @@ using smoothstudio.heroesandvillains.physics;
 public class PlayerFaint : NetworkBehaviour {
 
 	[SyncVar] private bool isHero;
-	[SerializeField] private ModelMaterialFader materialFader;
+	[SerializeField] private ModelMaterialHandler materialFader;
 
 	void Start() {
 		isHero = gameObject.GetComponent<BasePlayerInfo>().playerTeam == Settings.HeroTeam;
@@ -22,6 +22,7 @@ public class PlayerFaint : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcLocalFaint() {
 //		GetComponent<PlayerName>().DisableText();
+		//TODO Ragdoll enable? Maybe swap model?
 		GetComponent<PlanetPlayerMove>().enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
 		GetComponent<PlayerMeleeSwing>().enabled = false;

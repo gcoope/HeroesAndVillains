@@ -55,7 +55,7 @@ Material:
       data:
         first:
           name: _Color2
-        second: {r: 0, g: 0.29077074, b: 0.6911765, a: 0}
+        second: {r: 0.09558821, g: 0.09558821, b: 0.09558821, a: 0}
       data:
         first:
           name: _UpVector
