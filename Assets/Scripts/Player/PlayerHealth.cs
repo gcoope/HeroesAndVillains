@@ -41,11 +41,15 @@ public class PlayerHealth : NetworkBehaviour {
 	[Server]
 	public void TakeDamageOnServer(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDamage = false) {
 		lastPlayerToDamage = fromPlayerInfo;
+
 		if(!forceDamage && !string.IsNullOrEmpty(fromPlayerInfo.playerTeam)) { // No friendly damage
 			if(fromPlayerInfo.playerTeam.Equals(thisPlayerInfo.playerTeam)) {
 				return;
 			}
 		}
+
+		NetworkServer.FindLocalObject(lastPlayerToDamage.networkID).GetComponent<PlayerHUD>().RpcShowHitmarker(); // only works on host
+
 		if(currentHealth > 0) currentHealth -= amount; // So that it doesn't show negative health for players
 		if(currentHealth <= 0 && !playerFaint.isFainted) {
 			playerFaint.FaintOnServer();

@@ -157,7 +157,7 @@ namespace smoothstudio.heroesandvillains.player
 				if(hit.collider.CompareTag(ObjectTagKeys.Player)) {
 					CmdSpawnExplosionWithNormal(hit.point, hit.normal, playerInfo.playerTeam);
 					CmdRaycastHit(hit.collider.gameObject, localPlayerInfoPacket);
-					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker(); // TODO this as a callback from server
+//					if(hit.collider.GetComponent<BasePlayerInfo>().playerTeam != playerInfo.playerTeam) playerHUD.ShowHitmarker(); // TODO this as a callback from server
 				} else {
 					CmdSpawnExplosionWithNormal(hit.point, hit.normal, playerInfo.playerTeam);
 					CmdSpawnExplosionCollider(hit.point, localPlayerInfoPacket);

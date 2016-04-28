@@ -267,7 +267,8 @@ public class PlayerHUD : NetworkBehaviour {
 	}
 
 	// Hitmarker handling
-	public void ShowHitmarker() {
+	[ClientRpc]
+	public void RpcShowHitmarker() { // TODO hitmarker sound
 		if (!isShowingHitmarker) {
 			isShowingHitmarker = true;
 			hitmarkerImage.enabled = true;
