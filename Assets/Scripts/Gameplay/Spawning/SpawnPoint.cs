@@ -10,3 +10,4 @@ public class SpawnPoint : MonoBehaviour {
 		return true;
 	}
 }
+	
