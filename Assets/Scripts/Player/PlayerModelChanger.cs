@@ -32,7 +32,10 @@ public class PlayerModelChanger : NetworkBehaviour {
 	private void UpdateMaterial(string team) {
 //		currentMaterial = team == Settings.HeroTeam ? heroMat : villainMat;
 //		materialHandler.PassMaterial(currentMaterial);
-		materialHandler.SetTeamColours (team == Settings.HeroTeam ? heroCol : villainCol);
+		Color teamColour = team == Settings.HeroTeam ? heroCol : villainCol;
+		materialHandler.SetTeamColours (teamColour);
+		GetComponent<PlayerRagdoll>().SetupRigidbody(teamColour); // TODO Maybe somewhere better - sets suit color for rigidbody. We need to also do hair style and clothes settings
+
 	}
 
 	[Command]

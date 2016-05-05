@@ -58,13 +58,15 @@ public class PlayerFaint : NetworkBehaviour {
 
 	[ClientRpc]
 	public void RpcFaintOnClient() {
-		//TODO Ragdoll enable? Maybe swap model?
 		isFainted = true;
 		GetComponent<PlanetPlayerMove>().enabled = false;
 		GetComponent<PlayerAttack>().enabled = false;
 		GetComponent<PlayerMeleeSwing>().enabled = false;
 		GetComponent<Collider>().enabled = false;
+
 		materialFader.FadeOut();
+//		GetComponent<PlayerRagdoll>().EnableRagdoll(GetComponent<Rigidbody>().velocity);
+
 		if(isLocalPlayer) {
 			GetComponent<PlayerGravityBody>().enabled = false;
 			if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -101,7 +103,10 @@ public class PlayerFaint : NetworkBehaviour {
 		GetComponent<PlayerAttack>().enabled = true;
 		GetComponent<PlayerMeleeSwing>().enabled = true;
 		GetComponent<Collider>().enabled = true;
+
 		materialFader.FadeIn(true);
+//		GetComponent<PlayerRagdoll>().HideRagdoll();
+
 		if(isLocalPlayer) {
 			GetComponent<PlayerGravityBody>().enabled = true;
 			if(GetComponent<Rigidbody>() != null) GetComponent<Rigidbody>().velocity = Vector3.zero;

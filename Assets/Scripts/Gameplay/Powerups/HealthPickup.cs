@@ -16,7 +16,7 @@ public class HealthPickup : NetworkBehaviour, IPowerup {
 
 	void OnTriggerEnter(Collider col) {
 		if(col.CompareTag(ObjectTagKeys.Player)) {
-			if(col.GetComponent<PlayerHealth>().isFullHealth()) return;
+//			if(col.GetComponent<PlayerHealth>().isFullHealth()) return;
 			if (Activate ()) {
 				col.GetComponent<PlayerHealth> ().AddHealth (Settings.HealthPackHealAmount);
 			}

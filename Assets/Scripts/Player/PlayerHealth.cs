@@ -11,6 +11,7 @@ public class PlayerHealth : NetworkBehaviour {
 
 	public BasePlayerInfo thisPlayerInfo;
 	public PlayerHUD playerHUD;
+	private PlayerCamera playerCamera;
 	private PlayerFaint playerFaint;
 	public PlayerInfoPacket lastPlayerToDamage;
 
@@ -20,6 +21,7 @@ public class PlayerHealth : NetworkBehaviour {
 		playerHUD = gameObject.GetComponent<PlayerHUD>();
 		thisPlayerInfo = gameObject.GetComponent<BasePlayerInfo>();
 		playerFaint = gameObject.GetComponent<PlayerFaint>();
+		playerCamera = gameObject.GetComponent<PlayerCamera>();
 		UpdateHealthText ();
 	}
 
@@ -56,6 +58,9 @@ public class PlayerHealth : NetworkBehaviour {
 
 	[ClientRpc]
 	private void RpcUpdatePlayerHeath(PlayerInfoPacket fromPlayerInfo, int newHealthValue) {
+		playerHUD.ShowDamageIndicator();
+		if(isLocalPlayer) AudioKeys.TakeDamage.PlaySound();
+		playerCamera.ShakeCamera();
 		lastPlayerToDamage = fromPlayerInfo;
 		currentHealth = newHealthValue;
 		UpdateHealthText ();
@@ -64,6 +69,8 @@ public class PlayerHealth : NetworkBehaviour {
 	// Adding health
 	[Client]
 	public void AddHealth(int amount) {
+		// TODO adding health sound
+		AudioKeys.PlayerRegenHealth.PlaySound();
 		if(currentHealth + amount >= 100) {
 			currentHealth = 100;
 		} else {

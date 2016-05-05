@@ -27,6 +27,7 @@ namespace smoothstudio.heroesandvillains.player
 		// Projectile firing
 		public Transform projectileLauncher;
 		private GameObject splashCollider;
+		private PlayerCamera playerCamera;
 
 		private bool controllerHasFired = false;
 		private bool controllerCanFire = true;
@@ -53,6 +54,7 @@ namespace smoothstudio.heroesandvillains.player
 		void Start() {
 			playerInfo = gameObject.GetComponent<BasePlayerInfo>();
 			playerHealth = gameObject.GetComponent<PlayerHealth>();
+			playerCamera = gameObject.GetComponent<PlayerCamera>();
 
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
 
@@ -99,7 +101,7 @@ namespace smoothstudio.heroesandvillains.player
 						return;
 					StartCoroutine ("RapidFireCooldown");
 					RaycastFire ();
-					ShakeCamera();
+					playerCamera.ShakeCamera();
 				}
 			} else {
 				if (Input.GetMouseButtonDown (0)) {
@@ -107,7 +109,7 @@ namespace smoothstudio.heroesandvillains.player
 						return;
 					StartCoroutine ("NormalFireCooldown");
 					RaycastFire ();
-					ShakeCamera();
+					playerCamera.ShakeCamera();
 				} 
 
 			}
@@ -117,7 +119,7 @@ namespace smoothstudio.heroesandvillains.player
 				controllerHasFired = true;
 				StartCoroutine("ControllerFireCooldown");
 				RaycastFire();
-				ShakeCamera ();
+				playerCamera.ShakeCamera ();
 			}
 			if(Input.GetAxis("ControllerFire") > 0 && controllerHasFired) {
 				controllerHasFired = false;
@@ -138,15 +140,6 @@ namespace smoothstudio.heroesandvillains.player
 			canRapidFire = false;
 			yield return new WaitForSeconds(rapidFireCooldown);
 			canRapidFire = true;
-		}
-
-		private void ShakeCamera() {
-			if(!cameraShaking) {
-				cameraShaking = true;
-				playerCameraTransform.DOShakePosition (0.2f, new Vector3 (0.4f, 0.4f, 0), 4).OnComplete (()=>{
-					cameraShaking = false;
-				});
-			}
 		}
 
 		private void RaycastFire() { // Primary attack (for now)

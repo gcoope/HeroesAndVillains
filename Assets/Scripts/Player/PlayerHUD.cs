@@ -27,6 +27,7 @@ public class PlayerHUD : NetworkBehaviour {
 	public CanvasGroup pauseScreen;
 	public CanvasGroup respawnScreen;
 	public CanvasGroup scoreboardScreen;
+	public CanvasGroup damageIndicator;
 
 	public Text countdownText;
 	public CanvasGroup countdownScreen;
@@ -53,6 +54,7 @@ public class PlayerHUD : NetworkBehaviour {
 		gameObject.AddGlobalEventListener(GameplayEvent.GameOver, HandleGameoverEvent);
 		gameObject.AddGlobalEventListener(GameplayEvent.ResetGame, ResetGame);
 		hitmarkerImage.enabled = false;
+		damageIndicator.alpha = 0;
 	}
 
 	void Start() {
@@ -268,8 +270,9 @@ public class PlayerHUD : NetworkBehaviour {
 
 	// Hitmarker handling
 	[ClientRpc]
-	public void RpcShowHitmarker() { // TODO hitmarker sound
+	public void RpcShowHitmarker() {
 		if (!isShowingHitmarker) {
+			if(isLocalPlayer) AudioKeys.Hitmarker.PlaySound();
 			isShowingHitmarker = true;
 			hitmarkerImage.enabled = true;
 			StartCoroutine ("ShowHitmarkerCooldown");
@@ -282,4 +285,17 @@ public class PlayerHUD : NetworkBehaviour {
 		hitmarkerImage.enabled = false;
 	}
 
+	bool damageIndicatorShowing = false;
+
+	// Damage indicator showing
+	public void ShowDamageIndicator() {
+		if(!damageIndicatorShowing) {
+			damageIndicatorShowing = true;
+			damageIndicator.DOFade(1, 0.1f).OnComplete(()=>{
+				damageIndicator.DOFade(0, 0.1f).OnComplete(()=>{
+					damageIndicatorShowing = false;
+				});
+			});
+		}
+	}
 }

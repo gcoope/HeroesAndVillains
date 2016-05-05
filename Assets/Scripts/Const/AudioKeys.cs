@@ -10,4 +10,9 @@ public class AudioKeys {
 
 	public const string MenuLoop1 = "MenuLoop1";
 	public const string GameSong1 = "GameSong1";
+
+
+	public const string PlayerRegenHealth = "HealthRegen";
+	public const string Hitmarker = "Hitmarker";
+	public const string TakeDamage = "TakeDamage";
 }
