@@ -4,20 +4,21 @@ using System.Collections;
 using smoothstudio.heroesandvillains.player;
 using UnityEngine.Networking;
 
-public class RapidFirePowerup : NetworkBehaviour, IPowerup {
+public class HealthPickup : NetworkBehaviour, IPowerup {
 
 	private float respawnTime = 15f;
 	[SyncVar(hook="OnEnabledChanged")] public bool isEnabled = true;
 	public GameObject powerupModel;
 
 	void Awake() {
-		respawnTime = Settings.RapidFireRespawnTime;
+		respawnTime = Settings.HealthPackRespawnTime;
 	}
 
 	void OnTriggerEnter(Collider col) {
 		if(col.CompareTag(ObjectTagKeys.Player)) {
+			if(col.GetComponent<PlayerHealth>().isFullHealth()) return;
 			if (Activate ()) {
-				col.GetComponent<PlayerAttack> ().EnableRapidFire ();
+				col.GetComponent<PlayerHealth> ().AddHealth (Settings.HealthPackHealAmount);
 			}
 		}
 	}

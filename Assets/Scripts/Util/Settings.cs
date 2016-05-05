@@ -30,8 +30,11 @@ public class Settings : MonoBehaviour {
 	public const string HeroTeam = "Settings.HeroTeam";
 	public const string VillainTeam = "Settings.VillainTeam";
 
-	// Powerup
-	public static float PowerupRespawnTime = 15f;
+	// Pickups
+	public static float PowerupRespawnTime = 30f;
+	public static float RapidFireRespawnTime = 30f;
+	public static float HealthPackRespawnTime = 15f;
+	public static int HealthPackHealAmount = 50;
 
 	public static float MoveSpeedPowerupDuration = 8f;
 	public static float MoveSpeedPowerupSpeed = 20f;

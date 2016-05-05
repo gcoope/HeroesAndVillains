@@ -12,11 +12,8 @@ public class PlayerHealth : NetworkBehaviour {
 	public BasePlayerInfo thisPlayerInfo;
 	public PlayerHUD playerHUD;
 	private PlayerFaint playerFaint;
-//	[SerializeField] private Transform playerCameraTransform;
 	public PlayerInfoPacket lastPlayerToDamage;
 
-//	[SyncVar(hook = "OnHealthChange")] 
-//	[SyncVar] 
 	private int currentHealth = Settings.BaseHealth;
 
 	void Awake () {
@@ -62,6 +59,31 @@ public class PlayerHealth : NetworkBehaviour {
 		lastPlayerToDamage = fromPlayerInfo;
 		currentHealth = newHealthValue;
 		UpdateHealthText ();
+	}
+
+	// Adding health
+	[Client]
+	public void AddHealth(int amount) {
+		if(currentHealth + amount >= 100) {
+			currentHealth = 100;
+		} else {
+			currentHealth += amount;
+		}
+		UpdateHealthText();
+		CmdAddHealth(amount);
+	}
+
+	[Command]
+	private void CmdAddHealth(int amount) {
+		if(currentHealth + amount >= 100) {
+			currentHealth = 100;
+		} else {
+			currentHealth += amount;
+		}
+	}
+
+	public bool isFullHealth() {
+		return currentHealth == Settings.BaseHealth;
 	}
 
 	public void ResetHealthAfterRespawn() {

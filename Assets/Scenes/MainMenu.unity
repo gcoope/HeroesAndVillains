@@ -8259,7 +8259,7 @@ MonoBehaviour:
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
   m_OfflineScene: MainMenu
-  m_OnlineScene: DylanWorld
+  m_OnlineScene: CyborgWorld
   m_SpawnPrefabs:
   - {fileID: 119806, guid: cbac0e78d652a8141a1cce4985561dad, type: 2}
   m_CustomConfig: 1
