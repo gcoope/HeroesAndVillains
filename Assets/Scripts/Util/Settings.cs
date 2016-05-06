@@ -3,32 +3,32 @@
 public class Settings : MonoBehaviour {
 
 	// Player
-	public const int BaseHealth = 100;
-	public const int OverShield = 0;
-	public const int BaseDamage = 10;
-	public const int BaseMeleeDamage = 15;
-	public const float BaseMoveSpeed = 15f;
-	public const float BaseJumpHeight = 15f;
-	public const bool DoubleJumpEnabled = false;
-	public const float RocketJumpPower = 15f;
+	public static int BaseHealth = 100;
+	public static int OverShield = 0;
+	public static int BaseDamage = 10;
+	public static int BaseMeleeDamage = 15;
+	public static float BaseMoveSpeed = 15f;
+	public static float BaseJumpHeight = 15f;
+	public static bool DoubleJumpEnabled = false;
+	public static float RocketJumpPower = 15f;
 
 	// Game settings
-	public const bool FirstPersonMode = true;
+	public static bool FirstPersonMode = true;
 	public static SettingsGameMode currentGameMode = SettingsGameMode.TEAM_DEATHMATCH;
-	public const bool TDMGameMode = true;
-	public const int ScorePerKill = 1;
-	public const int TDMWinScore = 50;
-	public const int timeBeforeNextRound = 5;
+	public static bool TDMGameMode = true;
+	public static int ScorePerKill = 1;
+	public static int TDMWinScore = 20;
+	public static int timeBeforeNextRound = 5;
 
 	// Physics
-    public const float Gravity = 16f;
+    public static float Gravity = 16f;
 
 	// Networking
-	public const string HostIP = "localhost";
+	public static string HostIP = "localhost";
 
 	// Teams
-	public const string HeroTeam = "Settings.HeroTeam";
-	public const string VillainTeam = "Settings.VillainTeam";
+	public static string HeroTeam = "Settings.HeroTeam";
+	public static string VillainTeam = "Settings.VillainTeam";
 
 	// Pickups
 	public static float PowerupRespawnTime = 30f;

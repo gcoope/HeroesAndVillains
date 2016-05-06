@@ -1,0 +1,11 @@
+[BaseHealth] 1000
+[BaseJumpHeight] 15
+
+[ScorePerKill] 1
+[TDMWinScore] 20
+
+[Gravity] 16
+
+[PowerupRespawnTime] 30
+[RapidFireRespawnTime] 30
+[HealthPackRespawnTime] 15
