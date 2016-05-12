@@ -4,11 +4,6 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using DG.Tweening;
 using smoothstudio.heroesandvillains.player.events;
-using System;
-using System.Net.Sockets;
-using System.Net;
-using System.Text;
-using UnityEngine.SceneManagement;
 using UnityEngine.Networking.Match;
 
 public class StartMenuController : MonoBehaviour {
@@ -16,6 +11,9 @@ public class StartMenuController : MonoBehaviour {
 	private string ipAddress = "localhost";
 	private bool isHost = false;
 	private Text infoText;
+
+	// World Setting
+	private NetworkManager netManager;
 
 	void Awake() {	
 		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, JoinAsClient);
@@ -29,6 +27,23 @@ public class StartMenuController : MonoBehaviour {
 		gameObject.AddGlobalEventListener(MenuEvent.StopMatchMaker, StopMatchMaker);
 		gameObject.AddGlobalEventListener(MenuEvent.CreateOnlineRoom, CreateRoom);
 		gameObject.AddGlobalEventListener(MenuEvent.JoinDefaultRoom, JoinRoom);
+
+		// findme online scene setting
+		netManager = gameObject.GetComponent<NetworkManager>();
+		switch(Settings.gameWorld) {
+			case SettingsGameWorld.METROPOLIS:
+				netManager.onlineScene = "DylanWorld";
+				break;
+			case SettingsGameWorld.BORG:
+				netManager.onlineScene = "CyborgWorld";
+				break;
+			case SettingsGameWorld.CANDYLAND:
+				netManager.onlineScene = "CandyLand";
+				break;
+			case SettingsGameWorld.LOBBY:
+				netManager.onlineScene = "LobbyMenu";
+				break;
+		}
 	}
 
 	void Start() {

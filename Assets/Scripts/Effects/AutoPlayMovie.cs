@@ -41,7 +41,7 @@ public class AutoPlayMovie : MonoBehaviour {
 	}
 
 	IEnumerator ChangeAtEnd() {
-		yield return new WaitForSeconds(videoDuration-0.5f);
+		yield return new WaitForSeconds(videoDuration);
 		GoToStartScene();
 	}
 

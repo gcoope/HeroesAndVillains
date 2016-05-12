@@ -27,7 +27,7 @@ public class PlayerHealth : NetworkBehaviour {
 
 	void Update() {
 		if(!isLocalPlayer) return;
-		if(Input.GetKeyDown(KeyCode.F9) && Input.GetKey(KeyCode.LeftControl)) {
+		if(Input.GetKeyDown(KeyCode.F9) && !playerFaint.isFainted) {
 			CmdTakeDamageOnServer(25, new PlayerInfoPacket(thisPlayerInfo.playerName, thisPlayerInfo.playerTeam, netId), true);
 		}	
 	}
@@ -36,8 +36,7 @@ public class PlayerHealth : NetworkBehaviour {
 	public void CmdTakeDamageOnServer(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDmg) {
 		TakeDamageOnServer(amount, fromPlayerInfo, forceDmg);
 	}
-
-	[Server]
+		
 	public void TakeDamageOnServer(int amount, PlayerInfoPacket fromPlayerInfo, bool forceDamage = false) {
 		lastPlayerToDamage = fromPlayerInfo;
 

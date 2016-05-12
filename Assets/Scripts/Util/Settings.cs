@@ -20,6 +20,9 @@ public class Settings : MonoBehaviour {
 	public static int TDMWinScore = 20;
 	public static int timeBeforeNextRound = 5;
 
+	// World setting
+	public static SettingsGameWorld gameWorld = SettingsGameWorld.LOBBY;
+
 	// Physics
     public static float Gravity = 16f;
 
@@ -49,4 +52,11 @@ public enum SettingsGameMode {
 	CAPTURE_THE_FLAG,
 	CONTROL_POINTS,
 	PAYLOAD
+}
+
+public enum SettingsGameWorld {
+	METROPOLIS,
+	BORG,
+	CANDYLAND,
+	LOBBY
 }

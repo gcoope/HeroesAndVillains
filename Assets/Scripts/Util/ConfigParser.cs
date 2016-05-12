@@ -26,6 +26,25 @@ public class ConfigParser : MonoBehaviour {
 			if(line.StartsWith("[ScorePerKill]")) Settings.ScorePerKill = int.Parse(line.Replace("[ScorePerKill]", ""));
 			if(line.StartsWith("[TDMWinScore]")) Settings.TDMWinScore = int.Parse(line.Replace("[TDMWinScore]", ""));
 
+			// Game world
+			if(line.StartsWith("[GameWorld]")) { 
+				int worldIndex = int.Parse(line.Replace("[GameWorld]", ""));
+				switch(worldIndex) {
+				case 0:
+					Settings.gameWorld = SettingsGameWorld.METROPOLIS;
+					break;
+				case 1:
+					Settings.gameWorld = SettingsGameWorld.BORG;
+					break;
+				case 2:
+					Settings.gameWorld = SettingsGameWorld.CANDYLAND;
+					break;
+				case 3:
+					Settings.gameWorld = SettingsGameWorld.LOBBY;
+					break;
+				}
+			}
+
 			// Physics
 			if(line.StartsWith("[Gravity]")) Settings.Gravity = int.Parse(line.Replace("[Gravity]", ""));
 
@@ -33,7 +52,7 @@ public class ConfigParser : MonoBehaviour {
 			if(line.StartsWith("[PowerupRespawnTime]")) Settings.PowerupRespawnTime = float.Parse(line.Replace("[PowerupRespawnTime]", ""));
 			if(line.StartsWith("[RapidFireRespawnTime]")) Settings.RapidFireRespawnTime = float.Parse(line.Replace("[RapidFireRespawnTime]", ""));
 			if(line.StartsWith("[HealthPackRespawnTime]")) Settings.HealthPackRespawnTime = float.Parse(line.Replace("[HealthPackRespawnTime]", ""));
-		}
+		}	
 	}
 
 }

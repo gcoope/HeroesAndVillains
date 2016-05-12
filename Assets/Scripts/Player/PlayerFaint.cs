@@ -32,7 +32,6 @@ public class PlayerFaint : NetworkBehaviour {
 		}
 	}
 
-	[Server]
 	public void FaintOnServer() {
 		isFainted = true;
 		materialFader.FadeOut();
@@ -41,17 +40,17 @@ public class PlayerFaint : NetworkBehaviour {
 		// Score and message handling
 		if(playerHealth.lastPlayerToDamage.playerName == playerHealth.thisPlayerInfo.playerName) {
 			if(playerHealth.thisPlayerInfo.playerTeam == Settings.HeroTeam) {
-				CmdLogSomething("<color=cyan>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed themselves!");
+				ServerLogSomething("<color=cyan>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed themselves!");
 			} else {
-				CmdLogSomething("<color=red>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed themselves!");
+				ServerLogSomething("<color=red>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed themselves!");
 			}
 		} else {
 			if(playerHealth.thisPlayerInfo.playerTeam == Settings.HeroTeam) {
-				CmdLogSomething("<color=red>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed <color=cyan>" +  playerHealth.thisPlayerInfo.playerName + "</color>");
+				ServerLogSomething("<color=red>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed <color=cyan>" +  playerHealth.thisPlayerInfo.playerName + "</color>");
 			} else {
-				CmdLogSomething("<color=cyan>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  playerHealth.thisPlayerInfo.playerName + "</color>");
+				ServerLogSomething("<color=cyan>" + playerHealth.lastPlayerToDamage.playerName + "</color> destroyed <color=red>" +  playerHealth.thisPlayerInfo.playerName + "</color>");
 			}
-			CmdAddScore(playerHealth.lastPlayerToDamage.networkID, Settings.ScorePerKill, playerHealth.lastPlayerToDamage.playerTeam == Settings.HeroTeam); // findme Points added here
+			ServerAddScore(playerHealth.lastPlayerToDamage.networkID, Settings.ScorePerKill, playerHealth.lastPlayerToDamage.playerTeam == Settings.HeroTeam); // findme Points added here
 		}
 
 	}
@@ -121,8 +120,17 @@ public class PlayerFaint : NetworkBehaviour {
 		ServerScoreManager.instance.AddScore(isHeroTeam, amount);
 	}
 
+	private void ServerAddScore(NetworkInstanceId id, int amount, bool isHeroTeam) {
+		ServerPlayerManager.instance.AddScore(id, amount);
+		ServerScoreManager.instance.AddScore(isHeroTeam, amount);
+	}
+
 	[Command]
 	private void CmdLogSomething(string msg) {
+		ServerOnlyPlayerDisplay.instance.Log(msg);
+	}
+
+	private void ServerLogSomething(string msg) {
 		ServerOnlyPlayerDisplay.instance.Log(msg);
 	}
 
