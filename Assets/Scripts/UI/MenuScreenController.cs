@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 public class MenuScreenController : MonoBehaviour {
 
+	#pragma warning disable 169
 	[SerializeField] private GameObject MainMenuCanvas;
 	[SerializeField] private GameObject MultiplayerCanvas;
+	[SerializeField] private GameObject LobbyCanvas;
 
 	[SerializeField] private CanvasGroup MainMenuButtonsGroup;
 	[SerializeField] private CanvasGroup MainMenuOptions;
@@ -25,6 +27,7 @@ public class MenuScreenController : MonoBehaviour {
 	[SerializeField] private Text sfxSliderLabel;
 	[SerializeField] private Slider musicSlider;
 	[SerializeField] private Text musicSliderLabel;
+	#pragma warning restore 169
 
 	void Awake () {
 		cameraMove = gameObject.GetComponent<MainMenuCameraMove>();
@@ -34,6 +37,7 @@ public class MenuScreenController : MonoBehaviour {
 
 		MainMenuCanvas.SetActive(true);
 		MultiplayerCanvas.SetActive(false);
+		LobbyCanvas.SetActive(false);
 		QuitPanel.SetActive (false);
 
 		MainMenuOptions.alpha = 0;
@@ -77,6 +81,18 @@ public class MenuScreenController : MonoBehaviour {
 		mainMenuCanvasGroup.DOFade(1, 0.25f);
 
 		cameraMove.MoveToStartPosition();
+	}
+
+	public void ShowLobbyCanvas() {
+		MainMenuCanvas.SetActive(false);
+		MultiplayerCanvas.SetActive(false);
+		LobbyCanvas.SetActive(true);
+	}
+
+	public void ShowMainMenuCanvasFromLobby() {
+		mainMenuCanvasGroup.alpha = 1;
+		MainMenuCanvas.SetActive(true);
+		LobbyCanvas.SetActive(false);
 	}
 
 	public void ShowOptions() {

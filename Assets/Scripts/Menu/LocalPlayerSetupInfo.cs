@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class LocalPlayerSetupInfo : MonoBehaviour {
 
-	private Text nameInputText;
-
 	private string localPlayerName;
 	private string localPlayerTeam;
 
@@ -16,6 +14,8 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 		gameObject.AddGlobalEventListener(MenuEvent.JoinDefaultRoom, UpdateItems); 
 		gameObject.AddGlobalEventListener(MenuEvent.InputFieldChange, HandleInputFieldChange);
 	}
+
+	// TODO Get info from lobby
 
 	void Start () {
 		localPlayerName = "";

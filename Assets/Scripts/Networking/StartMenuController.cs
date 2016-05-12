@@ -11,11 +11,10 @@ public class StartMenuController : MonoBehaviour {
 	private string ipAddress = "localhost";
 	private bool isHost = false;
 	private Text infoText;
-
-	// World Setting
 	private NetworkManager netManager;
 
 	void Awake() {	
+		// Should be noted that events will be added and handled even if script is disabled
 		gameObject.AddGlobalEventListener(MenuEvent.JoinLocal, JoinAsClient);
 		gameObject.AddGlobalEventListener(MenuEvent.HostLocal, HostLan);
 		gameObject.AddGlobalEventListener(MenuEvent.HostServer, StartAsServer);
@@ -28,8 +27,9 @@ public class StartMenuController : MonoBehaviour {
 		gameObject.AddGlobalEventListener(MenuEvent.CreateOnlineRoom, CreateRoom);
 		gameObject.AddGlobalEventListener(MenuEvent.JoinDefaultRoom, JoinRoom);
 
+		if(!netManager) netManager = gameObject.GetComponent<NetworkManager>();
+
 		// findme online scene setting
-		netManager = gameObject.GetComponent<NetworkManager>();
 		switch(Settings.gameWorld) {
 			case SettingsGameWorld.METROPOLIS:
 				netManager.onlineScene = "DylanWorld";
@@ -41,7 +41,7 @@ public class StartMenuController : MonoBehaviour {
 				netManager.onlineScene = "CandyLand";
 				break;
 			case SettingsGameWorld.LOBBY:
-				netManager.onlineScene = "LobbyMenu";
+				netManager.onlineScene = "MainMenu";
 				break;
 		}
 	}
@@ -56,7 +56,7 @@ public class StartMenuController : MonoBehaviour {
 
 			if(data.inputKey == InputFieldKeys.MenuIPInput) {
 				ipAddress = data.inputValue;
-				if(NetworkManager.singleton != null) NetworkManager.singleton.networkAddress = ipAddress;
+				if(netManager != null) netManager.networkAddress = ipAddress;
 			}
 		}
 	}
@@ -64,21 +64,22 @@ public class StartMenuController : MonoBehaviour {
 	public void JoinAsClient() { JoinAsClient(null); }
 	public void JoinAsClient(EventObject evt = null) {
 		CheckHostAddress ();
-		NetworkManager.singleton.StartClient();
+		netManager.StartClient();
 	}
 
 	public void HostLan() { HostLan(null); }
 	public void HostLan(EventObject evt = null) {
 		isHost = true;
 		CheckHostAddress();
-		NetworkManager.singleton.StartHost();
+		netManager.StartHost();
 	}
 
 	public void StartAsServer() { StartAsServer(null); }
 	public void StartAsServer(EventObject evt = null) {
-		NetworkManager.singleton.StopServer();
-		NetworkManager.singleton.networkAddress = "localhost";
-		NetworkManager.singleton.StartServer();
+//		netManager.StopServer();
+//		netManager.StartServer();
+		netManager.networkAddress = "localhost";
+		netManager.StartServer();
 	}
 
 	public void CloseApp() { CloseApp(null); }
@@ -88,11 +89,11 @@ public class StartMenuController : MonoBehaviour {
 
 	public void Disconnect(EventObject evt) {
 		if(isHost) {
-			NetworkManager.singleton.StopHost();
+			netManager.StopHost();
 			isHost = false;
 		} else {
-			if(NetworkManager.singleton.IsClientConnected()) {
-				NetworkManager.singleton.client.Disconnect();
+			if(netManager.IsClientConnected()) {
+				netManager.client.Disconnect();
 				//SceneManager.LoadScene(0);
 				Application.LoadLevel (0);
 			}
@@ -102,32 +103,32 @@ public class StartMenuController : MonoBehaviour {
 	// Matchmaker
 	public void StartMatchMaker() {StartMatchMaker(null);}
 	public void StartMatchMaker(EventObject evt = null) {
-		NetworkManager.singleton.StartMatchMaker();
+		netManager.StartMatchMaker();
 	}
 
 	public void StopMatchMaker() {StopMatchMaker(null);}
 	public void StopMatchMaker(EventObject evt = null) {
-		NetworkManager.singleton.StopMatchMaker();
+		netManager.StopMatchMaker();
 	}
 
 	public void CreateRoom() {CreateRoom(null);}
 	public void CreateRoom(EventObject evt = null) {
-		if(NetworkManager.singleton.matches == null || NetworkManager.singleton.matches.Count == 0) {
-			NetworkManager.singleton.matchMaker.CreateMatch("default", NetworkManager.singleton.matchSize, true, "", NetworkManager.singleton.OnMatchCreate);	
+		if(netManager.matches == null || netManager.matches.Count == 0) {
+			netManager.matchMaker.CreateMatch("default", netManager.matchSize, true, "", netManager.OnMatchCreate);	
 			SetInfoText("Creating game...");
 		}
 	}
 
 	public void JoinRoom() {JoinRoom(null);}
 	public void JoinRoom(EventObject evt = null) {
-		NetworkManager.singleton.matchMaker.ListMatches(0, 20, "", delegate(ListMatchResponse response) {
-			NetworkManager.singleton.OnMatchList(response);
+		netManager.matchMaker.ListMatches(0, 20, "", delegate(ListMatchResponse response) {
+			netManager.OnMatchList(response);
 			foreach(MatchDesc m in response.matches) {
 				Debug.Log(m.name);
 				if(m.name == "default") {
-					NetworkManager.singleton.matchName = m.name;
-					NetworkManager.singleton.matchSize = (uint)m.currentSize;
-					NetworkManager.singleton.matchMaker.JoinMatch(m.networkId, "", NetworkManager.singleton.OnMatchJoined);
+					netManager.matchName = m.name;
+					netManager.matchSize = (uint)m.currentSize;
+					netManager.matchMaker.JoinMatch(m.networkId, "", netManager.OnMatchJoined);
 					SetInfoText("Found game, joining...");
 				}
 			}
@@ -149,6 +150,6 @@ public class StartMenuController : MonoBehaviour {
 	}
 
 	private void CheckHostAddress() {
-		if(string.IsNullOrEmpty(NetworkManager.singleton.networkAddress)) NetworkManager.singleton.networkAddress = "localhost";
+		if(string.IsNullOrEmpty(netManager.networkAddress)) netManager.networkAddress = "localhost";
 	}
 }
