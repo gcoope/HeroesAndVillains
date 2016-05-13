@@ -20,5 +20,7 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public const string StopMatchMaker = "MenuEvent.StopMatchMaker";
 		public const string CreateOnlineRoom = "MenuEvent.CreateOnlineRoom";
 		public const string JoinDefaultRoom = "MenuEvent.JoinDefaultRoom";
+
+		public const string ExitLobbyButton = "MenuEvent.ExitLobbyButton";
 	}
 }

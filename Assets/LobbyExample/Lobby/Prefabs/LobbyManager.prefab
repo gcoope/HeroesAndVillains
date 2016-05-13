@@ -2569,8 +2569,8 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 56c4630952ccd9546aa30a1eddc073e8, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: ea1a353ad7fa01940ae37eca7f03bfbb, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -3267,14 +3267,14 @@ MonoBehaviour:
   m_ShowLobbyGUI: 0
   m_MaxPlayers: 12
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 2
+  m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 11487034, guid: ad727d7e1462ecc4f83c898ecc501997,
     type: 2}
   m_GamePlayerPrefab: {fileID: 130246, guid: 5cc213af753087b4384a299603d85056, type: 2}
   m_LobbyScene: MainMenu
   m_PlayScene: CyborgWorld
   lobbySlots: []
-  prematchCountdown: 3
+  prematchCountdown: 4
   menuScreenController: {fileID: 0}
   topPanel: {fileID: 11424994}
   mainMenuPanel: {fileID: 22442386}
@@ -3887,7 +3887,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 155310}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76df5720a2bf04b4692cae94f34f1501, type: 3}
   m_Name: 

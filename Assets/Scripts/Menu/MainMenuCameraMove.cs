@@ -11,20 +11,24 @@ public class MainMenuCameraMove : MonoBehaviour {
 	public Vector3 optionsRotation;
 
 	void Start () {
+		if(!cameraPivot) cameraPivot = GameObject.Find("CameraPivot").transform;
 		cameraPivot.eulerAngles = startRotation;
 	}	
 
 	public void MoveToStartPosition() {
+		if(!cameraPivot) cameraPivot = GameObject.Find("CameraPivot").transform;
 		DOTween.Kill(cameraPivot.eulerAngles);
 		cameraPivot.DORotate(startRotation, 0.5f);
 	}
 
 	public void MoveToMultiplayerPosition() {
+		if(!cameraPivot) cameraPivot = GameObject.Find("CameraPivot").transform;
 		DOTween.Kill(cameraPivot.eulerAngles);
 		cameraPivot.DORotate(multiplayerRotation, 0.5f);
 	}
 
 	public void MoveToOptionsPosition() {
+		if(!cameraPivot) cameraPivot = GameObject.Find("CameraPivot").transform;
 		DOTween.Kill(cameraPivot.eulerAngles);
 		cameraPivot.DORotate(optionsRotation, 0.5f);
 	}

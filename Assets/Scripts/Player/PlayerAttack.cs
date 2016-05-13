@@ -8,7 +8,7 @@ using DG.Tweening;
 
 namespace smoothstudio.heroesandvillains.player
 {
-	[RequireComponent(typeof(BasePlayerInfo))]
+	[NetworkSettings(channel=2, sendInterval=0)]
 	public class PlayerAttack : NetworkBehaviour
 	{	
 		[SerializeField] private PlayerAnimator playerAnimator;

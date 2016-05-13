@@ -54,6 +54,10 @@ namespace Prototype.NetworkLobby
 
         protected LobbyHook _lobbyHooks;
 
+		void Awake() {
+			DontDestroyOnLoad(gameObject);
+		}
+
         void Start()
         {
             s_Singleton = this;
@@ -61,20 +65,9 @@ namespace Prototype.NetworkLobby
             currentPanel = mainMenuPanel;
 
             backButton.gameObject.SetActive(false);
-            GetComponent<Canvas>().enabled = true;
-
-            DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
         }
-
-		public override void OnStartServer ()
-		{
-			base.OnStartServer ();
-			Debug.Log("am server");
-			SceneManager.LoadScene(playScene);
-			SceneManager.SetActiveScene(SceneManager.GetSceneByName(playScene));
-		}
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
@@ -116,6 +109,7 @@ namespace Prototype.NetworkLobby
             }
             else // We're in game
             {
+				menuScreenController.HideLobbyCanvas();
 //                ChangeTo(null);
 //                Destroy(GameObject.Find("MainMenuUI(Clone)"));
 //               	backDelegate = StopGameClbk;
@@ -244,6 +238,7 @@ namespace Prototype.NetworkLobby
 
            // ChangeTo(lobbyPanel);
 			// findme lobbyCanvas show
+			if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
 			menuScreenController.ShowLobbyCanvas();
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
@@ -335,10 +330,8 @@ namespace Prototype.NetworkLobby
         {
             //This hook allows you to apply state data from the lobby-player to the game-player
             //just subclass "LobbyHook" and add it to the lobby object.
-
-            if (_lobbyHooks)
-                _lobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
-
+            if (_lobbyHooks) _lobbyHooks.OnLobbyServerSceneLoadedForPlayer(this, lobbyPlayer, gamePlayer);
+			else Debug.Log("no hook");
             return true;
         }
 
@@ -406,6 +399,7 @@ namespace Prototype.NetworkLobby
 
             if (!NetworkServer.active)
             {//only to do on pure client (not self hosting client)
+				if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
 				menuScreenController.ShowLobbyCanvas();
 //                ChangeTo(lobbyPanel);
                 backDelegate = StopClientClbk;
@@ -416,8 +410,9 @@ namespace Prototype.NetworkLobby
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
+			Debug.Log("On client disconnect");
             base.OnClientDisconnect(conn);
-            ChangeTo(mainMenuPanel);
+//            ChangeTo(mainMenuPanel);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)

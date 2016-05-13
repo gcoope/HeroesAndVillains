@@ -320,7 +320,8 @@ namespace smoothstudio.heroesandvillains.player
 
 		[ClientCallback]
 		private void TransmitTransform() {
-			if(isLocalPlayer && NetworkManager.singleton.IsClientConnected()) { // TODO Add limiters here if lag/bandwidth issue
+			if(isLocalPlayer) { // TODO Add limiters here if lag/bandwidth issue
+//			if(isLocalPlayer && NetworkManager.singleton.IsClientConnected()) { // TODO Add limiters here if lag/bandwidth issue
 				Cmd_PassPosition(transform.position);
 				if(transform.rotation != lastRotation) {
 					Cmd_PassRotation(transform.rotation);

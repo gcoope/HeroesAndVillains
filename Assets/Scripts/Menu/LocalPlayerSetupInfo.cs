@@ -22,7 +22,7 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 		localPlayerTeam = Settings.HeroTeam;
 	}
 
-	private void HandleInputFieldChange(EventObject evt) {
+	private void HandleInputFieldChange(EventObject evt) { // TODO move this functionality to lobby screen
 		if(evt.Params[0] != null) {
 			InputFieldVO data = (InputFieldVO)evt.Params[0];
 
@@ -43,12 +43,12 @@ public class LocalPlayerSetupInfo : MonoBehaviour {
 		if(string.IsNullOrEmpty(localPlayerName)) {
 			localPlayerName = NameGenerator.GetRandomName();
 		}
-
+//
 		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerName, localPlayerName);
 	}
 
 	private void UpdateItems(EventObject evt) {
-		UpdateNameInput();
+//		UpdateNameInput();
 		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerTeam, localPlayerTeam);
 	}
 }

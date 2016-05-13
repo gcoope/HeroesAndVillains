@@ -1664,7 +1664,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1795065357}
-  m_RootOrder: 3
+  m_RootOrder: 2
 --- !u!114 &62882595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28280,8 +28280,8 @@ Transform:
   m_Children:
   - {fileID: 497884636}
   - {fileID: 2089965070}
-  - {fileID: 2063447414}
   - {fileID: 62882594}
+  - {fileID: 2063447414}
   - {fileID: 1367549928}
   - {fileID: 422886967}
   m_Father: {fileID: 0}
@@ -31879,7 +31879,7 @@ Transform:
   m_Children:
   - {fileID: 1196614981}
   m_Father: {fileID: 1795065357}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!114 &2063447415
 MonoBehaviour:
   m_ObjectHideFlags: 0

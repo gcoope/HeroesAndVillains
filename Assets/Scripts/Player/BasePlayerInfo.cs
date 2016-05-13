@@ -35,14 +35,19 @@ public class BasePlayerInfo : NetworkBehaviour {
 		playerName = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerName);
 		if(string.IsNullOrEmpty(playerName)) playerName = NameGenerator.GetRandomName();
 		playerTeam = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerTeam);
-		CmdTellServerPlayerInfo(playerName, playerTeam);
 
-		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // Only on local client - So we can't click ourselves, bit hacky...
+		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // Only on local client - So we can't click ourselves, bit hacky but works
 
 		// Positioning
 		Transform spawnPos = SpawnManager.instance.GetFreeSpawn(playerTeam == Settings.HeroTeam);
 		transform.position = spawnPos.position;
 		transform.rotation = spawnPos.rotation;
+
+		Invoke("LateOnStartLocalPlayer", 1f); // Hack to tell server our info - seems to be called just before player manager is setup
+	}
+
+	void LateOnStartLocalPlayer() {
+		if(ServerPlayerManager.instance) CmdTellServerPlayerInfo(playerName, playerTeam);
 	}
 
 	public override void OnStartClient () {		
@@ -68,10 +73,9 @@ public class BasePlayerInfo : NetworkBehaviour {
 		gameObject.name = playerName;
 		modelChanger.SetModelColour(playerTeam);
 		RpcSetClientPlayerInfo(playerName, playerTeam);
-
 		NetworkInstanceId _netID = gameObject.GetComponent<NetworkIdentity>().netId;
 		PlayerInfoPacket packet = new PlayerInfoPacket(playerName, playerTeam, _netID);
-		ServerPlayerManager.instance.RegisterPlayer(packet);
+		if(ServerPlayerManager.instance) ServerPlayerManager.instance.RegisterPlayer(packet);
 	}
 
 	[ClientRpc]

@@ -1,5 +1,5 @@
 // 0 = City, 1 = Borg, 2 = Candy, 3 = Lobby test
-[GameWorld] 1
+[GameWorld] 0
 
 [BaseHealth] 100
 [BaseJumpHeight] 15

@@ -1,14 +1,12 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.Networking;
 using System.Collections.Generic;
-using smoothstudio.heroesandvillains.player.events;
 
 public class ServerPlayerManager : NetworkBehaviour {
 
 	public static ServerPlayerManager instance {
 		get {
-			if(_instance == null) {_instance = GameObject.FindObjectOfType<ServerPlayerManager>();}
+			if(_instance == null) {_instance = Object.FindObjectOfType<ServerPlayerManager>();}
 			return _instance;
 		}
 	}
@@ -33,7 +31,7 @@ public class ServerPlayerManager : NetworkBehaviour {
 		gameObject.DispatchGlobalEvent(NetworkEvent.NewPlayerConnected, new object[]{playerInfoArray});
 	}
 
-	[Server]
+//	[Server]
 	public void UnregisterPlayer(NetworkInstanceId playerID) {
 		if(playerDetails.ContainsKey(playerID)) {
 			RpcRemovePlayer(playerDetails[playerID]);

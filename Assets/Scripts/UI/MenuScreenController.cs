@@ -89,10 +89,15 @@ public class MenuScreenController : MonoBehaviour {
 		LobbyCanvas.SetActive(true);
 	}
 
+	public void HideLobbyCanvas() {
+		LobbyCanvas.SetActive(false);
+	}
+
 	public void ShowMainMenuCanvasFromLobby() {
 		mainMenuCanvasGroup.alpha = 1;
 		MainMenuCanvas.SetActive(true);
 		LobbyCanvas.SetActive(false);
+		gameObject.DispatchGlobalEvent(MenuEvent.ExitLobbyButton);
 	}
 
 	public void ShowOptions() {
