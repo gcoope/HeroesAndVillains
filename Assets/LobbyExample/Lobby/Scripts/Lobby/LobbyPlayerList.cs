@@ -54,9 +54,22 @@ namespace Prototype.NetworkLobby
 
         public void RemovePlayer(LobbyPlayer player)
         {
-            _players.Remove(player);
-            PlayerListModified();
+			if(_players != null && _players.Count > 0) {
+	            _players.Remove(player);
+	            PlayerListModified();
+			}
         }
+
+		public void RemoveAllPlayers() {
+			for(int i = 0; i < _players.Count; i++) {
+				_players.Remove(_players[i]);
+			}
+			for(int i = 0; i < playerListContentTransform.childCount-1; i++) {
+				if(playerListContentTransform.GetChild(i)) Destroy(playerListContentTransform.GetChild(i).gameObject);
+				_players.Remove(_players[i]);
+			}
+			PlayerListModified();
+		}
 
         public void PlayerListModified()
         {

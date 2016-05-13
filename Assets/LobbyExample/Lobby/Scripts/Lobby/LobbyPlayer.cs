@@ -215,13 +215,18 @@ namespace Prototype.NetworkLobby
             if (isLocalPlayer)
             {
 				readyToBegin = false;
-                RemovePlayer();
+				RemovePlayer();
+				if(isClient) {
+					LobbyPlayerList._instance.RemoveAllPlayers();
+					NetworkClient.allClients[0].Disconnect(); // Is it always first index?
+					NetworkClient.ShutdownAll();
+				}
 //				NetworkServer.DisconnectAll();
-//				 TODO Disconnect properly
+//				TODO Disconnect properly
             }
-//            else if (isServer)
+//           else if (isServer) {
 //                LobbyManager.s_Singleton.KickPlayer(connectionToClient);
-//                
+//			}			                
         }
 
         public void ToggleJoinButton(bool enabled) {
