@@ -22,6 +22,7 @@ namespace Prototype.NetworkLobby
 
         [Space]
         [Header("UI Reference")]
+		public LobbySetupPanel setupPanel;
 		public MenuScreenController menuScreenController;
         public LobbyTopPanel topPanel;
 
@@ -118,6 +119,11 @@ namespace Prototype.NetworkLobby
             }
         }
 
+		// Used for map preferences
+		public void SetGlobalPreferredMap() {
+			// TODO
+		}
+
         public void ChangeTo(RectTransform newPanel)
         {
             if (currentPanel != null)
@@ -154,6 +160,8 @@ namespace Prototype.NetworkLobby
         {
             statusInfo.text = status;
             hostInfo.text = host;
+			setupPanel.SetHostIP(host);
+
         }
 
 
@@ -220,9 +228,6 @@ namespace Prototype.NetworkLobby
         {
             conn.Send(MsgKicked, new KickMsg());
         }
-
-
-
 
         public void KickedMessageHandler(NetworkMessage netMsg)
         {

@@ -24,7 +24,12 @@ namespace Prototype.NetworkLobby
         [SyncVar(hook = "OnMyName")]
         public string playerName = "";
         [SyncVar(hook = "OnMyTeam")]
-		public string playerTeam = Random.value > 0.4f ? Settings.HeroTeam : Settings.VillainTeam;
+		public string playerTeam = Settings.HeroTeam;
+
+		[SyncVar(hook = "OnMyPreferredMap")]
+		public int preferredMap = 0; // 0 metro, 1 borg, 2 candy
+
+		private int localPreferredMap = 0;
 
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(200.0f / 255.0f, 200.0f / 255.0f, 200.0f / 255.0f, 1.0f);
@@ -99,8 +104,18 @@ namespace Prototype.NetworkLobby
             OnClientReady(false);
         }
 
-        void SetupLocalPlayer()
-        {
+        void SetupLocalPlayer() {
+			gameObject.AddGlobalEventListener(MenuEvent.LobbyRandomNameButton, (delegate(EventObject obj) {
+				GenerateRandomName();
+			}));
+
+			gameObject.AddGlobalEventListener(MenuEvent.LobbySetLocalPreferredMap, (delegate(EventObject obj) {
+				if(obj.Params[0] != null) {
+					localPreferredMap = (int)obj.Params[0];
+					OnMapPrefChanged(localPreferredMap);
+				}
+			}));
+
             nameInput.interactable = true;
             remoteIcon.gameObject.SetActive(false);
             localIcon.gameObject.SetActive(true);
@@ -177,6 +192,13 @@ namespace Prototype.NetworkLobby
 			GetComponent<Image>().color = (idx % 2 == 0) ? EvenRowColor : OddRowColor;
         }
 
+		private void GenerateRandomName() {
+			if(isLocalPlayer) {				
+				playerName = NameGenerator.GetRandomName();
+				OnNameChanged(playerName);
+			}
+		}
+
         ///===== callback from sync var
 
         public void OnMyName(string newName) {
@@ -192,8 +214,17 @@ namespace Prototype.NetworkLobby
 				teamButton.GetComponent<Image>().color = villainTeamColor;
 			}
 
+			// Tell info panel to update count values
+			LobbyPlayerList._instance.PlayerPreferenceModified();
+
 //			CmdTeamChanged(playerTeam);
         }
+
+		public void OnMyPreferredMap(int mapPref) {
+			preferredMap = mapPref;
+			// Tell info panel to update count values
+			LobbyPlayerList._instance.PlayerPreferenceModified();
+		}
 
         //===== UI Handler
 
@@ -210,6 +241,10 @@ namespace Prototype.NetworkLobby
         public void OnNameChanged(string str) {
             CmdNameChanged(str);
         }
+
+		public void OnMapPrefChanged(int mapPref) {
+			CmdChangeMapPref(mapPref);
+		}
 
         public void OnRemovePlayerClick() {
             if (isLocalPlayer)
@@ -264,6 +299,11 @@ namespace Prototype.NetworkLobby
 		[Command]
 		public void CmdTeamChanged(string team) {
 			playerTeam = team;
+		}
+
+		[Command]
+		public void CmdChangeMapPref(int pref) {
+			preferredMap = pref;
 		}
        
 		public void OnDestroy() { // Cleanup thing when get destroy (which happen when client kick or disconnect)

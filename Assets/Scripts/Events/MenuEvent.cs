@@ -22,5 +22,7 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public const string JoinDefaultRoom = "MenuEvent.JoinDefaultRoom";
 
 		public const string ExitLobbyButton = "MenuEvent.ExitLobbyButton";
+		public const string LobbyRandomNameButton = "MenuEvent.LobbyRandomNameButton";
+		public const string LobbySetLocalPreferredMap = "MenuEvent.LobbySetLocalPreferredMap";
 	}
 }

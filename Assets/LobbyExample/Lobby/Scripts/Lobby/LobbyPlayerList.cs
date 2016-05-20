@@ -10,12 +10,21 @@ namespace Prototype.NetworkLobby
     {
         public static LobbyPlayerList _instance = null;
 
+		public LobbySetupPanel setupPanel;
         public RectTransform playerListContentTransform;
         public GameObject warningDirectPlayServer;
         public Transform addButtonRow;
 
         protected VerticalLayoutGroup _layout;
         protected List<LobbyPlayer> _players = new List<LobbyPlayer>();
+
+		private int heroPlayerCount = 0;
+		private int villainPlayerCount = 0;
+
+		// Map preferences
+		public int metroMapCount = 0;
+		public int borgMapCount = 0;
+		public int candylandMapCount = 0;
 
         public void OnEnable()
         {
@@ -30,8 +39,7 @@ namespace Prototype.NetworkLobby
 //				warningDirectPlayServer.SetActive(enabled);
         }
 
-        void Update()
-        {
+        void Update() {
             //this dirty the layout to force it to recompute evryframe (a sync problem between client/server
             //sometime to child being assigned before layout was enabled/init, leading to broken layouting)
             
@@ -48,7 +56,6 @@ namespace Prototype.NetworkLobby
 
             player.transform.SetParent(playerListContentTransform, false);
          //   addButtonRow.transform.SetAsLastSibling();
-
             PlayerListModified();
         }
 
@@ -71,14 +78,35 @@ namespace Prototype.NetworkLobby
 			PlayerListModified();
 		}
 
-        public void PlayerListModified()
-        {
+        public void PlayerListModified() {
             int i = 0;
-            foreach (LobbyPlayer p in _players)
-            {
+            foreach (LobbyPlayer p in _players) {
                 p.OnPlayerListChanged(i);
                 ++i;
             }
+
+			setupPanel.SetPlayerCounts(heroPlayerCount, villainPlayerCount);
         }
+
+		public void PlayerPreferenceModified() {
+			heroPlayerCount = villainPlayerCount = metroMapCount = borgMapCount = candylandMapCount = 0; // It works...
+			int i = 0;
+			foreach (LobbyPlayer p in _players) {
+				// Team player count
+				if(p.playerTeam == Settings.HeroTeam) heroPlayerCount++;
+				else if(p.playerTeam == Settings.VillainTeam) villainPlayerCount++;
+
+				// Map pref
+				if(p.preferredMap == 0) metroMapCount++;
+				else if(p.preferredMap == 1) borgMapCount++;
+				else if(p.preferredMap == 2) candylandMapCount++;
+				++i;
+			}
+
+			setupPanel.SetMapCountValues(metroMapCount, borgMapCount, candylandMapCount);
+//			Debug.Log(Mathf.Max(metroMapCount, borgMapCount, candylandMapCount));
+
+			// TODO Something with the highest value - what if two are even?
+		}
     }
 }
