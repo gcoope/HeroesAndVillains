@@ -4477,7 +4477,7 @@ MonoBehaviour:
     type: 2}
   m_GamePlayerPrefab: {fileID: 130246, guid: 5cc213af753087b4384a299603d85056, type: 2}
   m_LobbyScene: MainMenu
-  m_PlayScene: CandyLand
+  m_PlayScene: DylanWorld
   lobbySlots: []
   prematchCountdown: 1
   setupPanel: {fileID: 579848440}
