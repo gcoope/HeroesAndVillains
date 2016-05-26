@@ -23,8 +23,7 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 
 	private bool isVisible = false;
 
-	public override void OnStartServer ()
-	{
+	public override void OnStartServer () {
 		base.OnStartServer ();
 		consoleMessages = new List<string>();
 		transform.GetChild(0).gameObject.SetActive(isVisible);
@@ -37,8 +36,6 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 		Log("Server started on " + localIp);
 		Log("Registering server callbacks");
 		Log("Press F4 to toggle console");
-		//NetworkServer.RegisterHandler(MsgType.Connect, ClientConnected);
-//		NetworkServer.RegisterHandler(MsgType.Command, CommandSent);
 
 		serverIPText.text = "Server IP: " + localIp;
 	}

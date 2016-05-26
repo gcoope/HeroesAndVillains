@@ -24,7 +24,7 @@ public class LobbySetupPanel : MonoBehaviour {
 		TurnOffPanel(outfitPanel);
 		TurnOffPanel(worldPanel);
 		TurnOffPanel(gamemodePanel);
-		SetCurrentPanel(outfitPanel);
+		SetCurrentPanel(worldPanel);
 
 		outfitButton.onClick.AddListener(()=>{SetCurrentPanel(outfitPanel);});
 		worldButton.onClick.AddListener(()=>{SetCurrentPanel(worldPanel);});

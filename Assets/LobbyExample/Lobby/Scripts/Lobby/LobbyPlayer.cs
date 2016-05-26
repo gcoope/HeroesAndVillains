@@ -247,22 +247,20 @@ namespace Prototype.NetworkLobby
 		}
 
         public void OnRemovePlayerClick() {
-            if (isLocalPlayer)
-            {
-				readyToBegin = false;
-				RemovePlayer();
-				if(isClient) {
+			if(isServer) {
+				if(isClient) { 
+					LobbyManager.s_Singleton.StopHost();
+					readyToBegin = false;
 					LobbyPlayerList._instance.RemoveAllPlayers();
-					NetworkClient.allClients[0].Disconnect(); // Is it always first index?
-					NetworkClient.ShutdownAll();
 				}
-//				NetworkServer.DisconnectAll();
-//				TODO Disconnect properly
-            }
-//           else if (isServer) {
-//                LobbyManager.s_Singleton.KickPlayer(connectionToClient);
-//			}			                
-        }
+				else LobbyManager.s_Singleton.StopServer();
+			} else if(isLocalPlayer) {
+				readyToBegin = false;
+				LobbyPlayerList._instance.RemoveAllPlayers();
+				NetworkClient.allClients[0].Disconnect(); // Are we always first index? TODO Find exact index or d/c better
+				NetworkClient.ShutdownAll();
+			}
+		}
 
         public void ToggleJoinButton(bool enabled) {
             readyButton.gameObject.SetActive(enabled);

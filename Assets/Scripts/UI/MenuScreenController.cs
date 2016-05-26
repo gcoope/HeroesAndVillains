@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MenuScreenController : MonoBehaviour {
 
 	#pragma warning disable 169
+	[Header("UI Reference")]
 	[SerializeField] private GameObject MainMenuCanvas;
 	[SerializeField] private GameObject MultiplayerCanvas;
 	[SerializeField] private GameObject LobbyCanvas;
@@ -54,6 +55,10 @@ public class MenuScreenController : MonoBehaviour {
 		AudioKeys.MenuLoop1.PlayMusic();
 	}
 
+	void OnEnable() {
+		cameraMove.MoveToStartPosition();
+	}
+
 	void OnLevelWasLoaded() {
 		sfxSlider.value = SoundManager.instance.SFXVolume;
 		musicSlider.value = SoundManager.instance.MusicVolume;
@@ -62,7 +67,10 @@ public class MenuScreenController : MonoBehaviour {
 	}
 
 	public void ShowMultiplayerCanvas() {
-		mainMenuCanvasGroup.DOFade(0, 0.25f).OnComplete(()=>{MainMenuCanvas.SetActive(false);});
+//		mainMenuCanvasGroup.alpha = 1;
+//		mainMenuCanvasGroup.DOFade(0, 0.25f).OnComplete(()=>{
+			MainMenuCanvas.SetActive(false);
+//		});
 
 		MultiplayerCanvas.SetActive(true);
 		multiplayerCanvasGroup.alpha = 0;
@@ -89,6 +97,10 @@ public class MenuScreenController : MonoBehaviour {
 		LobbyCanvas.SetActive(true);
 	}
 
+	public void HideMultiplayerCanvas() {
+		MultiplayerCanvas.SetActive(false);
+	}
+
 	public void HideLobbyCanvas() {
 		LobbyCanvas.SetActive(false);
 	}
@@ -98,6 +110,12 @@ public class MenuScreenController : MonoBehaviour {
 		MainMenuCanvas.SetActive(true);
 		LobbyCanvas.SetActive(false);
 		gameObject.DispatchGlobalEvent(MenuEvent.ExitLobbyButton);
+	}
+
+	public void ShowMainMenuQuickly() {
+		mainMenuCanvasGroup.alpha = 1;
+		MainMenuCanvas.SetActive(true);
+		LobbyCanvas.SetActive(false);
 	}
 
 	public void ShowOptions() {

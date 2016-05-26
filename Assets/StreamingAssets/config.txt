@@ -1,5 +1,5 @@
-// 0 = City, 1 = Borg, 2 = Candy, 3 = Lobby test
-[GameWorld] 0
+[OnlineScoresURL] http://george.cat/supasite/scores.php
+[UseOnlineScores] true
 
 [BaseHealth] 100
 [BaseJumpHeight] 15

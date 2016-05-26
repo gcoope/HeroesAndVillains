@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using UnityEngine.Networking.Match;
 using System.Collections;
+using System.Net;
 
 
 namespace Prototype.NetworkLobby
@@ -27,7 +28,6 @@ namespace Prototype.NetworkLobby
         public LobbyTopPanel topPanel;
 
         public RectTransform mainMenuPanel;
-        public RectTransform lobbyPanel;
 
         public LobbyInfoPanel infoPanel;
         public LobbyCountdownPanel countdownPanel;
@@ -56,11 +56,11 @@ namespace Prototype.NetworkLobby
         protected LobbyHook _lobbyHooks;
 
 		void Awake() {
-			DontDestroyOnLoad(gameObject);
+			if(LobbyManager.s_Singleton != null) Destroy(gameObject);
+			else DontDestroyOnLoad(gameObject);
 		}
 
-        void Start()
-        {
+        void Start() {
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
@@ -70,46 +70,54 @@ namespace Prototype.NetworkLobby
             SetServerInfo("Offline", "None");
         }
 
-        public override void OnLobbyClientSceneChanged(NetworkConnection conn)
-        {
-            if (SceneManager.GetSceneAt(0).name == lobbyScene)
-            {
-                if (topPanel.isInGame)
-                {
-                    ChangeTo(lobbyPanel);
-                    if (_isMatchmaking)
-                    {
-                        if (conn.playerControllers[0].unetView.isServer)
-                        {
+		public override void OnStartServer () {
+			base.OnStartServer ();
+		}
+
+		public override void OnStopServer ()
+		{
+			Debug.Log("Server stopped");
+			menuScreenController.ShowMainMenuQuickly();
+			base.OnStopServer ();
+		}
+
+		public override void OnLobbyClientDisconnect (NetworkConnection conn)
+		{
+			Debug.Log("OnLobbyClientDisconnect");
+			menuScreenController.ShowMainMenuQuickly();
+			base.OnLobbyClientDisconnect (conn);
+		}
+
+        public override void OnLobbyClientSceneChanged(NetworkConnection conn) {
+			if(SceneManager.GetSceneAt(1) == null) Debug.Log("index 1 is null?");
+			if (SceneManager.GetSceneAt(0).name == lobbyScene){ // client is back at lobby
+				Debug.Log("scene 0 is lobby?");
+                if (topPanel.isInGame) {
+                    if (_isMatchmaking) {
+                        if (conn.playerControllers[0].unetView.isServer) {
                             backDelegate = StopHostClbk;
                         }
-                        else
-                        {
+                        else {
                             backDelegate = StopClientClbk;
                         }
                     }
-                    else
-                    {
-                        if (conn.playerControllers[0].unetView.isClient)
-                        {
+                    else {
+						if (conn.playerControllers[0].unetView.isClient) {
                             backDelegate = StopHostClbk;
                         }
-                        else
-                        {
+                        else {
                             backDelegate = StopClientClbk;
                         }
                     }
                 }
-                else
-                {
+                else {
                     ChangeTo(mainMenuPanel);
                 }
 
                 topPanel.ToggleVisibility(true);
                 topPanel.isInGame = false;
             }
-            else // We're in game
-            {
+            else { // client is in game
 				menuScreenController.HideLobbyCanvas();
 //                ChangeTo(null);
 //                Destroy(GameObject.Find("MainMenuUI(Clone)"));
@@ -150,18 +158,22 @@ namespace Prototype.NetworkLobby
             }
         }
 
-        public void DisplayIsConnecting()
-        {
+        public void DisplayIsConnecting() {
             var _this = this;
             infoPanel.Display("Connecting...", "Cancel", () => { _this.backDelegate(); });
         }
 
-        public void SetServerInfo(string status, string host)
-        {
+        public void SetServerInfo(string status, string host) {
             statusInfo.text = status;
             hostInfo.text = host;
-			setupPanel.SetHostIP(host);
 
+			string localIp = "";
+			foreach(IPAddress ip in Dns.GetHostEntry(Dns.GetHostName()).AddressList) {
+				if(ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork){
+					localIp = ip.ToString();
+				}
+			}
+			setupPanel.SetHostIP(localIp);
         }
 
 
@@ -174,8 +186,7 @@ namespace Prototype.NetworkLobby
 
         // ----------------- Server management
 
-        public void AddLocalPlayer()
-        {
+        public void AddLocalPlayer() {
             TryToAddPlayer();
         }
 
@@ -189,8 +200,7 @@ namespace Prototype.NetworkLobby
             ChangeTo(mainMenuPanel);
         }
                  
-        public void StopHostClbk()
-        {
+        public void StopHostClbk() {
             if (_isMatchmaking)
             {
                 matchMaker.DestroyMatch((NetworkID)_currentMatchID, OnDestroyMatch);
@@ -205,8 +215,7 @@ namespace Prototype.NetworkLobby
             ChangeTo(mainMenuPanel);
         }
 
-        public void StopClientClbk()
-        {
+        public void StopClientClbk() {
             StopClient();
 
             if (_isMatchmaking)
@@ -240,11 +249,10 @@ namespace Prototype.NetworkLobby
         public override void OnStartHost()
         {
             base.OnStartHost();
-
-           // ChangeTo(lobbyPanel);
 			// findme lobbyCanvas show
 			if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
 			menuScreenController.ShowLobbyCanvas();
+			menuScreenController.HideMultiplayerCanvas();
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
@@ -394,34 +402,31 @@ namespace Prototype.NetworkLobby
 
         // ----------------- Client callbacks ------------------
 
-        public override void OnClientConnect(NetworkConnection conn)
-        {
+        public override void OnClientConnect(NetworkConnection conn) {
             base.OnClientConnect(conn);
 
             infoPanel.gameObject.SetActive(false);
 
             conn.RegisterHandler(MsgKicked, KickedMessageHandler);
 
-            if (!NetworkServer.active)
-            {//only to do on pure client (not self hosting client)
+            if (!NetworkServer.active) { //only to do on pure client (not self hosting client)
 				if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
 				menuScreenController.ShowLobbyCanvas();
-//                ChangeTo(lobbyPanel);
                 backDelegate = StopClientClbk;
                 SetServerInfo("Client", networkAddress);
             }
         }
 
 
-        public override void OnClientDisconnect(NetworkConnection conn)
-        {
+        public override void OnClientDisconnect(NetworkConnection conn) {
 			Debug.Log("On client disconnect");
+			if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
+			menuScreenController.ShowMainMenuQuickly();
             base.OnClientDisconnect(conn);
 //            ChangeTo(mainMenuPanel);
         }
 
-        public override void OnClientError(NetworkConnection conn, int errorCode)
-        {
+        public override void OnClientError(NetworkConnection conn, int errorCode) {
             ChangeTo(mainMenuPanel);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }

@@ -21,3 +21,18 @@ public struct PlayerInfoPacket
 	}
 }
 
+[Serializable]
+public class PlayerInfoPacketJSON {
+	public string playerName;
+	public string playerTeam;
+	public int playerScore;
+}
+
+[Serializable]
+public class OnlineJSONPacket {
+	public PlayerInfoPacketJSON[] players;
+
+	public OnlineJSONPacket(int playerCount) {
+		players = new PlayerInfoPacketJSON[playerCount];
+	}
+}

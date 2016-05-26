@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ServerPlayerManager : NetworkBehaviour {
 
@@ -23,6 +24,7 @@ public class ServerPlayerManager : NetworkBehaviour {
 			PlayerInfoPacket[] packets = new PlayerInfoPacket[playerDetails.Count];
 			playerDetails.Values.CopyTo(packets, 0);
 			RpcUpdatePlayers(packets);
+			TrySendToOnline(packets);
 		}
 	}
 
@@ -59,6 +61,10 @@ public class ServerPlayerManager : NetworkBehaviour {
 				playerDetails[id].score + newScore
 			);
 			RpcUdateScore(playerDetails[id]);
+
+			PlayerInfoPacket[] packets = new PlayerInfoPacket[playerDetails.Count];
+			playerDetails.Values.CopyTo(packets, 0);
+			TrySendToOnline(packets);
 		}
 	}
 
@@ -86,6 +92,9 @@ public class ServerPlayerManager : NetworkBehaviour {
 		gameObject.DispatchGlobalEvent (GameplayEvent.ResetGame);
 		ResetAllScores();
 		RpcResetGame();
+		PlayerInfoPacket[] packets = new PlayerInfoPacket[playerDetails.Count];
+		playerDetails.Values.CopyTo(packets, 0);
+		TrySendToOnline(packets);
 	}
 
 	[ClientRpc]
@@ -93,4 +102,18 @@ public class ServerPlayerManager : NetworkBehaviour {
 		gameObject.DispatchGlobalEvent (GameplayEvent.ResetGame);
 	}
 
+	#region live online highscores
+
+	[Server]
+	private void TrySendToOnline(PlayerInfoPacket[] playerPackets) {
+		if(Settings.UseOnlineScores) WebCommunicator.instance.SendPlayerJSON(playerPackets);
+	}
+
+	void OnApplicationQuit() {
+		if(isServer) {
+			WebCommunicator.instance.SendMessage("EndGame");
+		}
+	}
+
+	#endregion
 }

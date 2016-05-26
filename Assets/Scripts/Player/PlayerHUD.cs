@@ -6,6 +6,7 @@ using DG.Tweening;
 using smoothstudio.heroesandvillains.player;
 using UnityStandardAssets.ImageEffects;
 using UnityEngine.Networking;
+using Prototype.NetworkLobby;
 
 public class PlayerHUD : NetworkBehaviour {
 
@@ -231,7 +232,8 @@ public class PlayerHUD : NetworkBehaviour {
 
 	// Exiting
 	public void Exit() {
-		gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect); // TODO Not working, find best solution
+		gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect);
+//		LobbyManager.s_Singleton.KickPlayer(connectionToServer); 
 	}
 
 	// util

@@ -26,24 +26,9 @@ public class ConfigParser : MonoBehaviour {
 			if(line.StartsWith("[ScorePerKill]")) Settings.ScorePerKill = int.Parse(line.Replace("[ScorePerKill]", ""));
 			if(line.StartsWith("[TDMWinScore]")) Settings.TDMWinScore = int.Parse(line.Replace("[TDMWinScore]", ""));
 
-			// Game world
-			if(line.StartsWith("[GameWorld]")) { 
-				int worldIndex = int.Parse(line.Replace("[GameWorld]", ""));
-				switch(worldIndex) {
-				case 0:
-					Settings.gameWorld = SettingsGameWorld.METROPOLIS;
-					break;
-				case 1:
-					Settings.gameWorld = SettingsGameWorld.BORG;
-					break;
-				case 2:
-					Settings.gameWorld = SettingsGameWorld.CANDYLAND;
-					break;
-				case 3:
-					Settings.gameWorld = SettingsGameWorld.LOBBY;
-					break;
-				}
-			}
+			// Networking
+			if(line.StartsWith("[UseOnlineScores]")) Settings.UseOnlineScores = bool.Parse(line.Replace("[UseOnlineScores]", ""));
+			if(line.StartsWith("[OnlineScoresURL]")) Settings.OnlineScoresURL = line.Replace("[OnlineScoresURL]", "");
 
 			// Physics
 			if(line.StartsWith("[Gravity]")) Settings.Gravity = int.Parse(line.Replace("[Gravity]", ""));

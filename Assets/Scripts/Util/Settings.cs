@@ -28,6 +28,8 @@ public class Settings : MonoBehaviour {
 
 	// Networking
 	public static string HostIP = "localhost";
+	public static string OnlineScoresURL = "http://george.cat/supasite/scores2.php";
+	public static bool UseOnlineScores = true;
 
 	// Teams
 	public static string HeroTeam = "Settings.HeroTeam";
