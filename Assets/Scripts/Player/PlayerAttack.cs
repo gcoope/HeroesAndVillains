@@ -20,6 +20,7 @@ namespace smoothstudio.heroesandvillains.player
 		private bool canNormalFire = true;
 		private bool canRapidFire = true;
 		private bool cameraShaking = false;
+		private int directHitDamage = 25;
 
 		private Transform playerCameraTransform;
 		PlayerGravityBody playerGravityBody;
@@ -59,6 +60,7 @@ namespace smoothstudio.heroesandvillains.player
 			splashCollider = Resources.Load<GameObject>("Prefabs/Physics/SplashDamageCollider");
 
 			rapidFireCooldown = Settings.RapidFireCooldownSpeed;
+			directHitDamage = playerInfo.directHitDamage;
 
 			playerCameraTransform = gameObject.GetComponentInChildren<Camera>().transform;
 			if(isLocalPlayer) {
@@ -188,10 +190,9 @@ namespace smoothstudio.heroesandvillains.player
 
 		[Command]
 		private void CmdRaycastHit(GameObject player, PlayerInfoPacket playerInfoPacket) {
-			player.GetComponent<PlayerHealth>().TakeDamageOnServer(20, playerInfoPacket);
+			player.GetComponent<PlayerHealth>().TakeDamageOnServer(directHitDamage, playerInfoPacket);
 		}
 
-		// TODO Falcon kick
 		private void MeleeHitSomePlayer(EventObject evt) {
 			if (evt.Params != null) {
 				if((BasePlayerInfo)evt.Params[0] == playerInfo) { // If the person hit was us

@@ -222,7 +222,7 @@ namespace smoothstudio.heroesandvillains.player
 
 				if(isGrounded) {
 					playerGravityBody.SetGravity(8f);
-					playerGravityBody.Jump(7f);
+					playerGravityBody.Jump(jumpPower);
 					playerAnimator.CmdJump();
 					reduceGravity = true;
 				}

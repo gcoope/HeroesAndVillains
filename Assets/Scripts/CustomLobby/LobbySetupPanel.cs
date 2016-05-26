@@ -9,42 +9,23 @@ public class LobbySetupPanel : MonoBehaviour {
 	public Text villainCountText;
 
 	public Button outfitButton;
-	public Button worldButton;
-	public Button gamemodeButton;
-	public Button randomNameButton;
-
 	public GameObject outfitPanel;
-	public GameObject worldPanel;
-	public GameObject gamemodePanel;
-	private GameObject currentPanel;
+
 
 	public MapSelectController mapPanelController; // Used to set values back from lobby manager
+	public GameModeSelectController gameSelectController;
 
 	void Awake() {
 		TurnOffPanel(outfitPanel);
-		TurnOffPanel(worldPanel);
-		TurnOffPanel(gamemodePanel);
-		SetCurrentPanel(worldPanel);
+		outfitButton.onClick.AddListener(()=>{TogglePanel(outfitPanel);});
+	}
 
-		outfitButton.onClick.AddListener(()=>{SetCurrentPanel(outfitPanel);});
-		worldButton.onClick.AddListener(()=>{SetCurrentPanel(worldPanel);});
-		gamemodeButton.onClick.AddListener(()=>{SetCurrentPanel(gamemodePanel);});
-		randomNameButton.onClick.AddListener(()=>{gameObject.DispatchGlobalEvent(MenuEvent.LobbyRandomNameButton);});
+	private void TogglePanel(GameObject panel) { 
+		panel.SetActive(!panel.activeSelf);
 	}
 
 	private void TurnOffPanel(GameObject panel) { 
 		panel.SetActive(false);
-	}
-
-	private void SetCurrentPanel(GameObject newCurrentPanel) {
-		if(currentPanel && currentPanel != newCurrentPanel) {
-			currentPanel.SetActive(false);
-			currentPanel = newCurrentPanel;
-			currentPanel.SetActive(true);
-		} else {
-			currentPanel = newCurrentPanel;
-			currentPanel.SetActive(true);
-		}
 	}
 
 	// Publics
@@ -56,8 +37,17 @@ public class LobbySetupPanel : MonoBehaviour {
 		villainCountText.text = villainCount.ToString();
 	}
 
-	// Send info back to panels from lobby maanager if needed
-	public void SetMapCountValues(int metroCount, int borgCount, int candyCount){
-		mapPanelController.SetVoteCountValues(metroCount, borgCount, candyCount);
+	public void HideOutfitPanel() {
+		TurnOffPanel(outfitPanel);
 	}
+
+	// Send info back to panels from lobby maanager if needed
+	public void SetMapCountValues(int metroCount, int borgCount, int candyCount, int desertCount){
+		mapPanelController.SetMapVoteCountValues(metroCount, borgCount, candyCount, desertCount);
+	}
+
+	public void SetGameCountValues(int arena, int ctf, int zone, int superior){
+		gameSelectController.SetGameVoteCountValues(arena, ctf, zone, superior);
+	}
+
 }

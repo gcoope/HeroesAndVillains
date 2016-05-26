@@ -19,3 +19,5 @@ EditorBuildSettings:
     path: Assets/Scenes/CyborgWorld.unity
   - enabled: 1
     path: Assets/Scenes/CandyLand.unity
+  - enabled: 1
+    path: Assets/Scenes/Desert.unity

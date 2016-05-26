@@ -2,7 +2,7 @@
 [UseOnlineScores] true
 
 [BaseHealth] 100
-[BaseJumpHeight] 15
+[BaseJumpHeight] 12
 
 [ScorePerKill] 1
 [TDMWinScore] 20

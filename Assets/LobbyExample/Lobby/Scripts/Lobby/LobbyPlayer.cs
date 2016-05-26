@@ -27,9 +27,13 @@ namespace Prototype.NetworkLobby
 		public string playerTeam = Settings.HeroTeam;
 
 		[SyncVar(hook = "OnMyPreferredMap")]
-		public int preferredMap = 0; // 0 metro, 1 borg, 2 candy
+		public int preferredMap = 0; // 0 metro, 1 borg, 2 candy, 3 desert
+
+		[SyncVar(hook = "OnMyPreferredGameMode")]
+		public int preferredGameMode = 0; // 0 arena, 1 ctf, 2 zone, 3 superiority
 
 		private int localPreferredMap = 0;
+		private int localPreferredGameMode = 0;
 
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(200.0f / 255.0f, 200.0f / 255.0f, 200.0f / 255.0f, 1.0f);
@@ -113,6 +117,13 @@ namespace Prototype.NetworkLobby
 				if(obj.Params[0] != null) {
 					localPreferredMap = (int)obj.Params[0];
 					OnMapPrefChanged(localPreferredMap);
+				}
+			}));
+
+			gameObject.AddGlobalEventListener(MenuEvent.LobbySetLocalPreferredGameMode, (delegate(EventObject obj) {
+				if(obj.Params[0] != null) {
+					localPreferredGameMode = (int)obj.Params[0];
+					OnGamePrefChanged(localPreferredGameMode);
 				}
 			}));
 
@@ -226,6 +237,13 @@ namespace Prototype.NetworkLobby
 			LobbyPlayerList._instance.PlayerPreferenceModified();
 		}
 
+		public void OnMyPreferredGameMode(int gamePref) {
+			preferredGameMode = gamePref;
+			// Tell info panel to update count values
+			LobbyPlayerList._instance.PlayerPreferenceModified();
+		}
+
+
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally
@@ -244,6 +262,10 @@ namespace Prototype.NetworkLobby
 
 		public void OnMapPrefChanged(int mapPref) {
 			CmdChangeMapPref(mapPref);
+		}
+
+		public void OnGamePrefChanged(int mapPref) {
+			CmdChangeGamePref(mapPref);
 		}
 
         public void OnRemovePlayerClick() {
@@ -303,7 +325,12 @@ namespace Prototype.NetworkLobby
 		public void CmdChangeMapPref(int pref) {
 			preferredMap = pref;
 		}
-       
+
+		[Command]
+		public void CmdChangeGamePref(int pref) {
+			preferredGameMode = pref;
+		}
+
 		public void OnDestroy() { // Cleanup thing when get destroy (which happen when client kick or disconnect)
             LobbyPlayerList._instance.RemovePlayer(this);
             if (LobbyManager.s_Singleton != null) LobbyManager.s_Singleton.OnPlayersNumberModified(-1);

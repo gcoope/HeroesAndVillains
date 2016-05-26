@@ -14,7 +14,7 @@ public class SplashDamagerCollider : NetworkBehaviour {
 
 	void OnTriggerEnter(Collider col) {
 		if(col.CompareTag(ObjectTagKeys.Player)) {
-			col.gameObject.GetComponent<PlayerHealth>().CmdTakeDamageOnServer(20, playerPacket, false);
+			col.gameObject.GetComponent<PlayerHealth>().CmdTakeDamageOnServer(Settings.SplashDamage, playerPacket, false);
 		}
 
 		if(col.CompareTag(ObjectTagKeys.DestructableObject)) {

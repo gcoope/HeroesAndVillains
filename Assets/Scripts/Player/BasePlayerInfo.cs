@@ -5,7 +5,6 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	private PlayerFaint playerFaint;
 	private PlayerHealth playerHealth;
-//	private PlayerName nameText;
 	private PlayerModelChanger modelChanger;
 
 	[Header("Player")]
@@ -17,12 +16,19 @@ public class BasePlayerInfo : NetworkBehaviour {
 	public string playerTeam = Settings.HeroTeam; // TODO change this to int hero = 1 villain = 2 etc.
 
 	[Header("Stats")]
-	public int overShield = Settings.OverShield;  // as above
-	public int damage = Settings.BaseDamage;
+	[HideInInspector]
+	public int directHitDamage = Settings.DirectHitDamage;
+	[HideInInspector]
+	public int splashDamage = Settings.SplashDamage;
+	[HideInInspector]
 	public int meleeDamage = Settings.BaseMeleeDamage;
+	[HideInInspector]
 	public float speed = Settings.BaseMoveSpeed;
+	[HideInInspector]
 	public float jumpHeight = Settings.BaseJumpHeight;
+	[HideInInspector]
 	public float rocketJumpPower = Settings.RocketJumpPower;
+	[HideInInspector]
 	public bool doubleJumpEnabled = Settings.DoubleJumpEnabled;
 
 	void Awake () {

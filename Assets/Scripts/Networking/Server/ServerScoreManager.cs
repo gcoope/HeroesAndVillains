@@ -38,12 +38,12 @@ public class ServerScoreManager : NetworkBehaviour {
 
 //		ServerOnlyPlayerDisplay.instance.Log (isHeroTeam ? "<color=cyan>Heroes scored a point</color>" : "<color=red>Villains scored a point</color>");
 
-		if(Settings.currentGameMode == SettingsGameMode.TEAM_DEATHMATCH) CheckTDMWinCondition();
+		if(Settings.currentGameMode == SettingsGameMode.ARENA) CheckArenaWinCondition();
 
 		if (restartingGame)	restartingGame = false; // No harm in doing this here(?) - means we know it's a new round/game
 	}
 
-	private void CheckTDMWinCondition() {
+	private void CheckArenaWinCondition() {
 		if (isServer) {
 			if (heroScore >= Settings.TDMWinScore) {
 				EndGame (true);

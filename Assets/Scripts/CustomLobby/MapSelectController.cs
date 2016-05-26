@@ -9,6 +9,7 @@ public class MapSelectController : MonoBehaviour {
 	public MapOption metroOption;
 	public MapOption borgOption;
 	public MapOption candyOption;
+	public MapOption desertOption;
 	private MapOption currentOption;
 
 
@@ -19,6 +20,7 @@ public class MapSelectController : MonoBehaviour {
 		metroOption.button.onClick.AddListener(()=>{SetCurrentOption(metroOption);});
 		borgOption.button.onClick.AddListener(()=>{SetCurrentOption(borgOption);});
 		candyOption.button.onClick.AddListener(()=>{SetCurrentOption(candyOption);});
+		desertOption.button.onClick.AddListener(()=>{SetCurrentOption(desertOption);});
 	}
 
 	private void SetCurrentOption(MapOption option) {
@@ -41,6 +43,9 @@ public class MapSelectController : MonoBehaviour {
 		case "candyland":
 			return 2;
 			break;
+		case "desert":
+			return 3;
+			break;
 		default:
 			return 0;
 		}
@@ -50,9 +55,10 @@ public class MapSelectController : MonoBehaviour {
 		gameObject.DispatchGlobalEvent(MenuEvent.LobbySetLocalPreferredMap, new object[]{GetPreferredMap()});
 	}
 
-	public void SetVoteCountValues(int metroCount, int borgCount, int candyCount) {
+	public void SetMapVoteCountValues(int metroCount, int borgCount, int candyCount, int desertCount) {
 		metroOption.SetVoteCount(metroCount);
 		borgOption.SetVoteCount(borgCount);
 		candyOption.SetVoteCount(candyCount);
+		desertOption.SetVoteCount(desertCount);
 	}
 }
