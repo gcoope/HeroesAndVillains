@@ -4,6 +4,9 @@ using UnityEngine.Networking;
 
 public class PlayerModelChanger : NetworkBehaviour {
 
+	[SyncVar(hook = "OnOutfitChange")]
+	public int selectedOutfit = 0;
+
 	public Material heroMat;
 	public Material villainMat;
 	public Color heroCol;
@@ -18,13 +21,11 @@ public class PlayerModelChanger : NetworkBehaviour {
 		if(team != playerTeam) CmdTellOthersMaterial(team);
 	}
 
-	public void SetModelColour(string team) {
-		playerTeam = team;
-		UpdateMaterial(playerTeam);
+	private void OnOutfitChange(int outfitIndex) {
+		if(outfitIndex != selectedOutfit) CmdTellOthersOutfit(outfitIndex);
 	}
 
-	[ClientRpc]
-	public void RpcSetModelColour(string team) {
+	public void SetModelColour(string team) {
 		playerTeam = team;
 		UpdateMaterial(playerTeam);
 	}
@@ -34,15 +35,32 @@ public class PlayerModelChanger : NetworkBehaviour {
 //		materialHandler.PassMaterial(currentMaterial);
 		Color teamColour = team == Settings.HeroTeam ? heroCol : villainCol;
 		materialHandler.SetTeamColours (teamColour);
-		GetComponent<PlayerRagdoll>().SetupRigidbody(teamColour); // TODO Maybe somewhere better - sets suit color for rigidbody. We need to also do hair style and clothes settings
-
+//		GetComponent<PlayerRagdoll>().SetupRigidbody(teamColour); // TODO Maybe somewhere better - sets suit color for rigidbody. We need to also do hair style and clothes settings
 	}
 
 	[Command]
 	public void CmdTellOthersMaterial(string playerTeam) {
 		RpcSetModelColour(playerTeam);
-//		gameObject.GetComponent<PlayerModelChanger>().UpdateMaterial(playerTeam);
 	}
+
+	[ClientRpc]
+	public void RpcSetModelColour(string team) {
+		playerTeam = team;
+		UpdateMaterial(playerTeam);
+	}
+
+	[Command]
+	public void CmdTellOthersOutfit(int outfitIndex) {
+		RpcSetOutfit(outfitIndex);
+	}
+
+	[ClientRpc]
+	public void RpcSetOutfit(int outfitIndex) {
+		selectedOutfit = outfitIndex;
+		Debug.Log("outfit index: " + outfitIndex);
+//		UpdateModel(outfitIndex);
+	}
+
 
 	public void EnableModel(bool enable) {
 		materialHandler.SetModelShowing(enable);

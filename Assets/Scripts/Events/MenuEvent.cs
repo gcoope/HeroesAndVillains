@@ -25,5 +25,6 @@ namespace smoothstudio.heroesandvillains.player.events {
 		public const string LobbyRandomNameButton = "MenuEvent.LobbyRandomNameButton";
 		public const string LobbySetLocalPreferredMap = "MenuEvent.LobbySetLocalPreferredMap";
 		public const string LobbySetLocalPreferredGameMode = "MenuEvent.LobbySetLocalPreferredGameMode";
+		public const string LobbyOutfitSelected = "MenuEvent.LobbyOutfitSelected";
 	}
 }

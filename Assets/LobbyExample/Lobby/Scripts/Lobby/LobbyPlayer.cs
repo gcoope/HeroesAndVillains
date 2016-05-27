@@ -46,9 +46,15 @@ namespace Prototype.NetworkLobby
 		public Color heroTeamColor;
 		public Color villainTeamColor;
 
+		public int selectedOutfit = 0;
+
 		void Awake() {
 			gameObject.AddGlobalEventListener(MenuEvent.ExitLobbyButton, (delegate(EventObject obj) {
 				OnRemovePlayerClick();	
+			}));
+
+			gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, (delegate(EventObject obj) {
+				selectedOutfit = (int)obj.GetParam(0);
 			}));
 		}
 
