@@ -111,7 +111,7 @@ public class ServerPlayerManager : NetworkBehaviour {
 
 	void OnApplicationQuit() {
 		if(isServer) {
-			WebCommunicator.instance.SendMessage("EndGame");
+			WebCommunicator.instance.SendNetMessage("EndGame");
 		}
 	}
 

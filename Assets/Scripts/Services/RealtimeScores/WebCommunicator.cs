@@ -36,7 +36,7 @@ public class WebCommunicator : MonoBehaviour {
 		useOnlineScores = Settings.UseOnlineScores;
 	}
 
-	public void SendMessage(string msg) {
+	public void SendNetMessage(string msg) {
 		if(useOnlineScores) {
 			StartCoroutine(TrySendMessage(msg));
 		}
@@ -83,8 +83,8 @@ public class WebCommunicator : MonoBehaviour {
 
 		if(request.error != null) Debug.Log(request.error);
 		else {
-//			Debug.Log(request.text);
-			Debug.Log("JSON send success");
+			Debug.Log(request.text);
+//			Debug.Log("JSON send success");
 			request.Dispose();
 		}
 	}

@@ -4,11 +4,11 @@ using UnityEngine.Networking;
 
 public class NetworkLobbyHandler : LobbyHook {
 
-	public override void OnLobbyServerSceneLoadedForPlayer (UnityEngine.Networking.NetworkManager manager, GameObject lobbyPlayer, GameObject gamePlayer) {
+	public override void OnLobbyServerSceneLoadedForPlayer (NetworkManager manager, GameObject lobbyPlayer, GameObject gamePlayer) {
 		LobbyPlayer lobbyInfo = lobbyPlayer.GetComponent<LobbyPlayer>();
 		gamePlayer.GetComponent<BasePlayerInfo>().playerName = lobbyInfo.playerName;
 		gamePlayer.GetComponent<BasePlayerInfo>().playerTeam = lobbyInfo.playerTeam;
-		gamePlayer.GetComponent<PlayerModelChanger>().selectedOutfit = lobbyInfo.selectedOutfit;
+		gamePlayer.GetComponent<BasePlayerInfo>().playerOutfit = lobbyInfo.selectedOutfit;
 
 		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerName, lobbyInfo.playerName);
 		PlayerPrefs.SetString(PlayerPrefKeys.LocalPlayerTeam, lobbyInfo.playerTeam);

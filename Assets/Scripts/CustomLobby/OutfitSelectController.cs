@@ -14,14 +14,16 @@ public class OutfitSelectController : MonoBehaviour {
 	}
 
 	void Start() {
-		chosenOutfitIndex = Random.Range(0,10);
+		gameObject.DispatchGlobalEvent (MenuEvent.LobbyOutfitSelected, new object[]{Random.Range(0,9)}); // Do this once at the start otherwise something isn't getting set
 		outfitButtons[chosenOutfitIndex].Selected();
 	}
 
 	public void SelectOutfit(EventObject evt) {
-		outfitButtons[chosenOutfitIndex].Deselected();
-		chosenOutfitIndex = (int)evt.GetParam(0); // presume only 1 item
-		outfitButtons[chosenOutfitIndex].Selected();
+		if (outfitButtons [chosenOutfitIndex] != null) {
+			outfitButtons [chosenOutfitIndex].Deselected ();
+			chosenOutfitIndex = (int)evt.GetParam (0); // presume only 1 param
+			outfitButtons [chosenOutfitIndex].Selected ();
+		}
 	}
 
 }

@@ -27,6 +27,8 @@ public class GameOption : MonoBehaviour {
 	}
 
 	public void SetVoteCount(int count) {
-		voteCount.text = count.ToString();
+		if (voteCount != null) {
+			if (voteCount.isActiveAndEnabled) voteCount.text = count.ToString ();
+		}
 	}
 }

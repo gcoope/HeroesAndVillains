@@ -54,7 +54,7 @@ namespace Prototype.NetworkLobby
 			}));
 
 			gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, (delegate(EventObject obj) {
-				selectedOutfit = (int)obj.GetParam(0);
+				if(isLocalPlayer) selectedOutfit = (int)obj.GetParam(0);
 			}));
 		}
 

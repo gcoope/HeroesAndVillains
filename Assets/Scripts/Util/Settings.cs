@@ -28,8 +28,8 @@ public class Settings : MonoBehaviour {
 
 	// Networking
 	public static string HostIP = "localhost";
-	public static string OnlineScoresURL = "http://george.cat/supasite/scores2.php";
-//	public static string OnlineScoresURL = "http://ct6008-15d.studentsites.glos.ac.uk/App/scores2.php";
+//	public static string OnlineScoresURL = "http://george.cat/supasite/scores2.php";
+	public static string OnlineScoresURL = "http://ct6008-15d.studentsites.glos.ac.uk/App/scores2.php";
 
 	public static bool UseOnlineScores = false;
 

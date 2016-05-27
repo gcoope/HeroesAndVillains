@@ -1113,14 +1113,17 @@ MonoBehaviour:
   remoteIcon: {fileID: 189178}
   playerName: 
   playerTeam: Settings.HeroTeam
+  preferredMap: 0
+  preferredGameMode: 0
   OddRowColor: {r: 0.98039216, g: 0.98039216, b: 0.98039216, a: 1}
   EvenRowColor: {r: 0.7058824, g: 0.7058824, b: 0.7058824, a: 1}
   JoinColor: {r: 0.9411765, g: 0, b: 0, a: 1}
   NotReadyColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 1}
   ReadyColor: {r: 0.08088237, g: 0.65770805, b: 1, a: 1}
   TransparentColor: {r: 0, g: 0, b: 0, a: 0}
-  heroTeamColor: {r: 0.9411765, g: 0, b: 0, a: 1}
-  villainTeamColor: {r: 0.08088237, g: 0.65770805, b: 1, a: 1}
+  heroTeamColor: {r: 0.08088237, g: 0.65770805, b: 1, a: 1}
+  villainTeamColor: {r: 0.9411765, g: 0, b: 0, a: 1}
+  selectedOutfit: 0
 --- !u!114 &11487112
 MonoBehaviour:
   m_ObjectHideFlags: 1

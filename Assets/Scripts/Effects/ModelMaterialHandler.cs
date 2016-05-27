@@ -18,7 +18,7 @@ public class ModelMaterialHandler : MonoBehaviour {
 	}
 
 	void Start() {
-		suitMat = suitRend.materials [0]; // TODO SO hard coded, pls fix me
+		suitMat = suitRend.materials [0]; // TODO So hard coded, fix me
 	}
 
 	public void PassMaterial(Material mat) {
@@ -73,7 +73,7 @@ public class ModelMaterialHandler : MonoBehaviour {
 	// Colour changing based on team
 	public void SetTeamColours(Color col) {
 		if (suitMat == null) {
-			suitMat = suitRend.materials [0]; // TODO SO hard coded, pls fix me
+			suitMat = suitRend.materials [0]; // TODO So hard coded, fix me
 
 		}
 		suitMat.color = col;
