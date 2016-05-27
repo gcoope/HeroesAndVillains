@@ -32,8 +32,12 @@ namespace Prototype.NetworkLobby
 		[SyncVar(hook = "OnMyPreferredGameMode")]
 		public int preferredGameMode = 0; // 0 arena, 1 ctf, 2 zone, 3 superiority
 
+		[SyncVar(hook = "OnMyOutfit")]
+		public int selectedOutfit = 0;
+
 		private int localPreferredMap = 0;
 		private int localPreferredGameMode = 0;
+		private int localSelectedOutfit = 0;
 
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(200.0f / 255.0f, 200.0f / 255.0f, 200.0f / 255.0f, 1.0f);
@@ -46,15 +50,9 @@ namespace Prototype.NetworkLobby
 		public Color heroTeamColor;
 		public Color villainTeamColor;
 
-		public int selectedOutfit = 0;
-
 		void Awake() {
 			gameObject.AddGlobalEventListener(MenuEvent.ExitLobbyButton, (delegate(EventObject obj) {
 				OnRemovePlayerClick();	
-			}));
-
-			gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, (delegate(EventObject obj) {
-				if(isLocalPlayer) selectedOutfit = (int)obj.GetParam(0);
 			}));
 		}
 
@@ -79,6 +77,8 @@ namespace Prototype.NetworkLobby
             //will be created with the right value currently on server
             OnMyName(playerName);
             OnMyTeam(playerTeam);
+			OnMyOutfit(selectedOutfit);
+
         }
 
         public override void OnStartAuthority()
@@ -130,6 +130,13 @@ namespace Prototype.NetworkLobby
 				if(obj.Params[0] != null) {
 					localPreferredGameMode = (int)obj.Params[0];
 					OnGamePrefChanged(localPreferredGameMode);
+				}
+			}));
+
+			gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, (delegate(EventObject obj) {
+				if(obj.Params[0] != null) {
+					localSelectedOutfit = (int)obj.GetParam(0);
+					OnOutfitChange(localSelectedOutfit);
 				}
 			}));
 
@@ -232,21 +239,41 @@ namespace Prototype.NetworkLobby
 			}
 
 			// Tell info panel to update count values
+			// Dedicated server we actually need to tell it these values
 			LobbyPlayerList._instance.PlayerPreferenceModified();
 
-//			CmdTeamChanged(playerTeam);
         }
+
+
 
 		public void OnMyPreferredMap(int mapPref) {
 			preferredMap = mapPref;
 			// Tell info panel to update count values
 			LobbyPlayerList._instance.PlayerPreferenceModified();
+
+			// Dedicated server we actually need to tell it do the same
+			if(!isServer) CmdUpdatePreferredMap(LobbyPlayerList._instance.currentVotedMap);
+		}
+
+		[Command]
+		void CmdUpdatePreferredMap(string mapName) {
+			LobbyManager.s_Singleton.playScene = mapName;
 		}
 
 		public void OnMyPreferredGameMode(int gamePref) {
 			preferredGameMode = gamePref;
 			// Tell info panel to update count values
 			LobbyPlayerList._instance.PlayerPreferenceModified();
+			//			if(!isServer) CmdUpdatePreferredGame(LobbyPlayerList._instance.currentVotedMap);
+		}
+
+//		[Command]
+//		void CmdUpdatePreferredGame(string mapName) {
+//			LobbyManager.s_Singleton.playScene = mapName;
+//		}
+//
+		public void OnMyOutfit(int index) {
+			selectedOutfit = index;
 		}
 
 
@@ -272,6 +299,10 @@ namespace Prototype.NetworkLobby
 
 		public void OnGamePrefChanged(int mapPref) {
 			CmdChangeGamePref(mapPref);
+		}
+
+		public void OnOutfitChange(int outfitIndex) {
+			CmdChangeOutfit(outfitIndex);
 		}
 
         public void OnRemovePlayerClick() {
@@ -335,6 +366,11 @@ namespace Prototype.NetworkLobby
 		[Command]
 		public void CmdChangeGamePref(int pref) {
 			preferredGameMode = pref;
+		}
+
+		[Command]
+		public void CmdChangeOutfit(int outfitIndex) {
+			selectedOutfit = outfitIndex;
 		}
 
 		public void OnDestroy() { // Cleanup thing when get destroy (which happen when client kick or disconnect)

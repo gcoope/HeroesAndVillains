@@ -1,5 +1,5 @@
-[OnlineScoresURL] http://george.cat/supasite/scores.php
-[UseOnlineScores] true
+[OnlineScoresURL]http://george.cat/supasite/scores.php
+[UseOnlineScores]false
 
 [BaseHealth] 100
 [BaseJumpHeight] 12

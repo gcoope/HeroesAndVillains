@@ -20,6 +20,9 @@ namespace Prototype.NetworkLobby
 		private int heroPlayerCount = 0;
 		private int villainPlayerCount = 0;
 
+		public string currentVotedMap = "";
+		public string currentVotedGameMode = "";
+
 		// Map preferences
 		private Dictionary<SettingsGameWorld, int> mapVotes;
 
@@ -167,16 +170,16 @@ namespace Prototype.NetworkLobby
 
 			switch(highestMap) {
 			case SettingsGameWorld.METROPOLIS:
-				LobbyManager.s_Singleton.playScene = LevelNames.Metropolis;
+				LobbyManager.s_Singleton.playScene = currentVotedMap = LevelNames.Metropolis;
 				break;
 			case SettingsGameWorld.BORG:
-				LobbyManager.s_Singleton.playScene = LevelNames.BorgWorld;
+				LobbyManager.s_Singleton.playScene = currentVotedMap = LevelNames.BorgWorld;
 				break;
 			case SettingsGameWorld.CANDYLAND:
-				LobbyManager.s_Singleton.playScene = LevelNames.Candyland;
+				LobbyManager.s_Singleton.playScene = currentVotedMap = LevelNames.Candyland;
 				break;
 			case SettingsGameWorld.DESERT:
-				LobbyManager.s_Singleton.playScene = LevelNames.Desert;
+				LobbyManager.s_Singleton.playScene = currentVotedMap = LevelNames.Desert;
 				break;
 			}
 			#endregion
@@ -214,16 +217,16 @@ namespace Prototype.NetworkLobby
 
 			switch(highestGame) { // TODO Different game mode votes here
 			case SettingsGameMode.ARENA:
-//				LobbyManager.s_Singleton.playScene = LevelNames.Metropolis;
+//				LobbyManager.s_Singleton.playScene = currentVotedGameMode = LevelNames.Metropolis;
 				break;
 			case SettingsGameMode.CAPTURE_THE_FLAG:
-//				LobbyManager.s_Singleton.playScene = LevelNames.BorgWorld;
+				//				LobbyManager.s_Singleton.playScene = currentVotedGameMode = LevelNames.BorgWorld;
 				break;
 			case SettingsGameMode.ZONE_CAPTURE:
-//				LobbyManager.s_Singleton.playScene = LevelNames.Candyland;
+				//				LobbyManager.s_Singleton.playScene = currentVotedGameMode = LevelNames.Candyland;
 				break;
 			case SettingsGameMode.SUPERIORITY:
-//				LobbyManager.s_Singleton.playScene = LevelNames.Desert;
+				//				LobbyManager.s_Singleton.playScene = currentVotedGameMode = LevelNames.Desert;
 				break;
 			}
 			#endregion

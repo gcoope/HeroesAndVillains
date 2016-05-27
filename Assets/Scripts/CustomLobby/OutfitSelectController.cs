@@ -10,11 +10,11 @@ public class OutfitSelectController : MonoBehaviour {
 
 
 	void Awake() {
-		gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, SelectOutfit); // TODO listen for this on setup controller
+		gameObject.AddGlobalEventListener(MenuEvent.LobbyOutfitSelected, SelectOutfit);
 	}
 
 	void Start() {
-		gameObject.DispatchGlobalEvent (MenuEvent.LobbyOutfitSelected, new object[]{Random.Range(0,9)}); // Do this once at the start otherwise something isn't getting set
+//		gameObject.DispatchGlobalEvent (MenuEvent.LobbyOutfitSelected, new object[]{Random.Range(0,9)}); // Do this once at the start otherwise no button is being set isn't getting set
 		outfitButtons[chosenOutfitIndex].Selected();
 	}
 

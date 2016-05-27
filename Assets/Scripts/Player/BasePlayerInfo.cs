@@ -42,10 +42,10 @@ public class BasePlayerInfo : NetworkBehaviour {
 	}
 
 	public override void OnStartLocalPlayer() {
-		playerName = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerName);
-		if(string.IsNullOrEmpty(playerName)) playerName = NameGenerator.GetRandomName();
-		playerTeam = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerTeam);
-		playerOutfit = PlayerPrefs.GetInt (PlayerPrefKeys.LocalPlayerOutfit);
+//		playerName = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerName);
+//		if(string.IsNullOrEmpty(playerName)) playerName = NameGenerator.GetRandomName();
+//		playerTeam = PlayerPrefs.GetString(PlayerPrefKeys.LocalPlayerTeam);
+//		playerOutfit = PlayerPrefs.GetInt (PlayerPrefKeys.LocalPlayerOutfit);
 
 		gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");	 // Only on local client - So we can't click ourselves, bit hacky but works
 
@@ -55,6 +55,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 		transform.rotation = spawnPos.rotation;
 
 		Invoke("LateOnStartLocalPlayer", 1f); // Hack to tell server our info - seems to be called just before player manager is setup
+
 	}
 
 	void LateOnStartLocalPlayer() {
@@ -62,10 +63,10 @@ public class BasePlayerInfo : NetworkBehaviour {
 	}
 
 	public override void OnStartClient () {		
-		base.OnStartClient ();
 		OnNameChange(playerName);
 		OnTeamChange(playerTeam);
 		OnOutfitChange(playerOutfit);
+		base.OnStartClient ();
 	}
 
 	public void OnTeamChange(string team) {
@@ -98,7 +99,7 @@ public class BasePlayerInfo : NetworkBehaviour {
 
 	[ClientRpc]
 	private void RpcSetClientPlayerInfo(string pName, string pTeam, int pOutfitIndex) {
-		if(isLocalPlayer) return;
+//		if(isLocalPlayer) return;
 		playerName = pName;
 		playerTeam = pTeam;
 		playerOutfit = pOutfitIndex;

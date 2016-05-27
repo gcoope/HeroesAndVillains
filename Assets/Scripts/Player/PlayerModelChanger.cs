@@ -8,6 +8,7 @@ public class PlayerModelChanger : NetworkBehaviour {
 	public Color villainCol;
 
 	public ModelHairHandler hairHandler;
+	public ModelFaceHandler faceHandler;
 	public ModelMaterialHandler materialHandler;
 
 	public void SetupModel(string team) {
@@ -17,6 +18,7 @@ public class PlayerModelChanger : NetworkBehaviour {
 
 	public void SetupOutfit(int outfitIndex) {
 		hairHandler.SetHairIndex(outfitIndex);
+		faceHandler.SetFaceIndex(outfitIndex);
 	}
 
 	public void EnableModel(bool enable) {

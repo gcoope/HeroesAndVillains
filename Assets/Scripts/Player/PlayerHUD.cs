@@ -29,6 +29,7 @@ public class PlayerHUD : NetworkBehaviour {
 	public CanvasGroup respawnScreen;
 	public CanvasGroup scoreboardScreen;
 	public CanvasGroup damageIndicator;
+	public CanvasGroup screenFader;
 
 	public Text countdownText;
 	public CanvasGroup countdownScreen;
@@ -60,6 +61,10 @@ public class PlayerHUD : NetworkBehaviour {
 
 	void Start() {
 		ResetHUD ();
+		ShowScreen(screenFader);
+		screenFader.DOFade(0,1).SetDelay(2f).OnComplete(()=>{
+			screenFader.gameObject.SetActive(false);
+		});
 	}
 
 	private void ResetHUD() {

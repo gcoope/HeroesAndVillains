@@ -25,6 +25,7 @@ public class ServerOnlyPlayerDisplay : NetworkBehaviour {
 
 	public override void OnStartServer () {
 		base.OnStartServer ();
+		if(!isClient) GameObject.Find("SceneCamera").GetComponent<AudioListener>().enabled = true;
 		consoleMessages = new List<string>();
 		transform.GetChild(0).gameObject.SetActive(isVisible);
 		string localIp = "";

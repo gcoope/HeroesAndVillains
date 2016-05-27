@@ -281,7 +281,8 @@ namespace Prototype.NetworkLobby
             foreach (PlayerController p in ClientScene.localPlayers)
                 localPlayerCount += (p == null || p.playerControllerId == -1) ? 0 : 1;
 
-            addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
+			if(addPlayerButton != null)
+				addPlayerButton.SetActive(localPlayerCount < maxPlayersPerConnection && _playerNumber < maxPlayers);
         }
 
         // ----------------- Server callbacks ------------------
