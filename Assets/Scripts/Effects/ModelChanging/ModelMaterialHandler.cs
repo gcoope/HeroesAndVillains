@@ -78,7 +78,6 @@ public class ModelMaterialHandler : MonoBehaviour {
 
 	// This takes the outfit index and team
 	public void SetTeamColour(int outfitIndex, bool isHero) {
-		Debug.Log("[ModelMaterialHandler] " + isHero);
 		if (suitMat == null) {
 			suitMat = suitRend.materials [0]; // TODO So hard coded, fix me
 		}

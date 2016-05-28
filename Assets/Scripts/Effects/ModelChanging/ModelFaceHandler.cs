@@ -30,8 +30,6 @@ public class ModelFaceHandler : MonoBehaviour {
 	public void SetFaceIndex(int index, bool isHero) {
 		currentIndex = index;
 		faceMat.mainTexture = isHero ? heroFaceTextures[currentIndex] : villainFaceTextures[currentIndex];
-		Debug.Log(isHero);
-		Debug.Log(index);
 		switch(index) { // We have to apply a slight colour change to the diffuse as the skin colour and face textures aren't the same 
 		case 0:
 		case 3:
