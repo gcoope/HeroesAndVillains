@@ -12,7 +12,7 @@ public static class SaveOnPlay {
 	private static void OnPlaymodeStateChange() {
 		if(!EditorApplication.isPlaying && EditorApplication.isPlayingOrWillChangePlaymode) {
 			EditorSceneManager.SaveOpenScenes();
-			Debug.Log("Saving!");
+			Debug.Log("<color=green>Saving!</color>");
 		}
 	}
 }

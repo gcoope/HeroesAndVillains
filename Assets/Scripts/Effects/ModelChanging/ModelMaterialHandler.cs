@@ -4,6 +4,9 @@ using DG.Tweening;
 
 public class ModelMaterialHandler : MonoBehaviour {
 
+	public Color[] heroColours;
+	public Color[] villainColours;
+
 	public Renderer[] headRenderers;
 	private Renderer[] playerRenderers;
 	private const float fadeDuration = 1f;
@@ -11,7 +14,6 @@ public class ModelMaterialHandler : MonoBehaviour {
 
 	public Renderer suitRend;
 	private Material suitMat;
-	public Material[] colouredMats;
 
 	void Awake() {
 		playerRenderers = GetComponentsInChildren<Renderer>();
@@ -21,11 +23,6 @@ public class ModelMaterialHandler : MonoBehaviour {
 		suitMat = suitRend.materials [0]; // TODO So hard coded, fix me
 	}
 
-	public void PassMaterial(Material mat) {
-		for(int i = 0; i < playerRenderers.Length; i++) {
-			playerRenderers[i].material = mat;
-		}
-	}
 
 	public void SetModelShowing(bool enable) {
 		modelShouldShow = enable;
@@ -78,4 +75,35 @@ public class ModelMaterialHandler : MonoBehaviour {
 		}
 		suitMat.color = col;
 	}
+
+	// This takes the outfit index and team
+	public void SetTeamColour(int outfitIndex, bool isHero) {
+		Debug.Log("[ModelMaterialHandler] " + isHero);
+		if (suitMat == null) {
+			suitMat = suitRend.materials [0]; // TODO So hard coded, fix me
+		}
+
+		switch(outfitIndex){
+		case 0:
+		case 1:
+			suitMat.color = isHero ? heroColours[0] : villainColours[0];
+			break;
+		case 2:
+		case 3:
+			suitMat.color = isHero ? heroColours[1] : villainColours[1];
+			break;
+		case 4:
+		case 5:
+			suitMat.color = isHero ? heroColours[2] : villainColours[2];
+			break;
+		case 6:
+		case 7:
+			suitMat.color = isHero ? heroColours[3] : villainColours[3];
+			break;
+		case 8:
+			suitMat.color = isHero ? heroColours[4] : villainColours[4];
+			break;
+		}
+	}
+
 }
