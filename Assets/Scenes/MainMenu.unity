@@ -3323,7 +3323,7 @@ RectTransform:
   - {fileID: 1117891627}
   - {fileID: 174292614}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.13116428, y: -200.07379}
@@ -3618,7 +3618,7 @@ RectTransform:
   m_Children:
   - {fileID: 1049376899}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.01952362, y: 0.000030517578}
@@ -4710,7 +4710,7 @@ MonoBehaviour:
   infoPanel: {fileID: 825467458}
   countdownPanel: {fileID: 401697145}
   addPlayerButton: {fileID: 0}
-  backButton: {fileID: 1655239543}
+  backButton: {fileID: 1849959348}
   statusInfo: {fileID: 1168186981}
   hostInfo: {fileID: 811113253}
   _playerNumber: 0
@@ -4898,7 +4898,7 @@ RectTransform:
   m_Children:
   - {fileID: 1988449924}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 7
+  m_RootOrder: 1
   m_AnchorMin: {x: 0.65, y: 0.075}
   m_AnchorMax: {x: 0.98361206, y: 0.891933}
   m_AnchoredPosition: {x: -0.00012207031, y: -0.0000019073486}
@@ -5728,14 +5728,14 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 589748661}
+  - {fileID: 579848437}
+  - {fileID: 794514652}
   - {fileID: 401697146}
   - {fileID: 1407555733}
   - {fileID: 1539603590}
   - {fileID: 778935928}
   - {fileID: 325189836}
   - {fileID: 825467459}
-  - {fileID: 579848437}
-  - {fileID: 794514652}
   m_Father: {fileID: 555708177}
   m_RootOrder: 3
   m_AnchorMin: {x: 0, y: 0}
@@ -10277,7 +10277,7 @@ RectTransform:
   - {fileID: 1693748963}
   - {fileID: 906636038}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.13116428, y: -200.07379}
@@ -10409,7 +10409,7 @@ RectTransform:
   - {fileID: 1252105980}
   - {fileID: 1052325159}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 8
+  m_RootOrder: 2
   m_AnchorMin: {x: 0.05, y: 0.075}
   m_AnchorMax: {x: 0.6300381, y: 0.891933}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -10916,7 +10916,7 @@ RectTransform:
   m_Children:
   - {fileID: 845648036}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -0.01168002, y: 0}
@@ -16353,7 +16353,7 @@ RectTransform:
   - {fileID: 25162531}
   - {fileID: 1168186979}
   m_Father: {fileID: 625103122}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0.13116428, y: -0.07368995}
@@ -17073,7 +17073,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 625103122}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: -960.00006, y: 105.07374}
@@ -21089,8 +21089,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1464675841}
-        m_MethodName: ShowMainMenuCanvasFromLobby
+      - m_Target: {fileID: 555708176}
+        m_MethodName: GoBackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -22790,7 +22790,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2027943497
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22849,7 +22849,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2027943499}
   m_HandleRect: {fileID: 20193127}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

@@ -26,10 +26,11 @@ public class PlayerHealth : NetworkBehaviour {
 	}
 
 	void Update() {
-		if(!isLocalPlayer) return;
-		if(Input.GetKeyDown(KeyCode.F9) && !playerFaint.isFainted) {
-			CmdTakeDamageOnServer(25, new PlayerInfoPacket(thisPlayerInfo.playerName, thisPlayerInfo.playerTeam, netId), true);
-		}	
+		if(isLocalPlayer) {
+			if(Input.GetKeyDown(KeyCode.F9) && Input.GetKey(KeyCode.LeftControl) && !playerFaint.isFainted) {
+				CmdTakeDamageOnServer(25, new PlayerInfoPacket(thisPlayerInfo.playerName, thisPlayerInfo.playerTeam, netId), true);
+			}	
+		}
 	}
 
 	[Command]

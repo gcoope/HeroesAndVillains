@@ -25,10 +25,12 @@ public class PlayerFaint : NetworkBehaviour {
 			if(isFainted && Input.GetKeyDown(KeyCode.R)) {
 				CmdRequestRespawn();
 			}
-			
+
+			#if UNITY_EDITOR
 			if(Input.GetKeyDown(KeyCode.Alpha5)) {
 				CmdAddScore(netId, Settings.ScorePerKill, playerHealth.thisPlayerInfo.playerTeam == Settings.HeroTeam); // findme Points added here
 			}
+			#endif
 		}
 	}
 

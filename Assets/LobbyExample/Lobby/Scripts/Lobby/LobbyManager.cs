@@ -19,7 +19,7 @@ namespace Prototype.NetworkLobby
 
         [Header("Unity UI Lobby")]
         [Tooltip("Time in second between all players ready & match start")]
-        public float prematchCountdown = 5.0f;
+        public float prematchCountdown = 3.0f;
 
         [Space]
         [Header("UI Reference")]
@@ -65,7 +65,7 @@ namespace Prototype.NetworkLobby
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
 
-            backButton.gameObject.SetActive(false);
+//            backButton.gameObject.SetActive(false);
 
             SetServerInfo("Offline", "None");
         }
@@ -146,16 +146,16 @@ namespace Prototype.NetworkLobby
 
             currentPanel = newPanel;
 
-            if (currentPanel != mainMenuPanel)
-            {
-                backButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                backButton.gameObject.SetActive(false);
-                SetServerInfo("Offline", "None");
-                _isMatchmaking = false;
-            }
+//            if (currentPanel != mainMenuPanel)
+//            {
+//                backButton.gameObject.SetActive(true);
+//            }
+//            else
+//            {
+//                backButton.gameObject.SetActive(false);
+//                SetServerInfo("Offline", "None");
+//                _isMatchmaking = false;
+//            }
         }
 
         public void DisplayIsConnecting() {
@@ -212,7 +212,9 @@ namespace Prototype.NetworkLobby
             }
 
             
-            ChangeTo(mainMenuPanel);
+//            ChangeTo(mainMenuPanel);
+			if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
+			menuScreenController.ShowMainMenuQuickly();
         }
 
         public void StopClientClbk() {
@@ -223,7 +225,9 @@ namespace Prototype.NetworkLobby
                 StopMatchMaker();
             }
 
-            ChangeTo(mainMenuPanel);
+//            ChangeTo(mainMenuPanel);
+			if(!menuScreenController) menuScreenController = GameObject.Find("CanvasController").GetComponent<MenuScreenController>();
+			menuScreenController.ShowMainMenuQuickly();
         }
 
         public void StopServerClbk()
@@ -308,6 +312,7 @@ namespace Prototype.NetworkLobby
                 }
             }
 
+
             return obj;
         }
 
@@ -337,7 +342,6 @@ namespace Prototype.NetworkLobby
                     p.ToggleJoinButton(numPlayers >= minPlayers);
                 }
             }
-
         }
 
         public override bool OnLobbyServerSceneLoadedForPlayer(GameObject lobbyPlayer, GameObject gamePlayer)
@@ -425,6 +429,7 @@ namespace Prototype.NetworkLobby
 			menuScreenController.ShowMainMenuQuickly();
             base.OnClientDisconnect(conn);
 //            ChangeTo(mainMenuPanel);
+			// Change to main menu
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode) {

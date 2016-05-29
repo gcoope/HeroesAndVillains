@@ -130,12 +130,14 @@ namespace smoothstudio.heroesandvillains.player
 				if(Physics.SphereCast(transform.position, 0.4f, -transform.up, out sphereHit, rayLength)) isGrounded = true;
 				else isGrounded = false;
 
-				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition();
+				#if UNITY_EDITOR
+				if(Input.GetKeyDown(KeyCode.C)) ToggleCameraPosition(); // findme third person toggle
 
 				// Move to top of world for testing
 				if(Input.GetKeyDown(KeyCode.F8)) {
 					ResetPositionToSpawn ();
 				}
+				#endif
 
 //				 Sticking fix
 				if (isGrounded) {

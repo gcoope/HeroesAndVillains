@@ -236,9 +236,8 @@ public class PlayerHUD : NetworkBehaviour {
 	}
 
 	// Exiting
-	public void Exit() {
-		gameObject.DispatchGlobalEvent(MenuEvent.ClientDisconnect);
-//		LobbyManager.s_Singleton.KickPlayer(connectionToServer); 
+	public void Exit() {; 
+		LobbyManager.s_Singleton.StopClientClbk(); // d/c from server
 	}
 
 	// util

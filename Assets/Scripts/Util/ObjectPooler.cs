@@ -90,7 +90,7 @@ public class ObjectPooler : MonoBehaviour {
 				instance.spawnedItems.Add(spawnedItem, prefab);
 				return spawnedItem;
 			} else { // If getting from pool fails somehow, instantiate a new one - Should never occur
-				Debug.LogWarning("Pool size was not big enough - runtime instantiating: " + prefab.name);
+				Debug.Log("Pool size was not big enough - runtime instantiating: " + prefab.name);
 				spawnedItem = Instantiate(prefab);
 				spawnedItem.SetActive(true); // Would be true by default anyway
 				spawnedItem.transform.parent = parent;
@@ -116,7 +116,7 @@ public class ObjectPooler : MonoBehaviour {
 			obj.transform.position = Vector3.zero;
 			obj.SetActive(false);
 		} else { // Force destroy - not preffered but will work the same
-			Debug.LogWarning("Force destroying: " + obj + ", it wasn't found in spawnedItems");
+			Debug.Log("Force destroying: " + obj + ", it wasn't found in spawnedItems");
 			//Object.Destroy(obj);
 		}
 	}

@@ -26,6 +26,7 @@ public class ModelMaterialHandler : MonoBehaviour {
 
 	public void SetModelShowing(bool enable) {
 		modelShouldShow = enable;
+		if(modelShouldShow) FadeIn();
 	}
 
 	public void FadeIn(bool delay = false) {

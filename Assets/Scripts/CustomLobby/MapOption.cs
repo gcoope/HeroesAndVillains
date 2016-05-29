@@ -27,6 +27,6 @@ public class MapOption : MonoBehaviour {
 	}
 
 	public void SetVoteCount(int count) {
-		voteCount.text = count.ToString();
+		if(voteCount != null && voteCount.text != null)	voteCount.text = count.ToString();
 	}
 }

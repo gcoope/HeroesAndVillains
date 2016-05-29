@@ -57,6 +57,10 @@ public class MenuScreenController : MonoBehaviour {
 
 	void OnEnable() {
 		cameraMove.MoveToStartPosition();
+
+		if(!MainMenuCanvas.activeSelf && !MultiplayerCanvas.activeSelf && !LobbyCanvas.activeSelf) { // When disconnecting from a client no menus are turned on?
+			MainMenuCanvas.SetActive(true);
+		}
 	}
 
 	void OnLevelWasLoaded() {
