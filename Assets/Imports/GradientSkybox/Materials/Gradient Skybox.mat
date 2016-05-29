@@ -51,11 +51,11 @@ Material:
       data:
         first:
           name: _Color1
-        second: {r: 0.086308405, g: 0, b: 0.5441177, a: 0}
+        second: {r: 0.047178183, g: 0.0077854716, b: 0.08823532, a: 0}
       data:
         first:
           name: _Color2
-        second: {r: 0, g: 0.9852941, b: 0.9852941, a: 0}
+        second: {r: 0.34256053, g: 0.9186135, b: 0.9705882, a: 0}
       data:
         first:
           name: _UpVector

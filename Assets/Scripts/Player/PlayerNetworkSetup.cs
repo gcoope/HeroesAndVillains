@@ -26,6 +26,7 @@ public class PlayerNetworkSetup : NetworkBehaviour {
 
 	public override void OnStartLocalPlayer() {
 		if(isLocalPlayer) {			
+			if(!isServer) GameObject.Find("SceneCamera").GetComponent<AudioListener>().enabled = true;
 			if(Camera.main != null) Camera.main.enabled = false;
 			playerCamera.enabled = true;
 			audioListener.enabled = true;

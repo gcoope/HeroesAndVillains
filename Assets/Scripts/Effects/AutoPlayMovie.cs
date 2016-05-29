@@ -46,7 +46,7 @@ public class AutoPlayMovie : MonoBehaviour {
 	}
 
 	private void GoToStartScene() {
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
 
 	}
 

@@ -89,7 +89,7 @@ namespace Prototype.NetworkLobby
 		}
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn) {
-			if(SceneManager.GetSceneAt(1) == null) Debug.Log("index 1 is null?");
+			if(SceneManager.GetSceneAt(2) == null) Debug.Log("index 1 is null?");
 			if (SceneManager.GetSceneAt(0).name == lobbyScene){ // client is back at lobby
 				Debug.Log("scene 0 is lobby?");
                 if (topPanel.isInGame) {
